@@ -8,11 +8,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace PagoAgilFrba
+namespace PagoAgilFrba.Login
 {
-    public partial class Form1 : Form
+    public partial class FrmSeleccionRol : Form
     {
-        public Form1()
+        public FrmSeleccionRol()
         {
             InitializeComponent();
         }
