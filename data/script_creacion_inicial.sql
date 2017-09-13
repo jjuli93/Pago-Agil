@@ -178,6 +178,39 @@ BEGIN
 END
 
 
+-- Item Facturas
+GO
+IF (NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES 
+				WHERE TABLE_SCHEMA = '[SistemaCaido]' AND
+					  TABLE_NAME   = 'Item_Facturas' ))
+BEGIN
+	CREATE TABLE [SistemaCaido].Item_Facturas(
+		IdItem int NOT NULL identity(1,1),
+		IdFactura int,
+		Cantidad numeric(18,0),
+		Monto numeric(18,2),
+		PRIMARY KEY(IdItem),
+		FOREIGN KEY(IdFactura) REFERENCES [SistemaCaido].Facturas,
+	);
+END
+
+
+-- Rendiciones
+GO
+IF (NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES 
+				WHERE TABLE_SCHEMA = '[SistemaCaido]' AND
+					  TABLE_NAME   = 'Rendiciones' ))
+BEGIN
+	CREATE TABLE [SistemaCaido].Rendiciones(
+		IdRendicion int NOT NULL identity(1,1),
+		IdEmpresa int,
+		NumeroRendicion numeric(18,0),
+		Fecha datetime,
+		PRIMARY KEY(IdRendicion),
+		FOREIGN KEY(IdEmpresa) REFERENCES [SistemaCaido].Empresas,
+	);
+END
+
 -- RolesXFuncionalidades
 GO
 IF (NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES 
@@ -211,11 +244,27 @@ BEGIN
 END
 
 
+-- UsuariosXSucursales
+GO
+IF (NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES 
+				WHERE TABLE_SCHEMA = '[SistemaCaido]' AND
+					  TABLE_NAME   = 'UsuariosXSucursales' ))
+BEGIN
+	CREATE TABLE [SistemaCaido].UsuariosXSucursales(
+		IdUsuario int,
+		IdSucursal int,
+		PRIMARY KEY(IdUsuario, IdSucursal),
+		FOREIGN KEY(IdUsuario) REFERENCES [SistemaCaido].Usuarios,
+		FOREIGN KEY(IdSucursal) REFERENCES [SistemaCaido].Sucursales,
+	);
+END
+
 -- Migracion de Datos
 GO
 
 /* Usuarios */
 INSERT INTO [SistemaCaido].Usuarios VALUES('Admin', 'w23e')
+INSERT INTO [SistemaCaido].Usuarios VALUES('Usuario1', 'inicio123')
 
 /* Roles */
 INSERT INTO [SistemaCaido].Roles VALUES('Administrador')
@@ -223,6 +272,7 @@ INSERT INTO [SistemaCaido].Roles VALUES('Cobrador')
 
 /* Funcionalidades */
 INSERT INTO [SistemaCaido].Funcionalidades VALUES ('ABM de Rol')
+INSERT INTO [SistemaCaido].Funcionalidades VALUES ('Login y Seguridad')
 INSERT INTO [SistemaCaido].Funcionalidades VALUES ('Registro de Usuario')
 INSERT INTO [SistemaCaido].Funcionalidades VALUES ('ABM de Cliente')
 INSERT INTO [SistemaCaido].Funcionalidades VALUES ('ABM de Empresa')
@@ -252,19 +302,44 @@ INSERT INTO [SistemaCaido].Sucursales (Nombre, Direccion, CodigoPostal, Habilita
 SELECT DISTINCT Sucursal_Nombre, Sucursal_Dirección, Sucursal_Codigo_Postal, 1
 FROM gd_esquema.Maestra WHERE Sucursal_Nombre IS NOT NULL
 
+/* Facturas */
+INSERT INTO [SistemaCaido].Facturas (IdCliente, IdEmpresa, NumeroFactura, FechaAlta, FechaVencimiento, Importe)
+SELECT DISTINCT IdCliente, IdEmpresa, Nro_Factura, Factura_Fecha, Factura_Fecha_Vencimiento, Factura_Total 
+FROM gd_esquema.Maestra 
+JOIN [SistemaCaido].Clientes on [Cliente-Nombre] + [Cliente-Apellido] = [SistemaCaido].Clientes.Nombre + [SistemaCaido].Clientes.Apellido
+JOIN [SistemaCaido].Empresas on Empresa_Nombre = [SistemaCaido].Empresas.Nombre
+WHERE Nro_Factura IS NOT NULL
+ 
+/* Item Facturas */
+INSERT INTO [SistemaCaido].Item_Facturas (IdFactura, Cantidad, Monto)
+SELECT IdFactura, ItemFactura_Cantidad, ItemFactura_Monto FROM gd_esquema.Maestra 
+JOIN [SistemaCaido].Facturas on Nro_Factura = [SistemaCaido].Facturas.NumeroFactura
+WHERE ItemFactura_Cantidad > 0
 
+/* Pagos */
+-- Ver migracion
+
+/* Rendiciones */
+INSERT INTO [SistemaCaido].Rendiciones (IdEmpresa, NumeroRendicion, Fecha)
+SELECT IdEmpresa, Rendicion_Nro, Rendicion_Fecha FROM gd_esquema.Maestra
+JOIN [SistemaCaido].Empresas ON Empresa_Nombre = [SistemaCaido].Empresas.Nombre
+WHERE Rendicion_Nro > 0
+
+ 
 /*
 DROP TABLE [SistemaCaido].RolesXFuncionalidades
 DROP TABLE [SistemaCaido].UsuariosXRoles
 DROP TABLE [SistemaCaido].Roles
 DROP TABLE [SistemaCaido].Funcionalidades
 DROP TABLE [SistemaCaido].Usuarios
-DROP TABLE [SistemaCaido].Empresas
-DROP TABLE [SistemaCaido].Sucursales
-DROP TABLE [SistemaCaido].Clientes
-DROP TABLE [SistemaCaido].MediosPago
 DROP TABLE [SistemaCaido].Pagos
-DROP TABLE [SistemaCaido].Rubros
+DROP TABLE [SistemaCaido].Item_Facturas
+DROP TABLE [SistemaCaido].Rendiciones
+DROP TABLE [SistemaCaido].Sucursales
+DROP TABLE [SistemaCaido].MediosPago
 DROP TABLE [SistemaCaido].Facturas
+DROP TABLE [SistemaCaido].Empresas
+DROP TABLE [SistemaCaido].Clientes
+DROP TABLE [SistemaCaido].Rubros
 DROP SCHEMA [SistemaCaido]
 */
