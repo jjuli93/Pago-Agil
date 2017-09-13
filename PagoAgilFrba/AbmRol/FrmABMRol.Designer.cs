@@ -40,26 +40,30 @@
             this.cancelarBtn = new System.Windows.Forms.Button();
             this.aceptarBtn = new System.Windows.Forms.Button();
             this.exitBtn = new System.Windows.Forms.LinkLabel();
-            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
+            this.cerrarSesionHl = new System.Windows.Forms.LinkLabel();
             this.panel1 = new System.Windows.Forms.Panel();
             this.label4 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.fnsChkList = new System.Windows.Forms.CheckedListBox();
             this.obligatorio2 = new System.Windows.Forms.Label();
             this.obligatoriosLbl = new System.Windows.Forms.Label();
             this.obligatorio1 = new System.Windows.Forms.Label();
             this.habilitadoChk = new System.Windows.Forms.CheckBox();
-            this.funcionalidadesLb = new System.Windows.Forms.CheckedListBox();
             this.label2 = new System.Windows.Forms.Label();
             this.nombreTb = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.rolesGrid = new System.Windows.Forms.DataGridView();
             this.abmPnl.SuspendLayout();
             this.confirmPnl.SuspendLayout();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).BeginInit();
+            this.groupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.rolesGrid)).BeginInit();
             this.SuspendLayout();
             // 
             // crearBtn
@@ -166,23 +170,25 @@
             this.exitBtn.TabIndex = 5;
             this.exitBtn.TabStop = true;
             this.exitBtn.Text = "X";
+            this.exitBtn.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.exitBtn_LinkClicked);
             // 
-            // linkLabel1
+            // cerrarSesionHl
             // 
-            this.linkLabel1.AutoSize = true;
-            this.linkLabel1.Location = new System.Drawing.Point(473, 42);
-            this.linkLabel1.Name = "linkLabel1";
-            this.linkLabel1.Size = new System.Drawing.Size(67, 13);
-            this.linkLabel1.TabIndex = 6;
-            this.linkLabel1.TabStop = true;
-            this.linkLabel1.Text = "cerrar sesión";
+            this.cerrarSesionHl.AutoSize = true;
+            this.cerrarSesionHl.Location = new System.Drawing.Point(473, 42);
+            this.cerrarSesionHl.Name = "cerrarSesionHl";
+            this.cerrarSesionHl.Size = new System.Drawing.Size(67, 13);
+            this.cerrarSesionHl.TabIndex = 6;
+            this.cerrarSesionHl.TabStop = true;
+            this.cerrarSesionHl.Text = "cerrar sesión";
+            this.cerrarSesionHl.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.cerrarSesionHl_LinkClicked);
             // 
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.panel1.Controls.Add(this.label4);
             this.panel1.Controls.Add(this.pictureBox1);
-            this.panel1.Controls.Add(this.linkLabel1);
+            this.panel1.Controls.Add(this.cerrarSesionHl);
             this.panel1.Controls.Add(this.confirmPnl);
             this.panel1.Controls.Add(this.exitBtn);
             this.panel1.Controls.Add(this.abmPnl);
@@ -214,11 +220,11 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.fnsChkList);
             this.groupBox1.Controls.Add(this.obligatorio2);
             this.groupBox1.Controls.Add(this.obligatoriosLbl);
             this.groupBox1.Controls.Add(this.obligatorio1);
             this.groupBox1.Controls.Add(this.habilitadoChk);
-            this.groupBox1.Controls.Add(this.funcionalidadesLb);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.nombreTb);
             this.groupBox1.Controls.Add(this.label1);
@@ -228,6 +234,14 @@
             this.groupBox1.TabIndex = 8;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Detalle del Rol";
+            // 
+            // fnsChkList
+            // 
+            this.fnsChkList.FormattingEnabled = true;
+            this.fnsChkList.Location = new System.Drawing.Point(268, 60);
+            this.fnsChkList.Name = "fnsChkList";
+            this.fnsChkList.Size = new System.Drawing.Size(225, 94);
+            this.fnsChkList.TabIndex = 11;
             // 
             // obligatorio2
             // 
@@ -271,14 +285,6 @@
             this.habilitadoChk.Text = "Habilitado";
             this.habilitadoChk.UseVisualStyleBackColor = true;
             // 
-            // funcionalidadesLb
-            // 
-            this.funcionalidadesLb.FormattingEnabled = true;
-            this.funcionalidadesLb.Location = new System.Drawing.Point(268, 60);
-            this.funcionalidadesLb.Name = "funcionalidadesLb";
-            this.funcionalidadesLb.Size = new System.Drawing.Size(229, 94);
-            this.funcionalidadesLb.TabIndex = 3;
-            // 
             // label2
             // 
             this.label2.AutoSize = true;
@@ -312,12 +318,31 @@
             this.errorProvider.BlinkStyle = System.Windows.Forms.ErrorBlinkStyle.NeverBlink;
             this.errorProvider.ContainerControl = this;
             // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.rolesGrid);
+            this.groupBox2.Location = new System.Drawing.Point(57, 245);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(426, 156);
+            this.groupBox2.TabIndex = 9;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Roles del sistema:";
+            // 
+            // rolesGrid
+            // 
+            this.rolesGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.rolesGrid.Location = new System.Drawing.Point(33, 21);
+            this.rolesGrid.Name = "rolesGrid";
+            this.rolesGrid.Size = new System.Drawing.Size(360, 122);
+            this.rolesGrid.TabIndex = 0;
+            // 
             // FrmABMRol
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Silver;
-            this.ClientSize = new System.Drawing.Size(543, 445);
+            this.ClientSize = new System.Drawing.Size(543, 413);
+            this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.panel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
@@ -333,6 +358,8 @@
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).EndInit();
+            this.groupBox2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.rolesGrid)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -349,13 +376,12 @@
         private System.Windows.Forms.Button aceptarBtn;
         private System.Windows.Forms.Button volverBtn;
         private System.Windows.Forms.LinkLabel exitBtn;
-        private System.Windows.Forms.LinkLabel linkLabel1;
+        private System.Windows.Forms.LinkLabel cerrarSesionHl;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label obligatoriosLbl;
         private System.Windows.Forms.CheckBox habilitadoChk;
-        private System.Windows.Forms.CheckedListBox funcionalidadesLb;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox nombreTb;
         private System.Windows.Forms.Label label1;
@@ -363,5 +389,8 @@
         private System.Windows.Forms.Label obligatorio2;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.ErrorProvider errorProvider;
+        private System.Windows.Forms.CheckedListBox fnsChkList;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.DataGridView rolesGrid;
     }
 }

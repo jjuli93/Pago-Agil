@@ -120,5 +120,21 @@ namespace PagoAgilFrba.Helpers
         {
             campos.ForEach(c => e.SetError(c, ""));
         }
+
+        public void cerrar_app()
+        {
+            if (MessageBox.Show("¿Desea salir de PagoAgil?", "PagoAgil FRBA App", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            {
+                Application.Exit();
+            }
+        }
+
+        public void cerrar_sesion()
+        {
+            if (MessageBox.Show("¿Cerrar sesión?", "PagoAgil FRBA App", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            {
+                Application.Restart();
+            }
+        }
     }
 }
