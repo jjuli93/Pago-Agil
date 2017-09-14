@@ -6,10 +6,10 @@
 # Trabajo Practico: "Pago Agil" 
 
 ## Integrantes
-> Julián Ignacio Alvarez  - Legajo 146659.8
+> Julián Ignacio Alvarez        - Legajo 146659.8
 
-> Gerardo Gabriel Arce    - Legajo 110738.0
+> Gerardo Gabriel Arce          - Legajo 110738.0
 
-> Julián Matias Corvalán  - Legajo 145016.5
+> Julián Matias Corvalán        - Legajo 145016.5
 
-> Lilian Luque Duarte     - Legajo 114101.6
+> Lilian Patricia Luque Duarte  - Legajo 114101.6
