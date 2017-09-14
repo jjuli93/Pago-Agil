@@ -4,9 +4,18 @@ USE GD2C2017
 GO
 CREATE SCHEMA [SistemaCaido];
 
-
+-- Tipos
 GO
+IF (NOT EXISTS (SELECT * FROM sys.types
+				WHERE name = 'TablaFuncionalidades' ))
+BEGIN 
+	CREATE TYPE [SistemaCaido].TablaFuncionalidades 
+	AS TABLE(Funcionalidad nvarchar(255) NULL)
+END
+
+
 -- Creacion de Tablas
+GO
 -- Funcionalidades
 IF (NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES 
 				WHERE TABLE_SCHEMA = '[SistemaCaido]' AND
@@ -343,3 +352,49 @@ DROP TABLE [SistemaCaido].Clientes
 DROP TABLE [SistemaCaido].Rubros
 DROP SCHEMA [SistemaCaido]
 */
+
+-- Stored Procedures
+GO
+create procedure AltaRol(@Rol nvarchar(255), @Funcionalidades [SistemaCaido].TablaFuncionalidades readonly)
+as begin transaction
+	declare @cantidadFilas int
+	declare @numeroFila int
+	declare @Funcionalidad nvarchar(255)
+
+	set @numeroFila		= 0
+	set @cantidadFilas	= (select count(*) from @Funcionalidades)
+
+	insert into [SistemaCaido].Roles values (@Rol)
+	if (@@ERROR != 0)
+	begin
+		raiserror('No se pudo dar de alta el rol..', 1,1)
+		rollback transaction
+	END
+
+	declare funcionalidad_cursor cursor for 
+	select Funcionalidad FROM @Funcionalidades
+
+	open funcionalidad_cursor
+	fetch next from funcionalidad_cursor into @Funcionalidad
+
+	while(@@FETCH_STATUS = 0)
+		begin
+			insert into [SistemaCaido].RolesXFuncionalidades values (@Rol, @Funcionalidad)
+			if (@@ERROR != 0)
+			begin
+				raiserror('No se pudo dar de alta el rol..', 1,1)
+				rollback transaction
+			end
+
+			insert into [SistemaCaido].Funcionalidades values (@Funcionalidad)
+			if (@@ERROR != 0)
+			begin
+				raiserror('No se pudo dar de alta el rol..', 1,1)
+				rollback transaction
+			end
+
+			fetch next from funcionalidad_cursor into @Funcionalidad
+		end
+
+	commit transaction
+
