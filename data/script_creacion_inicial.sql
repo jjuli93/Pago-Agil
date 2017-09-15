@@ -88,7 +88,7 @@ BEGIN
 		Apellido nvarchar(255),
 		DNI numeric(18,0),
 		Mail nvarchar(255),
-		--Telefono varchar(10),
+		Telefono varchar(10),
 		Direccion nvarchar(255),
 		CodigoPostal nvarchar(4),
 		FechaNacimiento datetime,
@@ -338,6 +338,7 @@ WHERE Rendicion_Nro > 0
 /*
 DROP TABLE [SistemaCaido].RolesXFuncionalidades
 DROP TABLE [SistemaCaido].UsuariosXRoles
+DROP TABLE [SistemaCaido].UsuariosXSucursales
 DROP TABLE [SistemaCaido].Roles
 DROP TABLE [SistemaCaido].Funcionalidades
 DROP TABLE [SistemaCaido].Usuarios
@@ -350,12 +351,43 @@ DROP TABLE [SistemaCaido].Facturas
 DROP TABLE [SistemaCaido].Empresas
 DROP TABLE [SistemaCaido].Clientes
 DROP TABLE [SistemaCaido].Rubros
+DROP TRIGGER [SistemaCaido].tr_nuevoCliente
+DROP PROCEDURE [SistemaCaido].AltaRol
+DROP PROCEDURE [SistemaCaido].AltaCliente
+DROP PROCEDURE [SistemaCaido].BajaCliente
+DROP PROCEDURE [SistemaCaido].ModificacionCliente
+DROP TYPE [SistemaCaido].TablaFuncionalidades
 DROP SCHEMA [SistemaCaido]
 */
 
+-- Triggers
+go
+create trigger [SistemaCaido].tr_nuevoCliente on [SistemaCaido].Clientes instead of insert
+as begin
+	set nocount on
+	 
+	declare @Habilitado int
+
+	if (not exists( select cli.Mail from Clientes cli, inserted ins 
+				   where cli.Mail = ins.Mail))
+		insert into Clientes
+		select Nombre, Apellido, DNI, Mail, Telefono, Direccion, CodigoPostal, FechaNacimiento, 1 from inserted
+
+	else
+		-- Se actualiza el existente
+		update Clientes
+		set Mail = ins.Mail
+		from Clientes cli, inserted ins
+		where cli.IdCliente = ins.IdCliente
+	end
+
+
+
+
+
 -- Stored Procedures
-GO
-create procedure AltaRol(@Rol nvarchar(255), @Funcionalidades [SistemaCaido].TablaFuncionalidades readonly)
+go
+create procedure [SistemaCaido].AltaRol(@Rol nvarchar(255), @Funcionalidades [SistemaCaido].TablaFuncionalidades readonly)
 as begin transaction
 	declare @cantidadFilas int
 	declare @numeroFila int
@@ -397,4 +429,56 @@ as begin transaction
 		end
 
 	commit transaction
+
+go
+create procedure [SistemaCaido].AltaCliente
+(@Nombre nvarchar(255), @Apellido nvarchar(255), @DNI numeric(18,0), @Mail nvarchar(255),
+ @Telefono varchar(10), @Direccion nvarchar(255), @CodigoPostal nvarchar(4), @FechaNacimiento datetime)
+ as begin transaction
+
+	insert into [SistemaCaido].Clientes values (@Nombre, @Apellido, @DNI, @Mail, @Telefono, @Direccion, @CodigoPostal, @FechaNacimiento, 1)
+	if (@@ERROR != 0)
+		begin
+			raiserror('No se pudo dar de alta el cliente..', 1,1)
+			rollback transaction
+		end
+
+	commit transaction
+
+go
+create procedure [SistemaCaido].BajaCliente(@IdCliente int)
+ as begin transaction
+
+	delete from [SistemaCaido].Clientes where IdCliente = @IdCliente
+	if (@@ERROR != 0)
+		begin
+			raiserror('No se pudo dar de baja el cliente..', 1,1)
+			rollback transaction
+		end
+
+	commit transaction
+
+go
+create procedure [SistemaCaido].ModificacionCliente
+(@IdCliente int, @Nombre nvarchar(255), @Apellido nvarchar(255), @DNI numeric(18,0), @Mail nvarchar(255),
+ @Telefono varchar(10), @Direccion nvarchar(255), @CodigoPostal nvarchar(4), @FechaNacimiento datetime)
+ as begin transaction
+	
+	update [SistemaCaido].Clientes
+	set Nombre = @Nombre, Apellido = @Apellido, 
+		DNI = @DNI, 
+		Mail = @Mail,
+		Telefono = @Telefono,
+		Direccion = @Direccion,
+		CodigoPostal = @CodigoPostal,
+		FechaNacimiento = @FechaNacimiento
+	where IdCliente = @IdCliente
+	if (@@ERROR != 0)
+		begin
+			raiserror('No se pudo modificar el cliente..', 1,1)
+			rollback transaction
+		end
+
+	commit transaction
+		
 
