@@ -356,6 +356,9 @@ DROP PROCEDURE [SistemaCaido].AltaRol
 DROP PROCEDURE [SistemaCaido].AltaCliente
 DROP PROCEDURE [SistemaCaido].BajaCliente
 DROP PROCEDURE [SistemaCaido].ModificacionCliente
+DROP PROCEDURE [SistemaCaido].AltaEmpresa
+DROP PROCEDURE [SistemaCaido].BajaEmpresa
+DROP PROCEDURE [SistemaCaido].ModificacionEmpresa
 DROP TYPE [SistemaCaido].TablaFuncionalidades
 DROP SCHEMA [SistemaCaido]
 */
@@ -436,7 +439,7 @@ create procedure [SistemaCaido].AltaCliente
  @Telefono varchar(10), @Direccion nvarchar(255), @CodigoPostal nvarchar(4), @FechaNacimiento datetime)
  as begin transaction
 
-	insert into [SistemaCaido].Clientes values (@Nombre, @Apellido, @DNI, @Mail, @Telefono, @Direccion, @CodigoPostal, @FechaNacimiento, 1)
+	insert into Clientes values (@Nombre, @Apellido, @DNI, @Mail, @Telefono, @Direccion, @CodigoPostal, @FechaNacimiento, 1)
 	if (@@ERROR != 0)
 		begin
 			raiserror('No se pudo dar de alta el cliente..', 1,1)
@@ -448,8 +451,11 @@ create procedure [SistemaCaido].AltaCliente
 go
 create procedure [SistemaCaido].BajaCliente(@IdCliente int)
  as begin transaction
-
-	delete from [SistemaCaido].Clientes where IdCliente = @IdCliente
+	/*
+	delete from Clientes where IdCliente = @IdCliente
+	*/
+	-- Eliminacion logica
+	update Clientes set Habilitado = 0 where IdCliente = @IdCliente
 	if (@@ERROR != 0)
 		begin
 			raiserror('No se pudo dar de baja el cliente..', 1,1)
@@ -464,7 +470,7 @@ create procedure [SistemaCaido].ModificacionCliente
  @Telefono varchar(10), @Direccion nvarchar(255), @CodigoPostal nvarchar(4), @FechaNacimiento datetime)
  as begin transaction
 	
-	update [SistemaCaido].Clientes
+	update Clientes
 	set Nombre = @Nombre, Apellido = @Apellido, 
 		DNI = @DNI, 
 		Mail = @Mail,
@@ -482,3 +488,50 @@ create procedure [SistemaCaido].ModificacionCliente
 	commit transaction
 		
 
+go
+create procedure [SistemaCaido].AltaEmpresa(@Nombre nvarchar(255), @CUIT nvarchar(50), @Direccion nvarchar(255), @IdRubro int)
+as begin transaction
+	insert into Empresas values (@Nombre, @CUIT, @Direccion, @IdRubro, 1)
+	if (@@ERROR != 0)
+		begin
+			raiserror('No se pudo dar de alta la empresa..', 1,1)
+			rollback transaction
+		end
+
+	commit transaction
+
+go
+create procedure [SistemaCaido].BajaEmpresa(@IdEmpresa int)
+as begin transaction
+/*
+	delete from Empresas where IdEmpresa = @IdEmpresa
+	*/
+	-- Eliminacion logica
+	update Empresas set Habilitada = 0 where IdEmpresa = @IdEmpresa
+
+	if (@@ERROR != 0)
+		begin
+			raiserror('No se pudo dar de baja la empresa..', 1,1)
+			rollback transaction
+		end
+
+	commit transaction	
+	
+go
+create procedure [SistemaCaido].ModificacionEmpresa(@IdEmpresa int, @Nombre nvarchar(255), @CUIT nvarchar(50), @Direccion nvarchar(255), @IdRubro int)
+as begin transaction
+	update Empresas
+	set Nombre = @Nombre,
+		CUIT = @CUIT,
+		Direccion = @Direccion,
+		IdRubro = @IdRubro
+	where IdEmpresa = @IdEmpresa
+	if (@@ERROR != 0)
+		begin
+			raiserror('No se pudo modificar la empresa..', 1,1)
+			rollback transaction
+		end
+
+	commit transaction
+
+		
