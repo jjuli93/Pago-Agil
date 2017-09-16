@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Drawing;
 
 namespace PagoAgilFrba.Helpers
 {
@@ -135,6 +136,19 @@ namespace PagoAgilFrba.Helpers
             {
                 Application.Restart();
             }
+        }
+
+        public void cambiar_color_labels(List<Label> labels, Color color)
+        {
+            labels.ForEach(l => l.ForeColor = color);
+        }
+
+        public void limpiar_tabla(DataGridView tabla)
+        {
+            //TODO: Ver el tema de la nulidad de la tabla y su datasource
+            tabla.ClearSelection();
+            tabla.Rows.Clear();
+            tabla.DataSource = null;
         }
     }
 }

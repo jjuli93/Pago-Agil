@@ -8,12 +8,12 @@ namespace PagoAgilFrba.Negocio
 {
     public class Funcionalidad
     {
-        int Id;
-        string Nombre;
+        public int Id;
+        public string Nombre;
 
-        public override Funcionalidad() { }
+        public Funcionalidad() { }
 
-        public override Funcionalidad(int _id, string _nombre)
+        public Funcionalidad(int _id, string _nombre)
         {
             this.Id = _id;
             this.Nombre = _nombre;

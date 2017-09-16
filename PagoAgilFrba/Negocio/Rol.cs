@@ -12,9 +12,9 @@ namespace PagoAgilFrba.Negocio
         public string Nombre;
         public int Id;
 
-        public override Rol() { }
+        public Rol() { }
 
-        public override Rol(int _id, string _nombre)
+        public Rol(int _id, string _nombre)
         {
             this.Id = _id;
             this.Nombre = _nombre;

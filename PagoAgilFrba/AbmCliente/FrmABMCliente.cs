@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using PagoAgilFrba.Helpers;
 
-namespace PagoAgilFrba.AbmRol
+namespace PagoAgilFrba.AbmCliente
 {
-    public partial class FrmABMRol : Form
+    public partial class FrmABMCliente : Form
     {
         private string default_description = "null";
         private List<Control> label_obligatorios;
@@ -20,16 +20,16 @@ namespace PagoAgilFrba.AbmRol
         ControlHelper helper = Singleton<ControlHelper>.Instance;
         int fila_seleccionada = -1;
 
-        public FrmABMRol()
+        public FrmABMCliente()
         {
             InitializeComponent();
             descripcionLbl.Text = default_description;
-            label_obligatorios = new List<Control>() { obligatoriosLbl, obligatorio1, obligatorio2 };
-            campos_obligatorios = new List<Control>() { nombreTb, fnsChkList };
-            campo_labels = new List<Label>() { nombreLb, funcsLb };
+            label_obligatorios = new List<Control>() { obligatoriosLbl, obligatorio1, obligatorio2, obligatorio3, obligatorio4, obligatorio5, obligatorio6, obligatorio7, obligatorio8 };
+            campos_obligatorios = new List<Control>() { nombreTb, apellidoTb, dniTb, fecnacDtp, direccionTb, codpostTb, emailTb, telefonoTb };
+            campo_labels = new List<Label>() { nombreLb, apellidoLb, dniLb, fecnacLb, dirLb, cpLb, emailLb, telLb };
             helper.visualizar_controles(label_obligatorios, false);
             habilitar_todo(false);
-            habilitadoChk.Visible = false;
+            habilitadoChk.Enabled = false;
         }
 
         public void habilitar_todo(bool valor_hab)
@@ -43,61 +43,6 @@ namespace PagoAgilFrba.AbmRol
                 helper.cambiar_color_labels(campo_labels, Color.DarkGray);
         }
 
-        #region "Botones"
-        private void crearBtn_Click(object sender, EventArgs e)
-        {
-            confirmPnl.Visible = true;
-            abmPnl.Visible = false;
-            descripcionLbl.Text = "Crear Rol";
-            helper.visualizar_controles(label_obligatorios, true);
-            habilitar_todo(true);
-        }
-
-        private void modificarBtn_Click(object sender, EventArgs e)
-        {
-            confirmPnl.Visible = true;
-            abmPnl.Visible = false;
-            descripcionLbl.Text = "Modificar Rol";
-            helper.visualizar_controles(label_obligatorios, true);
-            habilitar_todo(true);
-            habilitadoChk.Visible = true;
-        }
-
-        private void eliminarBtn_Click(object sender, EventArgs e)
-        {
-            confirmPnl.Visible = true;
-            abmPnl.Visible = false;
-            descripcionLbl.Text = "Eliminar Rol";
-        }
-
-        private void cancelarBtn_Click(object sender, EventArgs e)
-        {
-            this.restablecer_controles();
-        }
-
-        private void aceptarBtn_Click(object sender, EventArgs e)
-        {
-            string operacion = descripcionLbl.Text;
-            string msg = string.Format("¿Confirmar <{0}>?", operacion);
-
-            if (MessageBox.Show("¿Confirmar Operación?", "PagoAgil FRBA App", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-            {
-                switch (operacion)
-                {
-                    case "Crear Rol":
-                        do_insert();
-                        break;
-                    case "Modificar Rol":
-                        do_update();
-                        break;
-                    case "Eliminar Rol":
-                        do_delete();
-                        break;
-                }
-            }
-        }
-        #endregion
-        
         #region "Botones de salida"
         private void exitBtn_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
@@ -110,6 +55,67 @@ namespace PagoAgilFrba.AbmRol
         }
         #endregion
         
+        #region "Botones - Tab Principal"
+        private void volverBtn_Click(object sender, EventArgs e)
+        {
+            this.Owner.Show();
+            this.Close();
+        }
+
+        private void crearBtn_Click(object sender, EventArgs e)
+        {
+            confirmPnl.Visible = true;
+            abmPnl.Visible = false;
+            descripcionLbl.Text = "Crear Cliente";
+            helper.visualizar_controles(label_obligatorios, true);
+            habilitar_todo(true);
+        }
+
+        private void modificarBtn_Click(object sender, EventArgs e)
+        {
+            confirmPnl.Visible = true;
+            abmPnl.Visible = false;
+            descripcionLbl.Text = "Modificar Cliente";
+            helper.visualizar_controles(label_obligatorios, true);
+            habilitar_todo(true);
+            habilitadoChk.Visible = true;
+        }
+
+        private void eliminarBtn_Click(object sender, EventArgs e)
+        {
+            confirmPnl.Visible = true;
+            abmPnl.Visible = false;
+            descripcionLbl.Text = "Eliminar Cliente";
+        }
+
+        private void aceptarBtn_Click(object sender, EventArgs e)
+        {
+            string operacion = descripcionLbl.Text;
+            string msg = string.Format("¿Confirmar <{0}>?", operacion);
+
+            if (MessageBox.Show("¿Confirmar Operación?", "PagoAgil FRBA App", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            {
+                switch (operacion)
+                {
+                    case "Crear Cliente":
+                        do_insert();
+                        break;
+                    case "Modificar Cliente":
+                        do_update();
+                        break;
+                    case "Eliminar Cliente":
+                        do_delete();
+                        break;
+                }
+            }
+        }
+
+        private void cancelarBtn_Click(object sender, EventArgs e)
+        {
+            this.restablecer_controles();
+        }
+        #endregion
+
         #region "ALTA-BAJA-MODIFICACIONES"
         private void do_insert()
         {
@@ -123,11 +129,11 @@ namespace PagoAgilFrba.AbmRol
                 {
                     MessageBox.Show(ex.Message, "Error en la aplicación", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
- 
-                 this.restablecer_controles();
-             }
-             else
-                 MessageBox.Show("Por favor ingrese todos los datos obligatorios", "Campos incompletos", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                this.restablecer_controles();
+            }
+            else
+                MessageBox.Show("Por favor ingrese todos los datos obligatorios", "Campos incompletos", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         private void do_update()
@@ -173,22 +179,29 @@ namespace PagoAgilFrba.AbmRol
             habilitadoChk.Visible = false;
             helper.limpiar_errorProvider(campos_obligatorios, errorProvider);
         }
+        #endregion
 
-        private void obtener_rol_seleccionado()
+        #region "Controles Tab Buscador"
+        private void limpiarBtn_Click(object sender, EventArgs e)
         {
+            fltNombre.Text = string.Empty;
+            fltApellido.Text = string.Empty;
+            fltDNI.Text = string.Empty;
 
+            helper.limpiar_tabla(clientesDt);
         }
 
-        private void obtener_fns_seleccionadas()
+        private void buscarBtn_Click(object sender, EventArgs e)
         {
-        }
+            try
+            {
 
-        private void fnsChkList_EnabledChanged(object sender, EventArgs e)
-        {
-            if (fnsChkList.Enabled)
-                fnsChkList.BackColor = Color.WhiteSmoke;
-            else
-                fnsChkList.BackColor = Color.LightGray;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error en el buscador de clientes", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                //throw;
+            }
         }
         #endregion
     }

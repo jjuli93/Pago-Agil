@@ -50,9 +50,9 @@
             this.obligatoriosLbl = new System.Windows.Forms.Label();
             this.obligatorio1 = new System.Windows.Forms.Label();
             this.habilitadoChk = new System.Windows.Forms.CheckBox();
-            this.label2 = new System.Windows.Forms.Label();
+            this.funcsLb = new System.Windows.Forms.Label();
             this.nombreTb = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
+            this.nombreLb = new System.Windows.Forms.Label();
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.rolesGrid = new System.Windows.Forms.DataGridView();
@@ -225,9 +225,9 @@
             this.groupBox1.Controls.Add(this.obligatoriosLbl);
             this.groupBox1.Controls.Add(this.obligatorio1);
             this.groupBox1.Controls.Add(this.habilitadoChk);
-            this.groupBox1.Controls.Add(this.label2);
+            this.groupBox1.Controls.Add(this.funcsLb);
             this.groupBox1.Controls.Add(this.nombreTb);
-            this.groupBox1.Controls.Add(this.label1);
+            this.groupBox1.Controls.Add(this.nombreLb);
             this.groupBox1.Location = new System.Drawing.Point(13, 70);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(517, 167);
@@ -237,11 +237,14 @@
             // 
             // fnsChkList
             // 
+            this.fnsChkList.BackColor = System.Drawing.SystemColors.Control;
+            this.fnsChkList.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.fnsChkList.FormattingEnabled = true;
             this.fnsChkList.Location = new System.Drawing.Point(268, 60);
             this.fnsChkList.Name = "fnsChkList";
-            this.fnsChkList.Size = new System.Drawing.Size(225, 94);
+            this.fnsChkList.Size = new System.Drawing.Size(225, 92);
             this.fnsChkList.TabIndex = 11;
+            this.fnsChkList.EnabledChanged += new System.EventHandler(this.fnsChkList_EnabledChanged);
             // 
             // obligatorio2
             // 
@@ -285,15 +288,15 @@
             this.habilitadoChk.Text = "Habilitado";
             this.habilitadoChk.UseVisualStyleBackColor = true;
             // 
-            // label2
+            // funcsLb
             // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(265, 33);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(87, 13);
-            this.label2.TabIndex = 2;
-            this.label2.Text = "Funcionalidades:";
+            this.funcsLb.AutoSize = true;
+            this.funcsLb.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.funcsLb.Location = new System.Drawing.Point(265, 33);
+            this.funcsLb.Name = "funcsLb";
+            this.funcsLb.Size = new System.Drawing.Size(87, 13);
+            this.funcsLb.TabIndex = 2;
+            this.funcsLb.Text = "Funcionalidades:";
             // 
             // nombreTb
             // 
@@ -302,15 +305,15 @@
             this.nombreTb.Size = new System.Drawing.Size(197, 20);
             this.nombreTb.TabIndex = 1;
             // 
-            // label1
+            // nombreLb
             // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(19, 34);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(47, 13);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Nombre:";
+            this.nombreLb.AutoSize = true;
+            this.nombreLb.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.nombreLb.Location = new System.Drawing.Point(19, 34);
+            this.nombreLb.Name = "nombreLb";
+            this.nombreLb.Size = new System.Drawing.Size(47, 13);
+            this.nombreLb.TabIndex = 0;
+            this.nombreLb.Text = "Nombre:";
             // 
             // errorProvider
             // 
@@ -340,12 +343,13 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.Silver;
+            this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(543, 413);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.panel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FrmABMRol";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "FrmABMRol";
@@ -382,9 +386,9 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label obligatoriosLbl;
         private System.Windows.Forms.CheckBox habilitadoChk;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label funcsLb;
         private System.Windows.Forms.TextBox nombreTb;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label nombreLb;
         private System.Windows.Forms.Label obligatorio1;
         private System.Windows.Forms.Label obligatorio2;
         private System.Windows.Forms.Label label4;
