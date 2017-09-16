@@ -220,6 +220,40 @@ BEGIN
 	);
 END
 
+
+-- Productos
+GO
+IF (NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES 
+				WHERE TABLE_SCHEMA = '[SistemaCaido]' AND
+					  TABLE_NAME   = 'Productos' ))
+BEGIN
+	CREATE TABLE [SistemaCaido].Productos(
+		IdProducto int NOT NULL identity(1,1),
+		Descripcion nvarchar(255),
+		Precio numeric(18,2),
+		PRIMARY KEY(IdProducto),
+	);
+
+END
+
+
+-- Porcentajes
+GO
+IF (NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES 
+				WHERE TABLE_SCHEMA = '[SistemaCaido]' AND
+					  TABLE_NAME   = 'Porcentajes' ))
+BEGIN
+	CREATE TABLE [SistemaCaido].Porcentajes(
+		IdPorcentajes int NOT NULL identity(1,1),
+		Porcentaje numeric(3,2),
+		FechaAlta datetime,
+		IdUsuario int
+		PRIMARY KEY(IdPorcentajes),
+		FOREIGN KEY(IdUsuario) REFERENCES [SistemaCaido].Usuarios
+	);
+
+END
+
 -- RolesXFuncionalidades
 GO
 IF (NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES 
@@ -293,6 +327,9 @@ INSERT INTO [SistemaCaido].Usuarios VALUES('Usuario1', 'inicio123')
 INSERT INTO [SistemaCaido].Roles VALUES('Administrador')
 INSERT INTO [SistemaCaido].Roles VALUES('Cobrador')
 
+/* Porcentajes*/
+-- INSERT INTO [SistemaCaido].Porcentajes VALUES(CAST('100' as numeric(3,2)), CONVERT(datetime, GETDATE()), 1)
+
 /* Funcionalidades */
 INSERT INTO [SistemaCaido].Funcionalidades VALUES ('ABM de Rol')
 INSERT INTO [SistemaCaido].Funcionalidades VALUES ('Login y Seguridad')
@@ -352,12 +389,13 @@ SELECT IdEmpresa, Rendicion_Nro, Rendicion_Fecha FROM gd_esquema.Maestra
 JOIN [SistemaCaido].Empresas ON Empresa_Nombre = [SistemaCaido].Empresas.Nombre
 WHERE Rendicion_Nro > 0
 
- 
 /*
 DROP TABLE [SistemaCaido].RolesXFuncionalidades
 DROP TABLE [SistemaCaido].UsuariosXRoles
 DROP TABLE [SistemaCaido].UsuariosXSucursales
 DROP TABLE [SistemaCaido].PagosXFacturas
+DROP TABLE [SistemaCaido].Porcentajes
+DROP TABLE [SistemaCaido].Productos
 DROP TABLE [SistemaCaido].Roles
 DROP TABLE [SistemaCaido].Funcionalidades
 DROP TABLE [SistemaCaido].Usuarios
