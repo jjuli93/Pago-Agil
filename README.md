@@ -1,6 +1,15 @@
-# Pago Agil
+<img src="icon.png" align="right" />
 
+# Gestion de Datos
+---
 
-Julián Ignacio Alvarez	146659.8
-Gerardo Gabriel Arce	110738.0
-Julián Matias Corvalán  145016.5
+# Trabajo Practico: "Pago Agil" 
+
+## Integrantes
+> Julián Ignacio Alvarez        - Legajo 146659.8
+
+> Gerardo Gabriel Arce          - Legajo 110738.0
+
+> Julián Matias Corvalán        - Legajo 145016.5
+
+> Lilian Patricia Luque Duarte  - Legajo 114101.6
