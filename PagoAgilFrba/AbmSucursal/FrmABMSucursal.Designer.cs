@@ -1,6 +1,6 @@
-﻿namespace PagoAgilFrba.AbmEmpresa
+﻿namespace PagoAgilFrba.AbmSucursal
 {
-    partial class FrmABMEmpresa
+    partial class FrmABMSucursal
     {
         /// <summary>
         /// Required designer variable.
@@ -29,149 +29,44 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmABMEmpresa));
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.confirmPnl = new System.Windows.Forms.Panel();
-            this.descripcionLbl = new System.Windows.Forms.Label();
-            this.cancelarBtn = new System.Windows.Forms.Button();
-            this.aceptarBtn = new System.Windows.Forms.Button();
-            this.tituloLb = new System.Windows.Forms.Label();
-            this.logoPictureBox = new System.Windows.Forms.PictureBox();
-            this.cerrarSesionHl = new System.Windows.Forms.LinkLabel();
-            this.exitBtn = new System.Windows.Forms.LinkLabel();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmABMSucursal));
             this.abmPnl = new System.Windows.Forms.Panel();
             this.buscarBtn = new System.Windows.Forms.Button();
             this.volverBtn = new System.Windows.Forms.Button();
             this.crearBtn = new System.Windows.Forms.Button();
             this.eliminarBtn = new System.Windows.Forms.Button();
             this.modificarBtn = new System.Windows.Forms.Button();
+            this.confirmPnl = new System.Windows.Forms.Panel();
+            this.descripcionLbl = new System.Windows.Forms.Label();
+            this.cancelarBtn = new System.Windows.Forms.Button();
+            this.aceptarBtn = new System.Windows.Forms.Button();
+            this.cerrarSesionHl = new System.Windows.Forms.LinkLabel();
+            this.exitBtn = new System.Windows.Forms.LinkLabel();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.tituloLb = new System.Windows.Forms.Label();
+            this.logoPictureBox = new System.Windows.Forms.PictureBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.obligatorio4 = new System.Windows.Forms.Label();
             this.obligatorio3 = new System.Windows.Forms.Label();
             this.obligatorio1 = new System.Windows.Forms.Label();
             this.obligatorio2 = new System.Windows.Forms.Label();
             this.obligatoriosLbl = new System.Windows.Forms.Label();
-            this.rubroCb = new System.Windows.Forms.ComboBox();
             this.habilitadoChk = new System.Windows.Forms.CheckBox();
             this.cuitTb = new System.Windows.Forms.TextBox();
             this.direccionTb = new System.Windows.Forms.TextBox();
             this.nombreTb = new System.Windows.Forms.TextBox();
-            this.rubroLb = new System.Windows.Forms.Label();
             this.cuitLb = new System.Windows.Forms.Label();
             this.dirLb = new System.Windows.Forms.Label();
             this.nombreLb = new System.Windows.Forms.Label();
+            this.sucursalesDt = new System.Windows.Forms.DataGridView();
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
-            this.empresasDt = new System.Windows.Forms.DataGridView();
-            this.panel1.SuspendLayout();
-            this.confirmPnl.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.logoPictureBox)).BeginInit();
             this.abmPnl.SuspendLayout();
+            this.confirmPnl.SuspendLayout();
+            this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.logoPictureBox)).BeginInit();
             this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.sucursalesDt)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.empresasDt)).BeginInit();
             this.SuspendLayout();
-            // 
-            // panel1
-            // 
-            this.panel1.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.panel1.Controls.Add(this.confirmPnl);
-            this.panel1.Controls.Add(this.tituloLb);
-            this.panel1.Controls.Add(this.logoPictureBox);
-            this.panel1.Controls.Add(this.cerrarSesionHl);
-            this.panel1.Controls.Add(this.exitBtn);
-            this.panel1.Controls.Add(this.abmPnl);
-            this.panel1.Location = new System.Drawing.Point(0, 0);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(560, 63);
-            this.panel1.TabIndex = 9;
-            // 
-            // confirmPnl
-            // 
-            this.confirmPnl.Controls.Add(this.descripcionLbl);
-            this.confirmPnl.Controls.Add(this.cancelarBtn);
-            this.confirmPnl.Controls.Add(this.aceptarBtn);
-            this.confirmPnl.Location = new System.Drawing.Point(73, 31);
-            this.confirmPnl.Name = "confirmPnl";
-            this.confirmPnl.Size = new System.Drawing.Size(294, 29);
-            this.confirmPnl.TabIndex = 4;
-            this.confirmPnl.Visible = false;
-            // 
-            // descripcionLbl
-            // 
-            this.descripcionLbl.AutoSize = true;
-            this.descripcionLbl.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.descripcionLbl.ForeColor = System.Drawing.SystemColors.ButtonFace;
-            this.descripcionLbl.Location = new System.Drawing.Point(4, 8);
-            this.descripcionLbl.Name = "descripcionLbl";
-            this.descripcionLbl.Size = new System.Drawing.Size(29, 14);
-            this.descripcionLbl.TabIndex = 2;
-            this.descripcionLbl.Text = "null";
-            // 
-            // cancelarBtn
-            // 
-            this.cancelarBtn.Location = new System.Drawing.Point(214, 3);
-            this.cancelarBtn.Name = "cancelarBtn";
-            this.cancelarBtn.Size = new System.Drawing.Size(75, 23);
-            this.cancelarBtn.TabIndex = 1;
-            this.cancelarBtn.Text = "Cancelar";
-            this.cancelarBtn.UseVisualStyleBackColor = true;
-            this.cancelarBtn.Click += new System.EventHandler(this.cancelarBtn_Click);
-            // 
-            // aceptarBtn
-            // 
-            this.aceptarBtn.Location = new System.Drawing.Point(133, 3);
-            this.aceptarBtn.Name = "aceptarBtn";
-            this.aceptarBtn.Size = new System.Drawing.Size(75, 23);
-            this.aceptarBtn.TabIndex = 0;
-            this.aceptarBtn.Text = "Aceptar";
-            this.aceptarBtn.UseVisualStyleBackColor = true;
-            this.aceptarBtn.Click += new System.EventHandler(this.aceptarBtn_Click);
-            // 
-            // tituloLb
-            // 
-            this.tituloLb.AutoSize = true;
-            this.tituloLb.Font = new System.Drawing.Font("Verdana", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tituloLb.ForeColor = System.Drawing.SystemColors.ControlLight;
-            this.tituloLb.Location = new System.Drawing.Point(76, 7);
-            this.tituloLb.Name = "tituloLb";
-            this.tituloLb.Size = new System.Drawing.Size(122, 18);
-            this.tituloLb.TabIndex = 9;
-            this.tituloLb.Text = "ABM Empresa";
-            // 
-            // logoPictureBox
-            // 
-            this.logoPictureBox.Image = ((System.Drawing.Image)(resources.GetObject("logoPictureBox.Image")));
-            this.logoPictureBox.Location = new System.Drawing.Point(0, 1);
-            this.logoPictureBox.Name = "logoPictureBox";
-            this.logoPictureBox.Size = new System.Drawing.Size(61, 63);
-            this.logoPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.logoPictureBox.TabIndex = 8;
-            this.logoPictureBox.TabStop = false;
-            // 
-            // cerrarSesionHl
-            // 
-            this.cerrarSesionHl.AutoSize = true;
-            this.cerrarSesionHl.Location = new System.Drawing.Point(490, 42);
-            this.cerrarSesionHl.Name = "cerrarSesionHl";
-            this.cerrarSesionHl.Size = new System.Drawing.Size(67, 13);
-            this.cerrarSesionHl.TabIndex = 6;
-            this.cerrarSesionHl.TabStop = true;
-            this.cerrarSesionHl.Text = "cerrar sesión";
-            this.cerrarSesionHl.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.cerrarSesionHl_LinkClicked);
-            // 
-            // exitBtn
-            // 
-            this.exitBtn.AutoSize = true;
-            this.exitBtn.Font = new System.Drawing.Font("Lucida Console", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.exitBtn.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline;
-            this.exitBtn.LinkColor = System.Drawing.Color.LightGray;
-            this.exitBtn.Location = new System.Drawing.Point(531, 10);
-            this.exitBtn.Name = "exitBtn";
-            this.exitBtn.Size = new System.Drawing.Size(16, 13);
-            this.exitBtn.TabIndex = 5;
-            this.exitBtn.TabStop = true;
-            this.exitBtn.Text = "X";
-            this.exitBtn.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.exitBtn_LinkClicked);
             // 
             // abmPnl
             // 
@@ -180,10 +75,10 @@
             this.abmPnl.Controls.Add(this.crearBtn);
             this.abmPnl.Controls.Add(this.eliminarBtn);
             this.abmPnl.Controls.Add(this.modificarBtn);
-            this.abmPnl.Location = new System.Drawing.Point(73, 31);
+            this.abmPnl.Location = new System.Drawing.Point(71, 30);
             this.abmPnl.Name = "abmPnl";
             this.abmPnl.Size = new System.Drawing.Size(406, 29);
-            this.abmPnl.TabIndex = 3;
+            this.abmPnl.TabIndex = 4;
             // 
             // buscarBtn
             // 
@@ -235,40 +130,127 @@
             this.modificarBtn.UseVisualStyleBackColor = true;
             this.modificarBtn.Click += new System.EventHandler(this.modificarBtn_Click);
             // 
+            // confirmPnl
+            // 
+            this.confirmPnl.Controls.Add(this.descripcionLbl);
+            this.confirmPnl.Controls.Add(this.cancelarBtn);
+            this.confirmPnl.Controls.Add(this.aceptarBtn);
+            this.confirmPnl.Location = new System.Drawing.Point(71, 30);
+            this.confirmPnl.Name = "confirmPnl";
+            this.confirmPnl.Size = new System.Drawing.Size(294, 29);
+            this.confirmPnl.TabIndex = 5;
+            this.confirmPnl.Visible = false;
+            // 
+            // descripcionLbl
+            // 
+            this.descripcionLbl.AutoSize = true;
+            this.descripcionLbl.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.descripcionLbl.ForeColor = System.Drawing.SystemColors.ButtonFace;
+            this.descripcionLbl.Location = new System.Drawing.Point(4, 8);
+            this.descripcionLbl.Name = "descripcionLbl";
+            this.descripcionLbl.Size = new System.Drawing.Size(29, 14);
+            this.descripcionLbl.TabIndex = 2;
+            this.descripcionLbl.Text = "null";
+            // 
+            // cancelarBtn
+            // 
+            this.cancelarBtn.Location = new System.Drawing.Point(214, 3);
+            this.cancelarBtn.Name = "cancelarBtn";
+            this.cancelarBtn.Size = new System.Drawing.Size(75, 23);
+            this.cancelarBtn.TabIndex = 1;
+            this.cancelarBtn.Text = "Cancelar";
+            this.cancelarBtn.UseVisualStyleBackColor = true;
+            this.cancelarBtn.Click += new System.EventHandler(this.cancelarBtn_Click);
+            // 
+            // aceptarBtn
+            // 
+            this.aceptarBtn.Location = new System.Drawing.Point(133, 3);
+            this.aceptarBtn.Name = "aceptarBtn";
+            this.aceptarBtn.Size = new System.Drawing.Size(75, 23);
+            this.aceptarBtn.TabIndex = 0;
+            this.aceptarBtn.Text = "Aceptar";
+            this.aceptarBtn.UseVisualStyleBackColor = true;
+            this.aceptarBtn.Click += new System.EventHandler(this.aceptarBtn_Click);
+            // 
+            // cerrarSesionHl
+            // 
+            this.cerrarSesionHl.AutoSize = true;
+            this.cerrarSesionHl.Location = new System.Drawing.Point(491, 41);
+            this.cerrarSesionHl.Name = "cerrarSesionHl";
+            this.cerrarSesionHl.Size = new System.Drawing.Size(67, 13);
+            this.cerrarSesionHl.TabIndex = 8;
+            this.cerrarSesionHl.TabStop = true;
+            this.cerrarSesionHl.Text = "cerrar sesión";
+            this.cerrarSesionHl.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.cerrarSesionHl_LinkClicked);
+            // 
+            // exitBtn
+            // 
+            this.exitBtn.AutoSize = true;
+            this.exitBtn.Font = new System.Drawing.Font("Lucida Console", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.exitBtn.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline;
+            this.exitBtn.LinkColor = System.Drawing.Color.LightGray;
+            this.exitBtn.Location = new System.Drawing.Point(532, 9);
+            this.exitBtn.Name = "exitBtn";
+            this.exitBtn.Size = new System.Drawing.Size(16, 13);
+            this.exitBtn.TabIndex = 7;
+            this.exitBtn.TabStop = true;
+            this.exitBtn.Text = "X";
+            this.exitBtn.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.exitBtn_LinkClicked);
+            // 
+            // panel1
+            // 
+            this.panel1.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.panel1.Controls.Add(this.tituloLb);
+            this.panel1.Controls.Add(this.confirmPnl);
+            this.panel1.Controls.Add(this.logoPictureBox);
+            this.panel1.Controls.Add(this.abmPnl);
+            this.panel1.Controls.Add(this.cerrarSesionHl);
+            this.panel1.Controls.Add(this.exitBtn);
+            this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(560, 65);
+            this.panel1.TabIndex = 9;
+            // 
+            // tituloLb
+            // 
+            this.tituloLb.AutoSize = true;
+            this.tituloLb.Font = new System.Drawing.Font("Verdana", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tituloLb.ForeColor = System.Drawing.SystemColors.ControlLight;
+            this.tituloLb.Location = new System.Drawing.Point(74, 9);
+            this.tituloLb.Name = "tituloLb";
+            this.tituloLb.Size = new System.Drawing.Size(119, 18);
+            this.tituloLb.TabIndex = 10;
+            this.tituloLb.Text = "ABM Sucursal";
+            // 
+            // logoPictureBox
+            // 
+            this.logoPictureBox.Image = ((System.Drawing.Image)(resources.GetObject("logoPictureBox.Image")));
+            this.logoPictureBox.Location = new System.Drawing.Point(1, 1);
+            this.logoPictureBox.Name = "logoPictureBox";
+            this.logoPictureBox.Size = new System.Drawing.Size(61, 63);
+            this.logoPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.logoPictureBox.TabIndex = 9;
+            this.logoPictureBox.TabStop = false;
+            // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.obligatorio4);
             this.groupBox1.Controls.Add(this.obligatorio3);
             this.groupBox1.Controls.Add(this.obligatorio1);
             this.groupBox1.Controls.Add(this.obligatorio2);
             this.groupBox1.Controls.Add(this.obligatoriosLbl);
-            this.groupBox1.Controls.Add(this.rubroCb);
             this.groupBox1.Controls.Add(this.habilitadoChk);
             this.groupBox1.Controls.Add(this.cuitTb);
             this.groupBox1.Controls.Add(this.direccionTb);
             this.groupBox1.Controls.Add(this.nombreTb);
-            this.groupBox1.Controls.Add(this.rubroLb);
             this.groupBox1.Controls.Add(this.cuitLb);
             this.groupBox1.Controls.Add(this.dirLb);
             this.groupBox1.Controls.Add(this.nombreLb);
-            this.groupBox1.Location = new System.Drawing.Point(12, 70);
+            this.groupBox1.Location = new System.Drawing.Point(12, 78);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(537, 154);
-            this.groupBox1.TabIndex = 10;
+            this.groupBox1.Size = new System.Drawing.Size(537, 113);
+            this.groupBox1.TabIndex = 11;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Datos de la empresa";
-            // 
-            // obligatorio4
-            // 
-            this.obligatorio4.AutoSize = true;
-            this.obligatorio4.BackColor = System.Drawing.Color.Transparent;
-            this.obligatorio4.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.obligatorio4.ForeColor = System.Drawing.Color.DarkRed;
-            this.obligatorio4.Location = new System.Drawing.Point(499, 78);
-            this.obligatorio4.Name = "obligatorio4";
-            this.obligatorio4.Size = new System.Drawing.Size(20, 25);
-            this.obligatorio4.TabIndex = 19;
-            this.obligatorio4.Text = "*";
+            this.groupBox1.Text = "Datos de la sucursal";
             // 
             // obligatorio3
             // 
@@ -310,24 +292,16 @@
             // 
             this.obligatoriosLbl.AutoSize = true;
             this.obligatoriosLbl.ForeColor = System.Drawing.Color.DarkRed;
-            this.obligatoriosLbl.Location = new System.Drawing.Point(421, 122);
+            this.obligatoriosLbl.Location = new System.Drawing.Point(421, 81);
             this.obligatoriosLbl.Name = "obligatoriosLbl";
             this.obligatoriosLbl.Size = new System.Drawing.Size(98, 13);
             this.obligatoriosLbl.TabIndex = 15;
             this.obligatoriosLbl.Text = "* Campo obligatorio";
             // 
-            // rubroCb
-            // 
-            this.rubroCb.FormattingEnabled = true;
-            this.rubroCb.Location = new System.Drawing.Point(340, 78);
-            this.rubroCb.Name = "rubroCb";
-            this.rubroCb.Size = new System.Drawing.Size(153, 21);
-            this.rubroCb.TabIndex = 9;
-            // 
             // habilitadoChk
             // 
             this.habilitadoChk.AutoSize = true;
-            this.habilitadoChk.Location = new System.Drawing.Point(23, 121);
+            this.habilitadoChk.Location = new System.Drawing.Point(289, 77);
             this.habilitadoChk.Name = "habilitadoChk";
             this.habilitadoChk.Size = new System.Drawing.Size(73, 17);
             this.habilitadoChk.TabIndex = 8;
@@ -354,16 +328,6 @@
             this.nombreTb.Name = "nombreTb";
             this.nombreTb.Size = new System.Drawing.Size(164, 20);
             this.nombreTb.TabIndex = 4;
-            // 
-            // rubroLb
-            // 
-            this.rubroLb.AutoSize = true;
-            this.rubroLb.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rubroLb.Location = new System.Drawing.Point(286, 81);
-            this.rubroLb.Name = "rubroLb";
-            this.rubroLb.Size = new System.Drawing.Size(39, 13);
-            this.rubroLb.TabIndex = 3;
-            this.rubroLb.Text = "Rubro:";
             // 
             // cuitLb
             // 
@@ -395,79 +359,76 @@
             this.nombreLb.TabIndex = 0;
             this.nombreLb.Text = "Nombre:";
             // 
+            // sucursalesDt
+            // 
+            this.sucursalesDt.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.sucursalesDt.Location = new System.Drawing.Point(14, 205);
+            this.sucursalesDt.Name = "sucursalesDt";
+            this.sucursalesDt.Size = new System.Drawing.Size(531, 259);
+            this.sucursalesDt.TabIndex = 12;
+            // 
             // errorProvider
             // 
             this.errorProvider.BlinkStyle = System.Windows.Forms.ErrorBlinkStyle.NeverBlink;
             this.errorProvider.ContainerControl = this;
             // 
-            // empresasDt
-            // 
-            this.empresasDt.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.empresasDt.Location = new System.Drawing.Point(17, 234);
-            this.empresasDt.Name = "empresasDt";
-            this.empresasDt.Size = new System.Drawing.Size(527, 232);
-            this.empresasDt.TabIndex = 11;
-            // 
-            // FrmABMEmpresa
+            // FrmABMSucursal
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(560, 478);
-            this.Controls.Add(this.empresasDt);
+            this.Controls.Add(this.sucursalesDt);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.panel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "FrmABMEmpresa";
+            this.Name = "FrmABMSucursal";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "FrmABMEmpresa";
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
+            this.Text = "FrmABMSucursal";
+            this.abmPnl.ResumeLayout(false);
             this.confirmPnl.ResumeLayout(false);
             this.confirmPnl.PerformLayout();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.logoPictureBox)).EndInit();
-            this.abmPnl.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.sucursalesDt)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.empresasDt)).EndInit();
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Label tituloLb;
-        private System.Windows.Forms.PictureBox logoPictureBox;
-        private System.Windows.Forms.LinkLabel cerrarSesionHl;
-        private System.Windows.Forms.Panel confirmPnl;
-        private System.Windows.Forms.Label descripcionLbl;
-        private System.Windows.Forms.Button cancelarBtn;
-        private System.Windows.Forms.Button aceptarBtn;
-        private System.Windows.Forms.LinkLabel exitBtn;
         private System.Windows.Forms.Panel abmPnl;
+        private System.Windows.Forms.Button buscarBtn;
         private System.Windows.Forms.Button volverBtn;
         private System.Windows.Forms.Button crearBtn;
         private System.Windows.Forms.Button eliminarBtn;
         private System.Windows.Forms.Button modificarBtn;
-        private System.Windows.Forms.Button buscarBtn;
+        private System.Windows.Forms.Panel confirmPnl;
+        private System.Windows.Forms.Label descripcionLbl;
+        private System.Windows.Forms.Button cancelarBtn;
+        private System.Windows.Forms.Button aceptarBtn;
+        private System.Windows.Forms.LinkLabel cerrarSesionHl;
+        private System.Windows.Forms.LinkLabel exitBtn;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.PictureBox logoPictureBox;
+        private System.Windows.Forms.Label tituloLb;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.ErrorProvider errorProvider;
-        private System.Windows.Forms.DataGridView empresasDt;
-        private System.Windows.Forms.TextBox nombreTb;
-        private System.Windows.Forms.Label rubroLb;
-        private System.Windows.Forms.Label cuitLb;
-        private System.Windows.Forms.Label dirLb;
-        private System.Windows.Forms.Label nombreLb;
-        private System.Windows.Forms.CheckBox habilitadoChk;
-        private System.Windows.Forms.TextBox cuitTb;
-        private System.Windows.Forms.TextBox direccionTb;
-        private System.Windows.Forms.ComboBox rubroCb;
-        private System.Windows.Forms.Label obligatorio4;
         private System.Windows.Forms.Label obligatorio3;
         private System.Windows.Forms.Label obligatorio1;
         private System.Windows.Forms.Label obligatorio2;
         private System.Windows.Forms.Label obligatoriosLbl;
+        private System.Windows.Forms.CheckBox habilitadoChk;
+        private System.Windows.Forms.TextBox cuitTb;
+        private System.Windows.Forms.TextBox direccionTb;
+        private System.Windows.Forms.TextBox nombreTb;
+        private System.Windows.Forms.Label cuitLb;
+        private System.Windows.Forms.Label dirLb;
+        private System.Windows.Forms.Label nombreLb;
+        private System.Windows.Forms.DataGridView sucursalesDt;
+        private System.Windows.Forms.ErrorProvider errorProvider;
     }
 }
