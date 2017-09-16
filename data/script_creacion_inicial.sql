@@ -119,7 +119,7 @@ IF (NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES
 					  TABLE_NAME   = 'Pagos' ))
 BEGIN
 	CREATE TABLE [SistemaCaido].Pagos(
-		IdPago int NOT NULL identity(1,1),
+		IdPago int NOT NULL,
 		FechaCobro datetime,
 		IdCliente int,
 		Importe numeric(18,2),
@@ -253,6 +253,20 @@ BEGIN
 END
 
 
+-- PagosXFacturas
+IF (NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES 
+				WHERE TABLE_SCHEMA = '[SistemaCaido]' AND
+					  TABLE_NAME   = 'PagosXFacturas' ))
+BEGIN
+	CREATE TABLE [SistemaCaido].PagosXFacturas(
+		IdPago int,
+		IdFactura int
+		PRIMARY KEY(IdPago, IdFactura),
+		FOREIGN KEY(IdPago) REFERENCES [SistemaCaido].Pagos,
+		FOREIGN KEY(IdFactura) REFERENCES [SistemaCaido].Facturas,
+	);
+END
+
 -- UsuariosXSucursales
 GO
 IF (NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES 
@@ -326,7 +340,11 @@ JOIN [SistemaCaido].Facturas on Nro_Factura = [SistemaCaido].Facturas.NumeroFact
 WHERE ItemFactura_Cantidad > 0
 
 /* Pagos */
--- Ver migracion
+INSERT INTO [SistemaCaido].Pagos (IdPago, FechaCobro) --, IdCliente, IdSucursal)
+SELECT DISTINCT Pago_nro, Pago_Fecha FROM gd_esquema.Maestra --, IdCliente, IdSucursal FROM gd_esquema.Maestra
+--JOIN [SistemaCaido].Sucursales suc on Sucursal_Nombre = suc.Nombre
+--JOIN [SistemaCaido].Clientes cli on [Cliente-Apellido] + [Cliente-Nombre] = cli.Apellido + [Cliente-Nombre]
+WHERE Pago_nro IS NOT NULL 
 
 /* Rendiciones */
 INSERT INTO [SistemaCaido].Rendiciones (IdEmpresa, NumeroRendicion, Fecha)
@@ -339,6 +357,7 @@ WHERE Rendicion_Nro > 0
 DROP TABLE [SistemaCaido].RolesXFuncionalidades
 DROP TABLE [SistemaCaido].UsuariosXRoles
 DROP TABLE [SistemaCaido].UsuariosXSucursales
+DROP TABLE [SistemaCaido].PagosXFacturas
 DROP TABLE [SistemaCaido].Roles
 DROP TABLE [SistemaCaido].Funcionalidades
 DROP TABLE [SistemaCaido].Usuarios
@@ -352,6 +371,7 @@ DROP TABLE [SistemaCaido].Empresas
 DROP TABLE [SistemaCaido].Clientes
 DROP TABLE [SistemaCaido].Rubros
 DROP TRIGGER [SistemaCaido].tr_nuevoCliente
+DROP TRIGGER [SistemaCaido].tr_nuevaEmpresa
 DROP PROCEDURE [SistemaCaido].AltaRol
 DROP PROCEDURE [SistemaCaido].AltaCliente
 DROP PROCEDURE [SistemaCaido].BajaCliente
@@ -359,6 +379,9 @@ DROP PROCEDURE [SistemaCaido].ModificacionCliente
 DROP PROCEDURE [SistemaCaido].AltaEmpresa
 DROP PROCEDURE [SistemaCaido].BajaEmpresa
 DROP PROCEDURE [SistemaCaido].ModificacionEmpresa
+DROP PROCEDURE [SistemaCaido].AltaSucursal
+DROP PROCEDURE [SistemaCaido].BajaSucursal
+DROP PROCEDURE [SistemaCaido].ModificacionSucursal
 DROP TYPE [SistemaCaido].TablaFuncionalidades
 DROP SCHEMA [SistemaCaido]
 */
@@ -369,8 +392,6 @@ create trigger [SistemaCaido].tr_nuevoCliente on [SistemaCaido].Clientes instead
 as begin
 	set nocount on
 	 
-	declare @Habilitado int
-
 	if (not exists( select cli.Mail from Clientes cli, inserted ins 
 				   where cli.Mail = ins.Mail))
 		insert into Clientes
@@ -384,7 +405,23 @@ as begin
 		where cli.IdCliente = ins.IdCliente
 	end
 
+go
+create trigger [SistemaCaido].tr_nuevaEmpresa on [SistemaCaido].Empresas instead of insert
+as begin
+	set nocount on
+	 
+	if (not exists( select emp.CUIT from Empresas emp, inserted ins 
+				   where emp.CUIT = ins.CUIT))
+		insert into Empresas
+		select Nombre, CUIT, Direccion, IdRubro, 1 from inserted
 
+	else
+		-- Se actualiza el existente
+		update Empresas
+		set CUIT = ins.CUIT
+		from Empresas emp, inserted ins
+		where emp.IdEmpresa = ins.IdEmpresa
+	end
 
 
 
@@ -399,7 +436,7 @@ as begin transaction
 	set @numeroFila		= 0
 	set @cantidadFilas	= (select count(*) from @Funcionalidades)
 
-	insert into [SistemaCaido].Roles values (@Rol)
+	insert into Roles values (@Rol)
 	if (@@ERROR != 0)
 	begin
 		raiserror('No se pudo dar de alta el rol..', 1,1)
@@ -414,14 +451,14 @@ as begin transaction
 
 	while(@@FETCH_STATUS = 0)
 		begin
-			insert into [SistemaCaido].RolesXFuncionalidades values (@Rol, @Funcionalidad)
+			insert into RolesXFuncionalidades values (@Rol, @Funcionalidad)
 			if (@@ERROR != 0)
 			begin
 				raiserror('No se pudo dar de alta el rol..', 1,1)
 				rollback transaction
 			end
 
-			insert into [SistemaCaido].Funcionalidades values (@Funcionalidad)
+			insert into Funcionalidades values (@Funcionalidad)
 			if (@@ERROR != 0)
 			begin
 				raiserror('No se pudo dar de alta el rol..', 1,1)
@@ -467,7 +504,7 @@ create procedure [SistemaCaido].BajaCliente(@IdCliente int)
 go
 create procedure [SistemaCaido].ModificacionCliente
 (@IdCliente int, @Nombre nvarchar(255), @Apellido nvarchar(255), @DNI numeric(18,0), @Mail nvarchar(255),
- @Telefono varchar(10), @Direccion nvarchar(255), @CodigoPostal nvarchar(4), @FechaNacimiento datetime)
+ @Telefono varchar(10), @Direccion nvarchar(255), @CodigoPostal nvarchar(4), @FechaNacimiento datetime, @Habilitado char)
  as begin transaction
 	
 	update Clientes
@@ -477,7 +514,9 @@ create procedure [SistemaCaido].ModificacionCliente
 		Telefono = @Telefono,
 		Direccion = @Direccion,
 		CodigoPostal = @CodigoPostal,
-		FechaNacimiento = @FechaNacimiento
+		FechaNacimiento = @FechaNacimiento,
+		Habilitado = @Habilitado
+		
 	where IdCliente = @IdCliente
 	if (@@ERROR != 0)
 		begin
@@ -518,13 +557,14 @@ as begin transaction
 	commit transaction	
 	
 go
-create procedure [SistemaCaido].ModificacionEmpresa(@IdEmpresa int, @Nombre nvarchar(255), @CUIT nvarchar(50), @Direccion nvarchar(255), @IdRubro int)
+create procedure [SistemaCaido].ModificacionEmpresa(@IdEmpresa int, @Nombre nvarchar(255), @CUIT nvarchar(50), @Direccion nvarchar(255), @IdRubro int, @Habilitada char)
 as begin transaction
 	update Empresas
 	set Nombre = @Nombre,
 		CUIT = @CUIT,
 		Direccion = @Direccion,
-		IdRubro = @IdRubro
+		IdRubro = @IdRubro,
+		Habilitada = @Habilitada
 	where IdEmpresa = @IdEmpresa
 	if (@@ERROR != 0)
 		begin
@@ -534,4 +574,46 @@ as begin transaction
 
 	commit transaction
 
-		
+go
+create procedure [SistemaCaido].AltaSucursal(@Nombre nvarchar(255), @Direccion nvarchar(255), @CodigoPostal varchar(4))
+as begin transaction
+	insert into Sucursales values (@Nombre, @Direccion, @CodigoPostal, 1)	
+	if (@@ERROR != 0)
+		begin
+			raiserror('No se pudo dar de alta la sucursal..', 1,1)
+			rollback transaction
+		end
+
+	commit transaction
+
+go
+create procedure [SistemaCaido].BajaSucursal(@IdSucursal int)
+as begin transaction
+	-- Eliminacion logica
+	update Sucursales set Habilitada = 0 where IdSucursal = @IdSucursal
+	if (@@ERROR != 0)
+		begin
+			raiserror('No se pudo dar de baja la sucursal..', 1,1)
+			rollback transaction
+		end
+
+	commit transaction
+
+go
+create procedure [SistemaCaido].ModificacionSucursal
+(@IdSucursal int, @Nombre nvarchar(255), @Direccion nvarchar(255), @CodigoPostal varchar(4), @Habilitada char) 
+as begin transaction
+	update Sucursales
+	set Nombre = @Nombre,
+		Direccion = @Direccion,
+		CodigoPostal = @CodigoPostal,
+		Habilitada = @Habilitada
+	where IdSucursal = @IdSucursal
+
+	if (@@ERROR != 0)
+		begin
+			raiserror('No se pudo dar de baja la sucursal..', 1,1)
+			rollback transaction
+		end
+
+	commit transaction
