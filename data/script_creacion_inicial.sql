@@ -316,6 +316,22 @@ BEGIN
 	);
 END
 
+-- RendicionesXFacturas
+GO
+IF (NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES 
+				WHERE TABLE_SCHEMA = '[SistemaCaido]' AND
+					  TABLE_NAME   = 'RendicionesXFacturas' ))
+BEGIN
+	CREATE TABLE [SistemaCaido].RendicionesXFacturas(
+		IdRendicion int,
+		IdFactura int,
+		PRIMARY KEY(IdRendicion, IdFactura),
+		FOREIGN KEY(IdRendicion) REFERENCES [SistemaCaido].Rendiciones,
+		FOREIGN KEY(IdFactura) REFERENCES [SistemaCaido].Facturas,
+	);
+END
+
+
 -- Migracion de Datos
 GO
 
@@ -394,6 +410,7 @@ DROP TABLE [SistemaCaido].RolesXFuncionalidades
 DROP TABLE [SistemaCaido].UsuariosXRoles
 DROP TABLE [SistemaCaido].UsuariosXSucursales
 DROP TABLE [SistemaCaido].PagosXFacturas
+DROP TABLE [SistemaCaido].RendicionesXFacturas
 DROP TABLE [SistemaCaido].Porcentajes
 DROP TABLE [SistemaCaido].Productos
 DROP TABLE [SistemaCaido].Roles
@@ -436,11 +453,9 @@ as begin
 		select Nombre, Apellido, DNI, Mail, Telefono, Direccion, CodigoPostal, FechaNacimiento, 1 from inserted
 
 	else
-		-- Se actualiza el existente
-		update Clientes
-		set Mail = ins.Mail
-		from Clientes cli, inserted ins
-		where cli.IdCliente = ins.IdCliente
+		-- Se lanza un error
+		raiserror('No se puede dar de alta el cliente (Email existente)..', 1,1)
+
 	end
 
 go
@@ -454,14 +469,25 @@ as begin
 		select Nombre, CUIT, Direccion, IdRubro, 1 from inserted
 
 	else
-		-- Se actualiza el existente
-		update Empresas
-		set CUIT = ins.CUIT
-		from Empresas emp, inserted ins
-		where emp.IdEmpresa = ins.IdEmpresa
+		-- Se lanza un error
+		raiserror('No se puede dar de alta la empresa (CUIT existente)..', 1,1)
 	end
 
 
+go
+create trigger [SistemaCaido].tr_nuevaSucursal on [SistemaCaido].Sucursales instead of insert
+as begin
+	set nocount on
+	 
+	if (not exists( select suc.CodigoPostal from Sucursales suc, inserted ins 
+				   where suc.CodigoPostal = ins.CodigoPostal))
+		insert into Sucursales
+		select Nombre, Direccion, CodigoPostal, 1 from inserted
+
+	else
+		-- Se lanza un error
+		raiserror('No se puede dar de alta la sucursal (CP existente)..', 1,1)
+	end
 
 -- Stored Procedures
 go
@@ -580,12 +606,21 @@ as begin transaction
 go
 create procedure [SistemaCaido].BajaEmpresa(@IdEmpresa int)
 as begin transaction
-/*
-	delete from Empresas where IdEmpresa = @IdEmpresa
-	*/
+
+	declare @cantidadFacturas int
+
+	select @cantidadFacturas = count(*) from RendicionesXFacturas rxf
+	join Rendiciones ren on rxf.IdRendicion = ren.IdRendicion
+	where ren.IdEmpresa = @IdEmpresa
+	
+	if @cantidadFacturas != 0
+		begin
+			raiserror('No se pudo dar de baja la empresa (Facturas sin rendir)..', 1,1)
+			rollback transaction
+		end		
+
 	-- Eliminacion logica
 	update Empresas set Habilitada = 0 where IdEmpresa = @IdEmpresa
-
 	if (@@ERROR != 0)
 		begin
 			raiserror('No se pudo dar de baja la empresa..', 1,1)
