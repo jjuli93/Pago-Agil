@@ -1,88 +1,119 @@
+IF OBJECT_ID('[SistemaCaido].AltaRol', 'P') IS NOT NULL
+DROP PROC [SistemaCaido].AltaRol
+IF OBJECT_ID('[SistemaCaido].AltaCliente', 'P') IS NOT NULL
+DROP PROCEDURE [SistemaCaido].AltaCliente
+IF OBJECT_ID('[SistemaCaido].BajaCliente', 'P') IS NOT NULL
+DROP PROCEDURE [SistemaCaido].BajaCliente
+IF OBJECT_ID('[SistemaCaido].ModificacionCliente', 'P') IS NOT NULL
+DROP PROCEDURE [SistemaCaido].ModificacionCliente
+IF OBJECT_ID('[SistemaCaido].AltaEmpresa', 'P') IS NOT NULL
+DROP PROCEDURE [SistemaCaido].AltaEmpresa
+IF OBJECT_ID('[SistemaCaido].BajaEmpresa', 'P') IS NOT NULL
+DROP PROCEDURE [SistemaCaido].BajaEmpresa
+IF OBJECT_ID('[SistemaCaido].ModificacionEmpresa', 'P') IS NOT NULL
+DROP PROCEDURE [SistemaCaido].ModificacionEmpresa
+IF OBJECT_ID('[SistemaCaido].AltaSucursal', 'P') IS NOT NULL
+DROP PROCEDURE [SistemaCaido].AltaSucursal
+IF OBJECT_ID('[SistemaCaido].BajaSucursal', 'P') IS NOT NULL
+DROP PROCEDURE [SistemaCaido].BajaSucursal
+IF OBJECT_ID('[SistemaCaido].ModificacionSucursal', 'P') IS NOT NULL
+DROP PROCEDURE [SistemaCaido].ModificacionSucursal
+IF (EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'SistemaCaido' AND TABLE_NAME   = 'RolesXFuncionalidades' ))
+DROP TABLE [SistemaCaido].RolesXFuncionalidades
+IF (EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'SistemaCaido' AND TABLE_NAME   = 'UsuariosXRoles' ))
+DROP TABLE [SistemaCaido].UsuariosXRoles
+IF (EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'SistemaCaido' AND TABLE_NAME   = 'UsuariosXSucursales' ))
+DROP TABLE [SistemaCaido].UsuariosXSucursales
+IF (EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'SistemaCaido' AND TABLE_NAME   = 'PagosXFacturas' ))
+DROP TABLE [SistemaCaido].PagosXFacturas
+IF (EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'SistemaCaido' AND TABLE_NAME   = 'Roles' ))
+DROP TABLE [SistemaCaido].Roles
+IF (EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'SistemaCaido' AND TABLE_NAME   = 'Funcionalidades' ))
+DROP TABLE [SistemaCaido].Funcionalidades
+IF (EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'SistemaCaido' AND TABLE_NAME   = 'Usuarios' ))
+DROP TABLE [SistemaCaido].Usuarios
+IF (EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'SistemaCaido' AND TABLE_NAME   = 'Pagos' ))
+DROP TABLE [SistemaCaido].Pagos
+IF (EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'SistemaCaido' AND TABLE_NAME   = 'Item_Facturas' ))
+DROP TABLE [SistemaCaido].Item_Facturas
+IF (EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'SistemaCaido' AND TABLE_NAME   = 'Rendiciones' ))
+DROP TABLE [SistemaCaido].Rendiciones
+IF (EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'SistemaCaido' AND TABLE_NAME   = 'Sucursales' ))
+DROP TABLE [SistemaCaido].Sucursales
+IF (EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'SistemaCaido' AND TABLE_NAME   = 'MediosPago' ))
+DROP TABLE [SistemaCaido].MediosPago
+IF (EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'SistemaCaido' AND TABLE_NAME   = 'Facturas' ))
+DROP TABLE [SistemaCaido].Facturas
+IF (EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'SistemaCaido' AND TABLE_NAME   = 'Empresas' ))
+DROP TABLE [SistemaCaido].Empresas
+IF (EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'SistemaCaido' AND TABLE_NAME   = 'Clientes' ))
+DROP TABLE [SistemaCaido].Clientes
+IF (EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'SistemaCaido' AND TABLE_NAME   = 'Rubros' ))
+DROP TABLE [SistemaCaido].Rubros
+
+--DROP TRIGGER [SistemaCaido].tr_nuevoCliente
+--DROP TRIGGER [SistemaCaido].tr_nuevaEmpresa
+IF (EXISTS (SELECT * FROM sys.types WHERE name = 'TablaFuncionalidades' ))  
+DROP TYPE [SistemaCaido].TablaFuncionalidades
+DROP SCHEMA [SistemaCaido]
+
 USE GD2C2017
 
 -- Creacion de Esquema
 GO
-CREATE SCHEMA [SistemaCaido];
+
+CREATE SCHEMA SistemaCaido
 
 -- Tipos
 GO
-IF (NOT EXISTS (SELECT * FROM sys.types
-				WHERE name = 'TablaFuncionalidades' ))
-BEGIN 
-	CREATE TYPE [SistemaCaido].TablaFuncionalidades 
+
+	CREATE TYPE SistemaCaido.TablaFuncionalidades 
 	AS TABLE(Funcionalidad nvarchar(255) NULL)
-END
-
-
+	
 -- Creacion de Tablas
 GO
 -- Funcionalidades
-IF (NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES 
-				WHERE TABLE_SCHEMA = '[SistemaCaido]' AND
-					  TABLE_NAME   = 'Funcionalidades' ))
-BEGIN
-	CREATE TABLE [SistemaCaido].Funcionalidades(
+	CREATE TABLE SistemaCaido.Funcionalidades(
 		IdFuncionalidades int NOT NULL identity(1,1),
 		Nombre varchar(30),
 		PRIMARY KEY(IdFuncionalidades),
-	);
-END
-
+	)
 
 -- Roles
 GO
-IF (NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES 
-				WHERE TABLE_SCHEMA = '[SistemaCaido]' AND
-					  TABLE_NAME   = 'Roles' ))
 
-BEGIN
-	CREATE TABLE [SistemaCaido].Roles(
+	CREATE TABLE SistemaCaido.Roles(
 		IdRol int NOT NULL identity(1,1),
 		Nombre varchar(30),
 		PRIMARY KEY(IdRol),
-	);
-END
-
+	)
 
 -- Usuarios
 GO
-IF (NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES 
-				WHERE TABLE_SCHEMA = '[SistemaCaido]' AND
-					  TABLE_NAME   = 'Usuarios' ))
-BEGIN
-	CREATE TABLE [SistemaCaido].Usuarios(
+
+	CREATE TABLE SistemaCaido.Usuarios(
 		IdUsuario int NOT NULL identity(1,1),
 		Username varchar(10),
 		Password varchar(10),
 		PRIMARY KEY(IdUsuario),
-	);
-END
-
+	)
 
 -- Sucursales
 GO
-IF (NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES 
-				WHERE TABLE_SCHEMA = '[SistemaCaido]' AND
-					  TABLE_NAME   = 'Sucursales' ))
-BEGIN
-	CREATE TABLE [SistemaCaido].Sucursales(
+
+	CREATE TABLE SistemaCaido.Sucursales(
 		IdSucursal int NOT NULL identity(1,1),
 		Nombre nvarchar(255),
 		Direccion nvarchar(255),
 		CodigoPostal varchar(4),
 		Habilitada char,
 		PRIMARY KEY(IdSucursal),
-	);
-END
-
+	)
 
 -- Clientes
 GO
-IF (NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES 
-				WHERE TABLE_SCHEMA = '[SistemaCaido]' AND
-					  TABLE_NAME   = 'Clientes' ))
-BEGIN
-	CREATE TABLE [SistemaCaido].Clientes(
+
+	CREATE TABLE SistemaCaido.Clientes(
 		IdCliente int NOT NULL identity(1,1),
 		Nombre nvarchar(255),
 		Apellido nvarchar(255),
@@ -94,66 +125,47 @@ BEGIN
 		FechaNacimiento datetime,
 		Habilitado varchar(1),
 		PRIMARY KEY(IdCliente),
-	);
-END
-
+	)
 
 -- Medios de Pago
 GO
-IF (NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES 
-				WHERE TABLE_SCHEMA = '[SistemaCaido]' AND
-					  TABLE_NAME   = 'MediosPago' ))
-BEGIN
-	CREATE TABLE [SistemaCaido].MediosPago (
+
+	CREATE TABLE SistemaCaido.MediosPago (
 		IdMedioPago int NOT NULL identity(1,1),
 		Nombre nvarchar(255),
 		PRIMARY KEY(IdMedioPago),
-	);
-END
-
+	)
 
 -- Pagos
 GO
-IF (NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES 
-				WHERE TABLE_SCHEMA = '[SistemaCaido]' AND
-					  TABLE_NAME   = 'Pagos' ))
-BEGIN
-	CREATE TABLE [SistemaCaido].Pagos(
-		IdPago int NOT NULL,
+
+	CREATE TABLE SistemaCaido.Pagos(
+		IdPago int NOT NULL identity(1,1),
+		NumeroPago int not null,
 		FechaCobro datetime,
 		IdCliente int,
 		Importe numeric(18,2),
 		IdSucursal int,
 		IdMedioPago int,
 		PRIMARY KEY(IdPago),
-		FOREIGN KEY(IdCliente) REFERENCES [SistemaCaido].Clientes,
-		FOREIGN KEY(IdSucursal) REFERENCES [SistemaCaido].Sucursales,
-		FOREIGN KEY(IdMedioPago) REFERENCES [SistemaCaido].MediosPago,
-	);
-END
-
+		FOREIGN KEY(IdCliente) REFERENCES SistemaCaido.Clientes,
+		FOREIGN KEY(IdSucursal) REFERENCES SistemaCaido.Sucursales,
+		FOREIGN KEY(IdMedioPago) REFERENCES SistemaCaido.MediosPago,
+	)
 
 -- Rubros
 GO
-IF (NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES 
-				WHERE TABLE_SCHEMA = '[SistemaCaido]' AND
-					  TABLE_NAME   = 'Rubros' ))
-BEGIN
-	CREATE TABLE [SistemaCaido].Rubros(
+
+	CREATE TABLE SistemaCaido.Rubros(
 		IdRubro int NOT NULL identity(1,1),
 		Nombre nvarchar(255),
 		PRIMARY KEY(IdRubro),
-	);
-END
-
+	)
 
 -- Empresas
 GO
-IF (NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES 
-				WHERE TABLE_SCHEMA = '[SistemaCaido]' AND
-					  TABLE_NAME   = 'Empresas' ))
-BEGIN
-	CREATE TABLE [SistemaCaido].Empresas(
+
+	CREATE TABLE SistemaCaido.Empresas(
 		IdEmpresa int NOT NULL identity(1,1),
 		Nombre nvarchar(255),
 		CUIT nvarchar(50),
@@ -161,18 +173,13 @@ BEGIN
 		IdRubro int,
 		Habilitada char,
 		PRIMARY KEY(IdEmpresa),
-		FOREIGN KEY(IdRubro) REFERENCES [SistemaCaido].Rubros, 
+		FOREIGN KEY(IdRubro) REFERENCES SistemaCaido.Rubros, 
 	);
-END
-
 
 -- Facturas
 GO
-IF (NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES 
-				WHERE TABLE_SCHEMA = '[SistemaCaido]' AND
-					  TABLE_NAME   = 'Facturas' ))
-BEGIN
-	CREATE TABLE [SistemaCaido].Facturas(
+
+	CREATE TABLE SistemaCaido.Facturas(
 		IdFactura int NOT NULL identity(1,1),
 		IdCliente int,
 		IdEmpresa int,
@@ -181,106 +188,76 @@ BEGIN
 		FechaVencimiento datetime,
 		Importe numeric(18,2),
 		PRIMARY KEY(IdFactura),
-		FOREIGN KEY(IdCliente) REFERENCES [SistemaCaido].Clientes,
-		FOREIGN KEY(IdEmpresa) REFERENCES [SistemaCaido].Empresas,
-	);
-END
-
+		FOREIGN KEY(IdCliente) REFERENCES SistemaCaido.Clientes,
+		FOREIGN KEY(IdEmpresa) REFERENCES SistemaCaido.Empresas,
+	)
 
 -- Item Facturas
 GO
-IF (NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES 
-				WHERE TABLE_SCHEMA = '[SistemaCaido]' AND
-					  TABLE_NAME   = 'Item_Facturas' ))
-BEGIN
-	CREATE TABLE [SistemaCaido].Item_Facturas(
+
+	CREATE TABLE SistemaCaido.Item_Facturas(
 		IdItem int NOT NULL identity(1,1),
 		IdFactura int,
 		Cantidad numeric(18,0),
 		Monto numeric(18,2),
 		PRIMARY KEY(IdItem),
-		FOREIGN KEY(IdFactura) REFERENCES [SistemaCaido].Facturas,
-	);
-END
-
+		FOREIGN KEY(IdFactura) REFERENCES SistemaCaido.Facturas,
+	)
 
 -- Rendiciones
 GO
-IF (NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES 
-				WHERE TABLE_SCHEMA = '[SistemaCaido]' AND
-					  TABLE_NAME   = 'Rendiciones' ))
-BEGIN
-	CREATE TABLE [SistemaCaido].Rendiciones(
+
+	CREATE TABLE SistemaCaido.Rendiciones(
 		IdRendicion int NOT NULL identity(1,1),
 		IdEmpresa int,
 		NumeroRendicion numeric(18,0),
 		Fecha datetime,
 		PRIMARY KEY(IdRendicion),
-		FOREIGN KEY(IdEmpresa) REFERENCES [SistemaCaido].Empresas,
-	);
-END
+		FOREIGN KEY(IdEmpresa) REFERENCES SistemaCaido.Empresas,
+	)
 
 -- RolesXFuncionalidades
 GO
-IF (NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES 
-				WHERE TABLE_SCHEMA = '[SistemaCaido]' AND
-					  TABLE_NAME   = 'RolesXFuncionalidades' ))
-BEGIN
-	CREATE TABLE [SistemaCaido].RolesXFuncionalidades(
+
+	CREATE TABLE SistemaCaido.RolesXFuncionalidades(
 		IdRol int,
 		IdFuncionalidades int,
 		PRIMARY KEY(IdRol, IdFuncionalidades),
-		FOREIGN KEY(IdRol) REFERENCES [SistemaCaido].Roles,
-		FOREIGN KEY(IdFuncionalidades) REFERENCES [SistemaCaido].Funcionalidades,
+		FOREIGN KEY(IdRol) REFERENCES SistemaCaido.Roles,
+		FOREIGN KEY(IdFuncionalidades) REFERENCES SistemaCaido.Funcionalidades,
 	);
-END
 
 
 -- UsuariosXRoles
 GO
-IF (NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES 
-				WHERE TABLE_SCHEMA = '[SistemaCaido]' AND
-					  TABLE_NAME   = 'UsuariosXRoles' ))
-BEGIN
-	CREATE TABLE [SistemaCaido].UsuariosXRoles(
+	CREATE TABLE SistemaCaido.UsuariosXRoles(
 		IdUsuario int,
 		IdRol int,
 		PRIMARY KEY(IdUsuario, IdRol),
-		FOREIGN KEY(IdUsuario) REFERENCES [SistemaCaido].Usuarios,
-		FOREIGN KEY(IdRol) REFERENCES [SistemaCaido].Roles,
-
-	);
-END
-
+		FOREIGN KEY(IdUsuario) REFERENCES SistemaCaido.Usuarios,
+		FOREIGN KEY(IdRol) REFERENCES SistemaCaido.Roles
+		)
 
 -- PagosXFacturas
-IF (NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES 
-				WHERE TABLE_SCHEMA = '[SistemaCaido]' AND
-					  TABLE_NAME   = 'PagosXFacturas' ))
-BEGIN
-	CREATE TABLE [SistemaCaido].PagosXFacturas(
+
+	CREATE TABLE SistemaCaido.PagosXFacturas(
 		IdPago int,
 		IdFactura int
 		PRIMARY KEY(IdPago, IdFactura),
-		FOREIGN KEY(IdPago) REFERENCES [SistemaCaido].Pagos,
-		FOREIGN KEY(IdFactura) REFERENCES [SistemaCaido].Facturas,
-	);
-END
+		FOREIGN KEY(IdPago) REFERENCES SistemaCaido.Pagos,
+		FOREIGN KEY(IdFactura) REFERENCES SistemaCaido.Facturas,
+	)
 
 -- UsuariosXSucursales
 GO
-IF (NOT EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES 
-				WHERE TABLE_SCHEMA = '[SistemaCaido]' AND
-					  TABLE_NAME   = 'UsuariosXSucursales' ))
-BEGIN
-	CREATE TABLE [SistemaCaido].UsuariosXSucursales(
+
+	CREATE TABLE SistemaCaido.UsuariosXSucursales(
 		IdUsuario int,
 		IdSucursal int,
 		PRIMARY KEY(IdUsuario, IdSucursal),
-		FOREIGN KEY(IdUsuario) REFERENCES [SistemaCaido].Usuarios,
-		FOREIGN KEY(IdSucursal) REFERENCES [SistemaCaido].Sucursales,
-	);
-END
+		FOREIGN KEY(IdUsuario) REFERENCES SistemaCaido.Usuarios,
+		FOREIGN KEY(IdSucursal) REFERENCES SistemaCaido.Sucursales
+		)
 
 -- Migracion de Datos
 GO
@@ -329,7 +306,7 @@ FROM gd_esquema.Maestra WHERE Sucursal_Nombre IS NOT NULL
 INSERT INTO [SistemaCaido].Facturas (IdCliente, IdEmpresa, NumeroFactura, FechaAlta, FechaVencimiento, Importe)
 SELECT DISTINCT IdCliente, IdEmpresa, Nro_Factura, Factura_Fecha, Factura_Fecha_Vencimiento, Factura_Total 
 FROM gd_esquema.Maestra 
-JOIN [SistemaCaido].Clientes on [Cliente-Nombre] + [Cliente-Apellido] = [SistemaCaido].Clientes.Nombre + [SistemaCaido].Clientes.Apellido
+JOIN [SistemaCaido].Clientes c on [Cliente-Dni] = c.DNI 
 JOIN [SistemaCaido].Empresas on Empresa_Nombre = [SistemaCaido].Empresas.Nombre
 WHERE Nro_Factura IS NOT NULL
  
@@ -340,10 +317,10 @@ JOIN [SistemaCaido].Facturas on Nro_Factura = [SistemaCaido].Facturas.NumeroFact
 WHERE ItemFactura_Cantidad > 0
 
 /* Pagos */
-INSERT INTO [SistemaCaido].Pagos (IdPago, FechaCobro) --, IdCliente, IdSucursal)
-SELECT DISTINCT Pago_nro, Pago_Fecha FROM gd_esquema.Maestra --, IdCliente, IdSucursal FROM gd_esquema.Maestra
---JOIN [SistemaCaido].Sucursales suc on Sucursal_Nombre = suc.Nombre
---JOIN [SistemaCaido].Clientes cli on [Cliente-Apellido] + [Cliente-Nombre] = cli.Apellido + [Cliente-Nombre]
+INSERT INTO [SistemaCaido].Pagos (NumeroPago, FechaCobro, IdCliente, IdSucursal)
+SELECT DISTINCT Pago_nro, Pago_Fecha, IdCliente, IdSucursal FROM gd_esquema.Maestra
+JOIN [SistemaCaido].Sucursales suc on Sucursal_Nombre = suc.Nombre
+JOIN [SistemaCaido].Clientes cli on [Cliente-Dni] = cli.DNI
 WHERE Pago_nro IS NOT NULL 
 
 /* Rendiciones */
@@ -353,38 +330,7 @@ JOIN [SistemaCaido].Empresas ON Empresa_Nombre = [SistemaCaido].Empresas.Nombre
 WHERE Rendicion_Nro > 0
 
  
-/*
-DROP TABLE [SistemaCaido].RolesXFuncionalidades
-DROP TABLE [SistemaCaido].UsuariosXRoles
-DROP TABLE [SistemaCaido].UsuariosXSucursales
-DROP TABLE [SistemaCaido].PagosXFacturas
-DROP TABLE [SistemaCaido].Roles
-DROP TABLE [SistemaCaido].Funcionalidades
-DROP TABLE [SistemaCaido].Usuarios
-DROP TABLE [SistemaCaido].Pagos
-DROP TABLE [SistemaCaido].Item_Facturas
-DROP TABLE [SistemaCaido].Rendiciones
-DROP TABLE [SistemaCaido].Sucursales
-DROP TABLE [SistemaCaido].MediosPago
-DROP TABLE [SistemaCaido].Facturas
-DROP TABLE [SistemaCaido].Empresas
-DROP TABLE [SistemaCaido].Clientes
-DROP TABLE [SistemaCaido].Rubros
-DROP TRIGGER [SistemaCaido].tr_nuevoCliente
-DROP TRIGGER [SistemaCaido].tr_nuevaEmpresa
-DROP PROCEDURE [SistemaCaido].AltaRol
-DROP PROCEDURE [SistemaCaido].AltaCliente
-DROP PROCEDURE [SistemaCaido].BajaCliente
-DROP PROCEDURE [SistemaCaido].ModificacionCliente
-DROP PROCEDURE [SistemaCaido].AltaEmpresa
-DROP PROCEDURE [SistemaCaido].BajaEmpresa
-DROP PROCEDURE [SistemaCaido].ModificacionEmpresa
-DROP PROCEDURE [SistemaCaido].AltaSucursal
-DROP PROCEDURE [SistemaCaido].BajaSucursal
-DROP PROCEDURE [SistemaCaido].ModificacionSucursal
-DROP TYPE [SistemaCaido].TablaFuncionalidades
-DROP SCHEMA [SistemaCaido]
-*/
+
 
 -- Triggers
 go
