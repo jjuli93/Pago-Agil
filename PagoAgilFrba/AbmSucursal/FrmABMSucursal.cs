@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using PagoAgilFrba.Helpers;
 
-namespace PagoAgilFrba.AbmEmpresa
+namespace PagoAgilFrba.AbmSucursal
 {
-    public partial class FrmABMEmpresa : Form
+    public partial class FrmABMSucursal : Form
     {
         private string default_description = "null";
         private List<Control> label_obligatorios;
@@ -20,16 +20,9 @@ namespace PagoAgilFrba.AbmEmpresa
         ControlHelper helper = Singleton<ControlHelper>.Instance;
         int fila_seleccionada = -1;
 
-        public FrmABMEmpresa()
+        public FrmABMSucursal()
         {
             InitializeComponent();
-            descripcionLbl.Text = default_description;
-            label_obligatorios = new List<Control>() { obligatoriosLbl, obligatorio1, obligatorio2, obligatorio3, obligatorio4 };
-            campos_obligatorios = new List<Control>() { nombreTb, cuitTb, direccionTb, rubroCb };
-            campo_labels = new List<Label>() { nombreLb, cuitLb, dirLb, rubroLb };
-            helper.visualizar_controles(label_obligatorios, false);
-            habilitar_todo(false);
-            habilitadoChk.Visible = false;
         }
 
         #region "Commons"
@@ -53,7 +46,7 @@ namespace PagoAgilFrba.AbmEmpresa
             habilitar_todo(false);
             habilitadoChk.Visible = false;
             helper.limpiar_errorProvider(campos_obligatorios, errorProvider);
-            empresasDt.ReadOnly = false;
+            sucursalesDt.ReadOnly = false;
         }
         #endregion
 
@@ -74,17 +67,17 @@ namespace PagoAgilFrba.AbmEmpresa
         {
             confirmPnl.Visible = true;
             abmPnl.Visible = false;
-            descripcionLbl.Text = "Crear Empresa";
+            descripcionLbl.Text = "Crear Sucursal";
             helper.visualizar_controles(label_obligatorios, true);
             habilitar_todo(true);
-            empresasDt.ReadOnly = true;
+            sucursalesDt.ReadOnly = true;
         }
 
         private void modificarBtn_Click(object sender, EventArgs e)
         {
             confirmPnl.Visible = true;
             abmPnl.Visible = false;
-            descripcionLbl.Text = "Modificar Empresa";
+            descripcionLbl.Text = "Modificar Sucursal";
             helper.visualizar_controles(label_obligatorios, true);
             habilitar_todo(true);
             habilitadoChk.Visible = true;
@@ -94,7 +87,7 @@ namespace PagoAgilFrba.AbmEmpresa
         {
             confirmPnl.Visible = true;
             abmPnl.Visible = false;
-            descripcionLbl.Text = "Eliminar Empresa";
+            descripcionLbl.Text = "Eliminar Sucursal";
         }
 
         private void buscarBtn_Click(object sender, EventArgs e)
@@ -113,7 +106,7 @@ namespace PagoAgilFrba.AbmEmpresa
         }
         #endregion
 
-        #region "Botones confirmar"
+        #region "Botones Confirmar"
         private void aceptarBtn_Click(object sender, EventArgs e)
         {
             string operacion = descripcionLbl.Text;
@@ -143,7 +136,7 @@ namespace PagoAgilFrba.AbmEmpresa
         {
             restablecer_controles();
         }
-        #endregion 
+        #endregion
 
         #region "Operaciones"
         private void do_insert()
@@ -166,5 +159,6 @@ namespace PagoAgilFrba.AbmEmpresa
             throw new NotImplementedException();
         }
         #endregion
+
     }
 }

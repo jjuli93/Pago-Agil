@@ -68,11 +68,11 @@
     <Compile Include="AbmRol\FrmABMRol.Designer.cs">
       <DependentUpon>FrmABMRol.cs</DependentUpon>
     </Compile>
-    <Compile Include="AbmSucursal\Form1.cs">
+    <Compile Include="AbmSucursal\FrmABMSucursal.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="AbmSucursal\Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="AbmSucursal\FrmABMSucursal.Designer.cs">
+      <DependentUpon>FrmABMSucursal.cs</DependentUpon>
     </Compile>
     <Compile Include="Helpers\ControlHelper.cs" />
     <Compile Include="Helpers\ItemControlHelper.cs" />
@@ -126,6 +126,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="AbmRol\FrmABMRol.resx">
       <DependentUpon>FrmABMRol.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AbmSucursal\FrmABMSucursal.resx">
+      <DependentUpon>FrmABMSucursal.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Login\FrmLogin.resx">
       <DependentUpon>FrmLogin.cs</DependentUpon>
