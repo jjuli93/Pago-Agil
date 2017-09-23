@@ -156,8 +156,8 @@ GO
 
 CREATE TABLE SistemaCaido.Usuarios(
 	IdUsuario int NOT NULL identity(1,1),
-	Username varchar(10) NOT NULL,
-	Password varchar(10) NOT NULL,
+	Username varchar(30) NOT NULL,
+	Password varchar(255) NOT NULL,
 	IntentosFallidos int default(0) not null,
 	PRIMARY KEY(IdUsuario),
 )
@@ -183,7 +183,7 @@ CREATE TABLE SistemaCaido.Clientes(
 	Apellido nvarchar(255) NOT NULL,
 	DNI numeric(18,0) NOT NULL,
 	Mail nvarchar(255) NOT NULL,
-	Telefono varchar(10) NOT NULL,
+	Telefono varchar(10) ,  -- no pongo not null porque en la base maestra no existe el campo
 	Direccion nvarchar(255) NOT NULL,
 	CodigoPostal nvarchar(4) NOT NULL,
 	FechaNacimiento datetime NOT NULL,
@@ -261,7 +261,7 @@ GO
 
 CREATE TABLE [SistemaCaido].Productos(
 	IdProducto int NOT NULL identity(1,1),
-	Descripcion nvarchar(255) NOT NULL,
+	Descripcion nvarchar(255),
 	Precio numeric(18,2) NOT NULL,
 	PRIMARY KEY(IdProducto),
 )
@@ -311,7 +311,7 @@ CREATE TABLE SistemaCaido.Rendiciones(
 GO
 
 CREATE TABLE SistemaCaido.RolesXFuncionalidades(
-	IdRolXFuncionalidad int NOT NULL,
+	IdRolXFuncionalidad int IDENTITY(1,1) NOT NULL,
 	IdRol int NOT NULL,
 	IdFuncionalidad int NOT NULL,
 	PRIMARY KEY(IdRolXFuncionalidad),
@@ -324,7 +324,7 @@ CREATE TABLE SistemaCaido.RolesXFuncionalidades(
 GO
 
 CREATE TABLE SistemaCaido.UsuariosXRoles(
-	IdUsuarioXRol int NOT NULL,
+	IdUsuarioXRol int IDENTITY(1,1) NOT NULL,
 	IdUsuario int NOT NULL,
 	IdRol int NOT NULL,
 	PRIMARY KEY(IdUsuarioXRol),
@@ -335,7 +335,7 @@ CREATE TABLE SistemaCaido.UsuariosXRoles(
 -- PagosXFacturas
 
 CREATE TABLE SistemaCaido.PagosXFacturas(
-	IdPagoXFactura int NOT NULL,
+	IdPagoXFactura int IDENTITY(1,1) NOT NULL,
 	IdPago int NOT NULL,
 	IdFactura int NOT NULL,
 	PRIMARY KEY(IdPagoXFactura),
@@ -347,7 +347,7 @@ CREATE TABLE SistemaCaido.PagosXFacturas(
 GO
 
 CREATE TABLE SistemaCaido.UsuariosXSucursales(
-	IdUsuarioXSucursal int NOT NULL,
+	IdUsuarioXSucursal int IDENTITY(1,1) NOT NULL,
 	IdUsuario int NOT NULL,
 	IdSucursal int NOT NULL,
 	PRIMARY KEY(IdUsuarioXSucursal),
@@ -359,7 +359,7 @@ CREATE TABLE SistemaCaido.UsuariosXSucursales(
 GO
 
 CREATE TABLE [SistemaCaido].RendicionesXFacturas(
-	IdRendicionXFactura int NOT NULL,
+	IdRendicionXFactura int IDENTITY(1,1) NOT NULL,
 	IdRendicion int NOT NULL,
 	IdFactura int NOT NULL,
 	PRIMARY KEY(IdRendicionXFactura),
@@ -372,20 +372,21 @@ CREATE TABLE [SistemaCaido].RendicionesXFacturas(
 --*************************************** Migracion de datos ************************************************--                                 
 --=============================================================================================================--
 GO
-/*
+
 /* Usuario administrador */
-INSERT INTO [SistemaCaido].Usuarios VALUES('Admin', HASHBYTES('SHA2_256','w23e'))
+INSERT INTO [SistemaCaido].Usuarios (Username, Password)
+VALUES('Admin', HASHBYTES('SHA2_256','w23e'))
 
 /* Roles */
-INSERT INTO [SistemaCaido].Roles VALUES('Administrador')
-INSERT INTO [SistemaCaido].Roles VALUES('Cobrador')
+INSERT INTO [SistemaCaido].Roles (Nombre)
+VALUES('Administrador'), ('Cobrador')
 
 /*Usuarios X Roles*/
 INSERT INTO SistemaCaido.UsuariosXRoles (IdRol, IdUsuario)
 VALUES (1,1)
 
 /* Porcentajes*/
-INSERT INTO [SistemaCaido].Porcentajes VALUES(CAST('5,2' as numeric(3,2)), CONVERT(datetime, GETDATE()), 1)
+INSERT INTO [SistemaCaido].Porcentajes VALUES(CAST('5.2' as numeric(3,2)), CONVERT(datetime, GETDATE()), 1)   --TODO ver cual es el porcentaje actual
 
 /* Funcionalidades */
 INSERT INTO [SistemaCaido].Funcionalidades VALUES ('ABM de Rol')
@@ -415,13 +416,18 @@ SELECT DISTINCT Rubro_Descripcion FROM gd_esquema.Maestra WHERE Rubro_Descripcio
 
 /* Empresas */
 INSERT INTO [SistemaCaido].Empresas (Nombre, CUIT, Direccion, IdRubro, Habilitada)
-SELECT DISTINCT Empresa_Nombre, Empresa_Cuit, Empresa_Direccion, Empresa_Rubro, 1 
-FROM gd_esquema.Maestra WHERE Empresa_Nombre IS NOT NULL
+SELECT DISTINCT Empresa_Nombre, Empresa_Cuit, Empresa_Direccion, r.IdRubro, 1 
+FROM gd_esquema.Maestra m
+inner join SistemaCaido.Rubros r on r.Nombre = m.Rubro_Descripcion
+WHERE Empresa_Nombre IS NOT NULL
 
 /* Sucursales */
 INSERT INTO [SistemaCaido].Sucursales (Nombre, Direccion, CodigoPostal, Habilitada)
 SELECT DISTINCT Sucursal_Nombre, Sucursal_Dirección, Sucursal_Codigo_Postal, 1
 FROM gd_esquema.Maestra WHERE Sucursal_Nombre IS NOT NULL
+
+/* Usuarios X Sucursales */
+--TODO falta USUARIOSXSUCURSALES
 
 /* Facturas */
 INSERT INTO [SistemaCaido].Facturas (IdCliente, IdEmpresa, NumeroFactura, FechaAlta, FechaVencimiento, Importe)
@@ -431,26 +437,57 @@ JOIN [SistemaCaido].Clientes c on [Cliente-Dni] = c.DNI
 JOIN [SistemaCaido].Empresas on Empresa_Nombre = [SistemaCaido].Empresas.Nombre
 WHERE Nro_Factura IS NOT NULL
  
-/* Item Facturas */
-INSERT INTO [SistemaCaido].ProductosXFacturas(IdFactura, Cantidad, IdProducto)   --joinear con productos
+ /*
+/* Productos */
+INSERT INTO [SistemaCaido].Productos (Precio)
+Select DISTINCT m.ItemRendicion_Importe
+FROM gd_esquema.Maestra m
+
+/* Productos X Facturas*/
+INSERT INTO [SistemaCaido].ProductosXFacturas(IdFactura, Cantidad, IdProducto)   
 SELECT IdFactura, ItemFactura_Cantidad, ItemFactura_Monto FROM gd_esquema.Maestra 
 JOIN [SistemaCaido].Facturas on Nro_Factura = [SistemaCaido].Facturas.NumeroFactura
 WHERE ItemFactura_Cantidad > 0
+*/
+
+/* Medios de Pago*/
+INSERT INTO [SistemaCaido].MediosPago (Nombre)
+SELECT DISTINCT m.FormaPagoDescripcion
+FROM gd_esquema.Maestra m
+where m.FormaPagoDescripcion is not null
 
 /* Pagos */
-INSERT INTO [SistemaCaido].Pagos (NumeroPago, FechaCobro, IdCliente, IdSucursal)
-SELECT DISTINCT Pago_nro, Pago_Fecha, IdCliente, IdSucursal FROM gd_esquema.Maestra
+INSERT INTO [SistemaCaido].Pagos (NumeroPago, FechaCobro, IdCliente, IdSucursal, IdMedioPago, Importe)    --TODO Falta poner el importe
+SELECT DISTINCT Pago_nro, Pago_Fecha, IdCliente, IdSucursal, mp.IdMedioPago, 999
+FROM gd_esquema.Maestra m
 JOIN [SistemaCaido].Sucursales suc on Sucursal_Nombre = suc.Nombre
 JOIN [SistemaCaido].Clientes cli on [Cliente-Dni] = cli.DNI
+JOIN [SistemaCaido].MediosPago mp on mp.Nombre = m.FormaPagoDescripcion 
 WHERE Pago_nro IS NOT NULL 
 
+/* Pagos X Facturas */
+INSERT INTO [SistemaCaido].PagosXFacturas (IdFactura, IdPago)
+SELECT distinct f.IdFactura, p.IdPago
+FROM gd_esquema.Maestra m
+JOIN SistemaCaido.Facturas f on f.NumeroFactura = m.Nro_Factura
+JOIN SistemaCaido.Pagos p on p.NumeroPago = m.Pago_nro
+
 /* Rendiciones */
-INSERT INTO [SistemaCaido].Rendiciones (IdEmpresa, NumeroRendicion, Fecha)
-SELECT IdEmpresa, Rendicion_Nro, Rendicion_Fecha FROM gd_esquema.Maestra
+INSERT INTO [SistemaCaido].Rendiciones (IdEmpresa, NumeroRendicion, Fecha, IdPorcentaje, Importe) --TODO falta el importe
+SELECT IdEmpresa, Rendicion_Nro, Rendicion_Fecha, p.IdPorcentaje, 999 
+FROM gd_esquema.Maestra
 JOIN [SistemaCaido].Empresas ON Empresa_Nombre = [SistemaCaido].Empresas.Nombre
+JOIN [SistemaCaido].Porcentajes p on p.IdPorcentaje = 1 
 WHERE Rendicion_Nro > 0
 
-*/
+/*Rendiciones X Facturas */
+INSERT INTO [SistemaCaido].RendicionesXFacturas (IdFactura, IdRendicion)
+SELECT DISTINCT f.IdFactura, r.IdRendicion
+FROM gd_esquema.Maestra m
+JOIN SistemaCaido.Facturas f on f.NumeroFactura = m.Nro_Factura
+JOIN SistemaCaido.Rendiciones r on r.NumeroRendicion = m.Rendicion_Nro
+
+
 --=============================================================================================================--
 --*************************************** Triggers ************************************************--                                 
 --=============================================================================================================--
