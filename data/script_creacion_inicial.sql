@@ -539,7 +539,38 @@ as begin
 		raiserror('No se puede dar de alta la sucursal (CP existente)..', 1,1)
 	end
 
+go
+create trigger [SistemaCaido].tr_nuevaFactura on [SistemaCaido].Facturas instead of insert
+as begin
+	set nocount on
 
+	declare @FechaVenc datetime
+	declare @Empresa int
+	declare @ImporteFactura numeric(18,2)
+	declare @Habilitada char
+	declare @NumeroFactura int
+
+	select	@ImporteFactura = ins.Importe,
+			@FechaVenc = ins.FechaVencimiento,
+			@Empresa = ins.IdEmpresa,
+			@Habilitada = emp.Habilitada
+	from inserted ins
+	join Empresas emp
+	on emp.IdEmpresa = ins.IdEmpresa
+
+	if(@ImporteFactura < 0)
+		raiserror('El importe de la factura es menor de 0..', 1,1)
+
+	if(@ImporteFactura = 0)
+		raiserror('El importe de la factura es igual a 0..', 1,1)	
+		
+	if(@FechaVenc > sysdatetime())	
+		raiserror('La fecha de vencimiento supera la fecha actual..', 1,1)	
+
+	if(@Habilitada = 0)	
+		raiserror('La empresa seleccionada esta inactiva..', 1,1)
+
+end
 
 --=============================================================================================================--
 --*************************************** Creacion de Funciones ************************************************--                                 
