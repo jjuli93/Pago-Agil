@@ -955,5 +955,72 @@ as begin transaction
 	commit transaction
 
 
+------------ Registro de Pago de Facturas
+go
+create table [SistemaCaido].registroPagos(
+	idRegistroPago int identity(1,1),
+	idUsuario int,
+	idSucursal int,
+	idMedioPago int,
+	importe numeric(18,2),
+);
+
+go
+create type [SistemaCaido].tablaFacturas as table(
+	NumeroFactura int,
+	FechaCobro datetime default sysdatetime(),
+	Empresa int,
+	Cliente int,
+	FechaVencimiento datetime,
+	Importe numeric(18,2),
+	Sucursal int
+);
+
+alter table [SistemaCaido].tablaFacturas
+add Importe numeric(18,2) not null
+constraint chk_Importe check(Importe > 0);
+go
+create function [SistemaCaido].RegistrarPago(@Facturas [SistemaCaido].tablaFacturas readonly)
+returns numeric(18,2)
+as begin
+	declare @ImporteTotal numeric(18,2) 
+	declare @FechaVenc datetime
+	declare @Empresa int
+	declare @ImporteFactura numeric(18,2)
+	declare @Habilitada char
+
+	set @ImporteTotal = 0
+
+	declare facturas_cursor cursor local fast_forward
+	for select FechaVencimiento, Empresa, Importe from @Facturas
+
+	open facturas_cursor
+	fetch next from facturas_cursor into @FechaVen, @Empresa, @ImporteFactura
+
+	while(@@FETCH_STATUS = 0)
+		begin
+			if(@ImporteFactura < 0)
+				raiserror('El importe de la factura es menor de 0..', 1,1)
+
+			if(@ImporteFactura = 0)
+				raiserror('El importe de la factura es igual a 0..', 1,1)	
+				
+			if(@FechaVenc > sysdatetime())	
+				raiserror('La fecha de vencimiento supera la fecha actual..', 1,1)	
+
+			select @Habilitada = Habilitada from Empresas where IdEmpresa = @Empresa
+
+			if(@Habilitada = 0)	
+				raiserror('La empresa seleccionada esta inactiva..', 1,1)
+
+			set @ImporteTotal = @ImporteTotal + @ImporteFactura
+
+		end
+
+
+
+	return @ImporteTotal
+end
+
 
 	
