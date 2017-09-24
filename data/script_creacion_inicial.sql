@@ -955,16 +955,26 @@ as begin transaction
 	commit transaction
 
 
------------- Registro de Pago de Facturas
-go
-create table [SistemaCaido].registroPagos(
-	idRegistroPago int identity(1,1),
-	idUsuario int,
-	idSucursal int,
-	idMedioPago int,
-	importe numeric(18,2),
-);
+--********************************* ABM de Facturas ****************************************--
+/*
+create procedure [SistemaCaido].AltaFacturas(@Nombre nvarchar(255), @Direccion nvarchar(255), @CodigoPostal varchar(4))
+as begin transaction
+	insert into Sucursales values (@Nombre, @Direccion, @CodigoPostal, 1)	
+	if (@@ERROR != 0)
+		begin
+			raiserror('No se pudo dar de alta la sucursal..', 1,1)
+			rollback transaction
+		end
 
+	commit transaction
+
+go
+
+*/
+
+
+
+------------ Registro de Pago de Facturas
 go
 create type [SistemaCaido].tablaFacturas as table(
 	NumeroFactura int,
@@ -976,51 +986,29 @@ create type [SistemaCaido].tablaFacturas as table(
 	Sucursal int
 );
 
-alter table [SistemaCaido].tablaFacturas
-add Importe numeric(18,2) not null
-constraint chk_Importe check(Importe > 0);
 go
-create function [SistemaCaido].RegistrarPago(@Facturas [SistemaCaido].tablaFacturas readonly)
-returns numeric(18,2)
-as begin
+create procedure [SistemaCaido].RegistrarPago(@Facturas [SistemaCaido].tablaFacturas readonly,
+											  @Cliente int, @Sucursal int, @MedioPago int)
+as begin transaction
 	declare @ImporteTotal numeric(18,2) 
-	declare @FechaVenc datetime
-	declare @Empresa int
-	declare @ImporteFactura numeric(18,2)
-	declare @Habilitada char
+	declare @NumeroPago int
 
 	set @ImporteTotal = 0
+	set @NumeroPago = 0
 
-	declare facturas_cursor cursor local fast_forward
-	for select FechaVencimiento, Empresa, Importe from @Facturas
+	select @ImporteTotal = SUM(fact1.Importe) from Facturas fact1
+	join @Facturas fact2 on fact1.IdFactura = fact2.NumeroFactura
 
-	open facturas_cursor
-	fetch next from facturas_cursor into @FechaVen, @Empresa, @ImporteFactura
-
-	while(@@FETCH_STATUS = 0)
+	if(@ImporteTotal != 0)
 		begin
-			if(@ImporteFactura < 0)
-				raiserror('El importe de la factura es menor de 0..', 1,1)
-
-			if(@ImporteFactura = 0)
-				raiserror('El importe de la factura es igual a 0..', 1,1)	
-				
-			if(@FechaVenc > sysdatetime())	
-				raiserror('La fecha de vencimiento supera la fecha actual..', 1,1)	
-
-			select @Habilitada = Habilitada from Empresas where IdEmpresa = @Empresa
-
-			if(@Habilitada = 0)	
-				raiserror('La empresa seleccionada esta inactiva..', 1,1)
-
-			set @ImporteTotal = @ImporteTotal + @ImporteFactura
-
+			insert into Pagos values (@NumeroPago, sysdatetime(), @Cliente, @ImporteTotal, @Sucursal, @MedioPago)
+			if (@@ERROR != 0)
+				begin
+					raiserror('No se pudo registrar el pago..', 1,1)
+					rollback transaction
+				end
+			commit transaction
 		end
 
 
-
-	return @ImporteTotal
-end
-
-
-	
+------------ Rendicion de facturas cobradas
