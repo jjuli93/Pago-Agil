@@ -423,7 +423,7 @@ WHERE Empresa_Nombre IS NOT NULL
 
 /* Sucursales */
 INSERT INTO [SistemaCaido].Sucursales (Nombre, Direccion, CodigoPostal, Habilitada)
-SELECT DISTINCT Sucursal_Nombre, Sucursal_Dirección, Sucursal_Codigo_Postal, 1
+SELECT DISTINCT Sucursal_Nombre, Sucursal_DirecciÃ³n, Sucursal_Codigo_Postal, 1
 FROM gd_esquema.Maestra WHERE Sucursal_Nombre IS NOT NULL
 
 /* Usuarios X Sucursales */
@@ -810,9 +810,9 @@ begin tran
 	if((select count(*) from [SistemaCaido].Clientes where DNI = @dni) > 0) THROW 51000, 'Ya existe un cliente con el numero de DNI ingresado.', 1;
 
 	declare @usuario varchar(255)
-	declare @contraseña varchar(255)
+	declare @contraseÃ±a varchar(255)
 	set @usuario =   convert(varchar(255), @dni)
-	set @contraseña =   convert(varchar(255), @dni)
+	set @contraseÃ±a =   convert(varchar(255), @dni)
 
 	insert into [SistemaCaido].Clientes(Nombre,Apellido,FechaNacimiento,DNI,Direccion,CodigoPostal,Telefono)
 	values(@nombre, @apellido, @fechanac, @dni, @direccion, @codpost, @telefono)
@@ -1043,3 +1043,29 @@ as begin transaction
 
 
 ------------ Rendicion de facturas cobradas
+
+------------ Listado Estadistico ------------
+go
+create function [SistemaCaido].ClientesConMasPagos(@Anio char(4), @Trimestre int)
+returns table
+as return(
+	select top 5 IdCliente Cliente, count(*) CantidadPagos 
+	from Pagos
+	where year(FechaCobro) = @Anio and
+		  month(FechaCobro) between (3 * @Trimestre - 2) and (3 * @Trimestre)
+  group by IdCliente
+  order by 2 desc
+)
+
+go
+create function [SistemaCaido].EmpresasConMayorMontoRendido(@Anio char(4), @Trimestre int)
+returns table
+as return(
+	select top 5 emp.Nombre Empresa, SUM(rend.Importe - (rend.Importe * porc.Porcentaje) / 100) MontoRendido
+	from Empresas emp
+	join Rendiciones rend on emp.IdEmpresa = rend.IdEmpresa
+	join Porcentajes porc on rend.IdPorcentaje = porc.IdPorcentaje
+	where year(rend.Fecha) = @Anio and
+		  month(rend.Fecha) between (3 * @Trimestre - 2) and (3 * @Trimestre)
+	group by emp.Nombre, rend.Importe, porc.Porcentaje
+)
