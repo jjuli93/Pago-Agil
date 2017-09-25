@@ -60,6 +60,7 @@ namespace PagoAgilFrba.Helpers
                         e.SetError(c, "Debe seleccionar uno");
                     break;
                 default:
+                    cumple = true;
                     break;
             }
 

@@ -38,5 +38,16 @@ namespace PagoAgilFrba.Helpers
                 chkList.SetItemCheckState(i, CheckState.Unchecked);
             }
         }
+
+        public void select_in_combo(string name, ComboBox combo)
+        {
+            foreach (var item in combo.Items)
+            {
+                var i = item as itemComboBox;
+
+                if (i.nombre_item == name)
+                    combo.SelectedItem = item;
+            }
+        }
     }
 }
