@@ -987,22 +987,57 @@ as begin transaction
 
 
 --********************************* ABM de Facturas ****************************************--
-/*
-create procedure [SistemaCaido].AltaFacturas(@Nombre nvarchar(255), @Direccion nvarchar(255), @CodigoPostal varchar(4))
+go
+create type [SistemaCaido].Items as table(
+	Producto int,
+	Monto numeric(18,2),
+	Cantidad numeric(18,0)
+);
+
+go
+create procedure [SistemaCaido].AltaFacturas
+(@IdCliente int, @IdEmpresa int, @NumeroFactura numeric(18,0), @FechaVencimiento datetime, 
+ @Items [SistemaCaido].Items readonly)
 as begin transaction
-	insert into Sucursales values (@Nombre, @Direccion, @CodigoPostal, 1)	
+	declare @Importe numeric(18,2)
+	declare @Monto numeric(18,2)
+	declare @Producto int
+	declare @Cantidad numeric(18,0)
+
+
+	insert into Sucursales values (@IdCliente, @IdEmpresa, @NumeroFactura, sysdatetime(), @FechaVencimiento, @Importe)	
 	if (@@ERROR != 0)
 		begin
-			raiserror('No se pudo dar de alta la sucursal..', 1,1)
+			raiserror('No se pudo dar de alta la factura..', 1,1)
 			rollback transaction
 		end
 
+	else
+		begin
+			declare items_cursor cursor for
+			select Producto, Monto, Cantidad from @Items
+
+			open items_cursor
+			fetch next from items_cursor into @Monto, @Cantidad
+
+			while(@@FETCH_STATUS = 0) 
+			begin
+				select @Monto = isnull(Precio,0) from Productos where IdProducto = @Producto
+				if (@Monto = 0)
+					begin
+						--No existe el producto
+						raiserror('No existe el producto..', 1,1)
+						rollback transaction
+					end
+
+				else
+					begin
+						
+					end
+			end
+			
+		end
 	commit transaction
-
-go
-
-*/
-
 
 
 ------------ Registro de Pago de Facturas
@@ -1043,3 +1078,6 @@ as begin transaction
 
 
 ------------ Rendicion de facturas cobradas
+
+
+
