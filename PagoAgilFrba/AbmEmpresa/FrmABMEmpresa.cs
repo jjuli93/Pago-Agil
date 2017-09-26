@@ -123,13 +123,13 @@ namespace PagoAgilFrba.AbmEmpresa
             {
                 switch (operacion)
                 {
-                    case "Crear Rol":
+                    case "Crear Empresa":
                         do_insert();
                         break;
-                    case "Modificar Rol":
+                    case "Modificar Empresa":
                         do_update();
                         break;
-                    case "Eliminar Rol":
+                    case "Eliminar Empresa":
                         do_delete();
                         break;
                     case "Buscador":

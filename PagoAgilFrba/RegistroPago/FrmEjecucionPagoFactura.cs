@@ -10,9 +10,9 @@ using System.Windows.Forms;
 
 namespace PagoAgilFrba.RegistroPago
 {
-    public partial class Form1 : Form
+    public partial class FrmEjecucionPagoFactura : Form
     {
-        public Form1()
+        public FrmEjecucionPagoFactura()
         {
             InitializeComponent();
         }
