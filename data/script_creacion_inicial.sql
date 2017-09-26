@@ -1003,9 +1003,10 @@ as begin transaction
 	declare @Monto numeric(18,2)
 	declare @Producto int
 	declare @Cantidad numeric(18,0)
+	declare @IdFactura int
 
 
-	insert into Sucursales values (@IdCliente, @IdEmpresa, @NumeroFactura, sysdatetime(), @FechaVencimiento, @Importe)	
+	insert into Facturas values (@IdCliente, @IdEmpresa, @NumeroFactura, sysdatetime(), @FechaVencimiento, @Importe)	
 	if (@@ERROR != 0)
 		begin
 			raiserror('No se pudo dar de alta la factura..', 1,1)
@@ -1014,6 +1015,9 @@ as begin transaction
 
 	else
 		begin
+			-- Obtener el Id del ultimo insert
+			set @IdFactura = @@IDENTITY
+			 
 			declare items_cursor cursor for
 			select Producto, Monto, Cantidad from @Items
 
