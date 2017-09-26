@@ -1030,10 +1030,6 @@ as begin transaction
 						rollback transaction
 					end
 
-				else
-					begin
-						
-					end
 			end
 			
 		end
@@ -1078,11 +1074,6 @@ as begin transaction
 
 
 ------------ Rendicion de facturas cobradas
-
-<<<<<<< HEAD
-
-
-=======
 ------------ Listado Estadistico ------------
 go
 create function [SistemaCaido].ClientesConMasPagos(@Anio char(4), @Trimestre int)
@@ -1108,4 +1099,4 @@ as return(
 		  month(rend.Fecha) between (3 * @Trimestre - 2) and (3 * @Trimestre)
 	group by emp.Nombre, rend.Importe, porc.Porcentaje
 )
->>>>>>> origin/master
+
