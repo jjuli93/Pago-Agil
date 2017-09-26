@@ -549,6 +549,7 @@ as begin
 	declare @ImporteFactura numeric(18,2)
 	declare @Habilitada char
 	declare @NumeroFactura int
+	declare @IdFactura int
 
 	select	@ImporteFactura = ins.Importe,
 			@FechaVenc = ins.FechaVencimiento,
@@ -569,6 +570,16 @@ as begin
 
 	if(@Habilitada = 0)	
 		raiserror('La empresa seleccionada esta inactiva..', 1,1)
+
+	select top 1 @IdFactura = pxf.IdFactura 
+	from PagosXFacturas pxf, inserted ins where pxf.IdFactura = ins.IdFactura
+	if(@IdFactura != 0)
+		raiserror('La factura a ingresar se encuentra paga..', 1,1)
+
+	select top 1 @IdFactura = rxf.IdFactura 
+	from RendicionesXFacturas rxf, inserted ins where rxf.IdFactura = ins.IdFactura
+	if(@IdFactura != 0)
+		raiserror('La factura a ingresar se encuentra rendida..', 1,1)	
 
 end
 
@@ -1005,7 +1016,9 @@ as begin transaction
 	declare @Cantidad numeric(18,0)
 	declare @IdFactura int
 
+	set @Importe = 0
 
+	-- Agregar la factura con importe 0
 	insert into Facturas values (@IdCliente, @IdEmpresa, @NumeroFactura, sysdatetime(), @FechaVencimiento, @Importe)	
 	if (@@ERROR != 0)
 		begin
@@ -1033,8 +1046,21 @@ as begin transaction
 						raiserror('No existe el producto..', 1,1)
 						rollback transaction
 					end
-
+				else
+					begin
+						insert into ProductosXFacturas values(@Producto, @IdFactura, @Cantidad)
+						if (@@ERROR != 0)
+							begin
+								raiserror('No se pudo dar de alta el item de factura..', 1,1)
+								rollback transaction
+							end
+						else
+							set @Importe = @Importe + (@Monto * @Cantidad)
+					end
 			end
+
+			-- Actualizo el importe de la factura recientemente ingresada
+			update Facturas set Importe = @Importe where IdFactura = @IdFactura
 			
 		end
 	commit transaction
