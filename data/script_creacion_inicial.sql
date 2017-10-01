@@ -571,16 +571,47 @@ as begin
 	if(@Habilitada = 0)	
 		raiserror('La empresa seleccionada esta inactiva..', 1,1)
 
-	select top 1 @IdFactura = pxf.IdFactura 
-	from PagosXFacturas pxf, inserted ins where pxf.IdFactura = ins.IdFactura
-	if(@IdFactura != 0)
-		raiserror('La factura a ingresar se encuentra paga..', 1,1)
+end
 
-	select top 1 @IdFactura = rxf.IdFactura 
-	from RendicionesXFacturas rxf, inserted ins where rxf.IdFactura = ins.IdFactura
-	if(@IdFactura != 0)
-		raiserror('La factura a ingresar se encuentra rendida..', 1,1)	
+go
+create trigger [SistemaCaido].tr_tratarFactura on [SistemaCaido].Facturas instead of update,delete
+as begin
+	declare @Operacion char
+	declare @IdFactura int
 
+	set @Operacion = 'N'
+
+	if exists (select * from inserted) and exists (select * from deleted)
+		begin
+			set @Operacion = 'U'	--Update
+
+			select top 1 @IdFactura = pxf.IdFactura 
+			from PagosXFacturas pxf, inserted ins where pxf.IdFactura = ins.IdFactura
+			if(@IdFactura != 0)
+				raiserror('La factura a ingresar se encuentra paga..', 1,1)
+
+			select top 1 @IdFactura = rxf.IdFactura 
+			from RendicionesXFacturas rxf, inserted ins where rxf.IdFactura = ins.IdFactura
+			if(@IdFactura != 0)
+				raiserror('La factura a ingresar se encuentra rendida..', 1,1)	
+
+		end
+
+	if not exists (select * from inserted) and exists (select * from deleted)
+		begin
+			set @Operacion = 'D'	--Delete
+
+			select top 1 @IdFactura = pxf.IdFactura 
+			from PagosXFacturas pxf, deleted del where pxf.IdFactura = del.IdFactura
+			if(@IdFactura != 0)
+				raiserror('La factura a ingresar se encuentra paga..', 1,1)
+
+			select top 1 @IdFactura = rxf.IdFactura 
+			from RendicionesXFacturas rxf, deleted del where rxf.IdFactura = del.IdFactura
+			if(@IdFactura != 0)
+				raiserror('La factura a ingresar se encuentra rendida..', 1,1)	
+
+		end
 end
 
 --=============================================================================================================--
@@ -1006,7 +1037,7 @@ create type [SistemaCaido].Items as table(
 );
 
 go
-create procedure [SistemaCaido].AltaFacturas
+create procedure [SistemaCaido].AltaFactura
 (@IdCliente int, @IdEmpresa int, @NumeroFactura numeric(18,0), @FechaVencimiento datetime, 
  @Items [SistemaCaido].Items readonly)
 as begin transaction
@@ -1064,6 +1095,41 @@ as begin transaction
 			
 		end
 	commit transaction
+
+go
+create procedure [SistemaCaido].BajaFactura(@IdFactura int)
+as begin transaction
+	--Se borra la factura?
+	delete from Facturas where IdFactura = @IdFactura
+	if (@@ERROR != 0)
+		begin
+			raiserror('No se pudo dar de baja la factura..', 1,1)
+			rollback transaction
+		end
+
+	commit transaction
+	
+go
+create procedure [SistemaCaido].ModificacionFactura
+(@IdFactura int, @IdCliente int, @IdEmpresa int, @NumeroFactura int, @FechaAlta datetime, @FechaVencimiento datetime, @Importe numeric(18,2))
+as begin transaction
+	update Facturas
+	set IdCliente = @IdCliente,
+		IdEmpresa = @IdEmpresa,
+		NumeroFactura = @NumeroFactura,
+		FechaAlta = @FechaAlta,
+		FechaVencimiento = @FechaVencimiento,
+		Importe = @Importe
+	where IdFactura = @IdFactura
+	if (@@ERROR != 0)
+		begin
+			raiserror('No se pudo modificar la factura..', 1,1)
+			rollback transaction
+		end
+
+	commit transaction
+
+
 
 
 ------------ Registro de Pago de Facturas
