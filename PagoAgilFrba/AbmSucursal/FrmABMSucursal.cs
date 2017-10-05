@@ -116,13 +116,13 @@ namespace PagoAgilFrba.AbmSucursal
             {
                 switch (operacion)
                 {
-                    case "Crear Rol":
+                    case "Crear Sucursal":
                         do_insert();
                         break;
-                    case "Modificar Rol":
+                    case "Modificar Sucursal":
                         do_update();
                         break;
-                    case "Eliminar Rol":
+                    case "Eliminar Sucursal":
                         do_delete();
                         break;
                     case "Buscador":
