@@ -566,16 +566,33 @@ as begin
 	on emp.IdEmpresa = ins.IdEmpresa
 
 	if(@ImporteFactura < 0)
-		raiserror('El importe de la factura es menor de 0..', 1,1)
+		begin
+			raiserror('El importe de la factura es menor de 0..', 1,1)
+			rollback transaction
+		end
 
 	if(@ImporteFactura = 0)
-		raiserror('El importe de la factura es igual a 0..', 1,1)	
+		begin
+			raiserror('El importe de la factura es igual a 0..', 1,1)
+			rollback transaction
+		end	
 		
 	if(@FechaVenc > sysdatetime())	
-		raiserror('La fecha de vencimiento supera la fecha actual..', 1,1)	
+		begin
+			raiserror('La fecha de vencimiento supera la fecha actual..', 1,1)
+			rollback transaction
+		end	
 
 	if(@Habilitada = 0)	
-		raiserror('La empresa seleccionada esta inactiva..', 1,1)
+		begin
+			raiserror('La empresa seleccionada esta inactiva..', 1,1)
+			rollback transaction
+		end
+		
+	-- Si paso todo, inserto
+	INSERT INTO Facturas (IdCliente, IdEmpresa, NumeroFactura, FechaAlta, FechaVencimiento, Importe)
+	SELECT ins.IdCliente, ins.IdEmpresa, ins.NumeroFactura, ins.FechaAlta, ins.FechaVencimiento, ins.Importe 
+	FROM inserted ins
 
 end
 
