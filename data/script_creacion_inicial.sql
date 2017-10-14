@@ -288,7 +288,7 @@ CREATE TABLE [SistemaCaido].[Clientes](
 	[IdCliente] [int] IDENTITY(1,1) NOT NULL primary key,
 	[Nombre] [nvarchar](255) NOT NULL,
 	[Apellido] [nvarchar](255) NOT NULL,
-	[DNI] [numeric](18, 0) NOT NULL,
+	[DNI] [numeric](18, 0) NOT NULL unique,
 	[Mail] [nvarchar](255) NOT NULL ,  --No pongo unique porque hay clientes con mismo mail en tabla maestra
 	[Telefono] [varchar](10) NULL,
 	[Direccion] [nvarchar](255) NOT NULL,
@@ -366,7 +366,7 @@ GO
 CREATE TABLE [SistemaCaido].[Productos](
 	[IdProducto] [int] IDENTITY(1,1) NOT NULL primary key,
 	[Descripcion] [nvarchar](255) NULL,
-	[Precio] [numeric](18, 2) NOT NULL)
+	[Precio] [numeric](18, 8) NOT NULL)
 GO
 
 CREATE TABLE [SistemaCaido].[ProductosXFacturas](
@@ -622,7 +622,7 @@ INSERT INTO SistemaCaido.UsuariosXRoles (IdRol, IdUsuario)
 VALUES (1,1)
 
 /* Porcentajes*/
-INSERT INTO SistemaCaido.Porcentajes VALUES(CAST('5.2' as numeric(3,2)), CONVERT(datetime, GETDATE()), 1)   --TODO ver cual es el porcentaje actual
+INSERT INTO SistemaCaido.Porcentajes VALUES(CAST('0.1' as numeric(3,2)), CONVERT(datetime, GETDATE()), 1) 
 
 /* Funcionalidades */
 INSERT INTO SistemaCaido.Funcionalidades VALUES ('ABM de Rol')
@@ -677,15 +677,15 @@ WHERE Nro_Factura IS NOT NULL
  
 /* Productos */
 INSERT INTO SistemaCaido.Productos (Precio)
-Select DISTINCT (m.ItemFactura_Monto / m.ItemFactura_Cantidad)
+Select DISTINCT convert(numeric(18,8),(m.ItemFactura_Monto / m.ItemFactura_Cantidad))	
 FROM gd_esquema.Maestra m
 
 /* Productos X Facturas*/
 INSERT INTO SistemaCaido.ProductosXFacturas(IdFactura, Cantidad, IdProducto)   
-SELECT distinct f.IdFactura, m.ItemFactura_Cantidad, p.IdProducto 
+SELECT f.IdFactura, m.ItemFactura_Cantidad, p.IdProducto 
 FROM gd_esquema.Maestra m
 JOIN SistemaCaido.Facturas f on m.Nro_Factura = f.NumeroFactura
-JOIN SistemaCaido.Productos p on (m.ItemFactura_Monto / m.ItemFactura_Cantidad) = p.Precio
+JOIN SistemaCaido.Productos p on convert(numeric(18,8),(m.ItemFactura_Monto / m.ItemFactura_Cantidad)) = p.Precio
 WHERE ItemFactura_Cantidad > 0
 and m.Pago_nro is null
 
@@ -704,7 +704,6 @@ FROM gd_esquema.Maestra m
 JOIN SistemaCaido.Sucursales suc on Sucursal_Nombre = suc.Nombre
 JOIN SistemaCaido.Clientes cli on [Cliente-Dni] = cli.DNI
 JOIN SistemaCaido.MediosPago mp on mp.Nombre = m.FormaPagoDescripcion
-join SistemaCaido.Facturas f on m.ItemPago_nro = f.NumeroFactura
 WHERE Pago_nro IS NOT NULL 
 
 
@@ -712,11 +711,11 @@ WHERE Pago_nro IS NOT NULL
 INSERT INTO SistemaCaido.PagosXFacturas (IdFactura, IdPago)
 SELECT distinct f.IdFactura, p.IdPago
 FROM gd_esquema.Maestra m
-JOIN SistemaCaido.Facturas f on f.NumeroFactura = m.ItemPago_nro
+JOIN SistemaCaido.Facturas f on f.NumeroFactura = m.Nro_Factura
 JOIN SistemaCaido.Pagos p on p.NumeroPago = m.Pago_nro
 
 /* Rendiciones */
-INSERT INTO SistemaCaido.Rendiciones (IdEmpresa, NumeroRendicion, Fecha, IdPorcentaje, Importe) --TODO falta el importe
+INSERT INTO SistemaCaido.Rendiciones (IdEmpresa, NumeroRendicion, Fecha, IdPorcentaje, Importe)   --TODO falta importe
 SELECT distinct IdEmpresa, Rendicion_Nro, Rendicion_Fecha, p.IdPorcentaje, 999 
 FROM gd_esquema.Maestra
 JOIN SistemaCaido.Empresas ON Empresa_Nombre = SistemaCaido.Empresas.Nombre
