@@ -715,12 +715,15 @@ JOIN SistemaCaido.Facturas f on f.NumeroFactura = m.Nro_Factura
 JOIN SistemaCaido.Pagos p on p.NumeroPago = m.Pago_nro
 
 /* Rendiciones */
-INSERT INTO SistemaCaido.Rendiciones (IdEmpresa, NumeroRendicion, Fecha, IdPorcentaje, Importe)   --TODO falta importe
-SELECT distinct IdEmpresa, Rendicion_Nro, Rendicion_Fecha, p.IdPorcentaje, 999 
-FROM gd_esquema.Maestra
-JOIN SistemaCaido.Empresas ON Empresa_Nombre = SistemaCaido.Empresas.Nombre
+INSERT INTO SistemaCaido.Rendiciones (IdEmpresa, NumeroRendicion, Fecha, IdPorcentaje, Importe)
+SELECT distinct e.IdEmpresa, Rendicion_Nro, Rendicion_Fecha, p.IdPorcentaje, (SUM(f.Importe) * p.Porcentaje)
+FROM gd_esquema.Maestra m
+JOIN SistemaCaido.Empresas e ON Empresa_Nombre = e.Nombre
 JOIN SistemaCaido.Porcentajes p on p.IdPorcentaje = 1 
+JOIN SistemaCaido.Facturas f on m.Nro_Factura = f.NumeroFactura
 WHERE Rendicion_Nro > 0
+Group by e.IdEmpresa, Rendicion_Nro, Rendicion_Fecha, p.IdPorcentaje, p.Porcentaje
+
 
 /*Rendiciones X Facturas */
 INSERT INTO SistemaCaido.RendicionesXFacturas (IdFactura, IdRendicion)
@@ -1342,11 +1345,12 @@ GO
 create function [SistemaCaido].[ClientesConMasPagos](@Anio char(4), @Trimestre int)
 returns table
 as return(
-	select top 5 IdCliente Cliente, count(*) CantidadPagos 
-	from Pagos
+	select top 5 c.Nombre, c.Apellido, count(*) CantidadPagos 
+	from SistemaCaido.Pagos p
+	Join SistemaCaido.Clientes c on p.IdCliente = c.IdCliente
 	where year(FechaCobro) = @Anio and
 		  month(FechaCobro) between (3 * @Trimestre - 2) and (3 * @Trimestre)
-  group by IdCliente
+  group by c.IdCliente, c.Nombre, c.Apellido
   order by 2 desc
 )
 
@@ -1357,10 +1361,57 @@ create function [SistemaCaido].[EmpresasConMayorMontoRendido](@Anio char(4), @Tr
 returns table
 as return(
 	select top 5 emp.Nombre Empresa, SUM(rend.Importe - (rend.Importe * porc.Porcentaje) / 100) MontoRendido
-	from Empresas emp
-	join Rendiciones rend on emp.IdEmpresa = rend.IdEmpresa
-	join Porcentajes porc on rend.IdPorcentaje = porc.IdPorcentaje
+	from SistemaCaido.Empresas emp
+	join SistemaCaido.Rendiciones rend on emp.IdEmpresa = rend.IdEmpresa
+	join SistemaCaido.Porcentajes porc on rend.IdPorcentaje = porc.IdPorcentaje
 	where year(rend.Fecha) = @Anio and
 		  month(rend.Fecha) between (3 * @Trimestre - 2) and (3 * @Trimestre)
-	group by emp.Nombre, rend.Importe, porc.Porcentaje
+	group by emp.IdEmpresa, emp.Nombre, rend.Importe, porc.Porcentaje
+	order by 2 desc
 )
+GO
+
+
+Create function SistemaCaido.EmpresasConMayorPorcentajeFacturasCobradas (@Anio char(4), @Trimestre int)
+returns table
+as return(
+	Select top 5 e.Nombre , ((COUNT(distinct f.IdFactura) * 100) / (select count(*) 
+							  from SistemaCaido.PagosXFacturas pf2 
+							  Join SistemaCaido.Pagos p2 on pf2.IdPago = p2.IdPago 
+					   		  where  YEAR(p2.FechaCobro) = @Anio
+							  And MONTH(p2.FechaCobro) between (3 * @Trimestre - 2) and (3 * @Trimestre) )) Porentaje_Facturas
+	From SistemaCaido.Empresas e
+	Join SistemaCaido.Facturas f on f.IdEmpresa = e.IdEmpresa
+	Join SistemaCaido.PagosXFacturas pf on f.IdFactura = pf.IdFactura
+	Join SistemaCaido.Pagos p on p.IdPago = pf.IdPago
+	where  YEAR(p.FechaCobro) = @Anio
+	And MONTH(p.FechaCobro) between (3 * @Trimestre - 2) and (3 * @Trimestre)
+	group by e.IdEmpresa, e.Nombre
+	order by 2 desc
+)
+GO
+
+
+Create function SistemaCaido.ClientesConMayorPorcentajeFacturasPagadas (@Anio char(4), @Trimestre int)
+returns table
+as return(
+	Select top 5 c.Nombre, c.Apellido, ((COUNT(distinct f.IdFactura) * 100) / (select count(*) 
+							  from SistemaCaido.PagosXFacturas pf2 
+							  Join SistemaCaido.Pagos p2 on pf2.IdPago = p2.IdPago 
+					   		  where  YEAR(p2.FechaCobro) = @Anio
+							  And MONTH(p2.FechaCobro) between (3 * @Trimestre - 2) and (3 * @Trimestre) )) Porentaje_Facturas
+	From SistemaCaido.Clientes c
+	Join SistemaCaido.Facturas f on c.IdCliente = f.IdCliente
+	Join SistemaCaido.PagosXFacturas pf on f.IdFactura = pf.IdFactura
+	Join SistemaCaido.Pagos p on p.IdPago = pf.IdPago
+	where  YEAR(p.FechaCobro) = @Anio
+	And MONTH(p.FechaCobro) between (3 * @Trimestre - 2) and (3 * @Trimestre)
+	group by c.IdCliente, c.Nombre, c.Apellido
+	order by 3 desc
+)
+GO
+
+
+
+
+
