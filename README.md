@@ -2,9 +2,12 @@
 
 # Gestion de Datos
 ---
-Grupo 44 "SistemaCaido"
 
 # Trabajo Practico: "Pago Agil" 
+---
+
+## Grupo 44: "SistemaCaido"
+---
 
 ## Integrantes
 > Julián Ignacio Alvarez        - Legajo 146659.8
