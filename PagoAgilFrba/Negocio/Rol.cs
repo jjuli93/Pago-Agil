@@ -11,6 +11,7 @@ namespace PagoAgilFrba.Negocio
         public List<Funcionalidad> funcionalidades = new List<Funcionalidad>();
         public string Nombre;
         public int Id;
+        public bool habilitado;
 
         public Rol() { }
 

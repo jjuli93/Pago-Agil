@@ -35,15 +35,17 @@
             this.label2 = new System.Windows.Forms.Label();
             this.usernameTB = new System.Windows.Forms.TextBox();
             this.passwordTB = new System.Windows.Forms.TextBox();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.loginGB = new System.Windows.Forms.GroupBox();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.panel1 = new System.Windows.Forms.Panel();
             this.loginGB.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // ingresarBtn
             // 
-            this.ingresarBtn.Location = new System.Drawing.Point(49, 191);
+            this.ingresarBtn.Location = new System.Drawing.Point(49, 200);
             this.ingresarBtn.Name = "ingresarBtn";
             this.ingresarBtn.Size = new System.Drawing.Size(75, 23);
             this.ingresarBtn.TabIndex = 0;
@@ -53,7 +55,7 @@
             // 
             // cancelarBtn
             // 
-            this.cancelarBtn.Location = new System.Drawing.Point(155, 191);
+            this.cancelarBtn.Location = new System.Drawing.Point(155, 200);
             this.cancelarBtn.Name = "cancelarBtn";
             this.cancelarBtn.Size = new System.Drawing.Size(75, 23);
             this.cancelarBtn.TabIndex = 1;
@@ -94,15 +96,6 @@
             this.passwordTB.TabIndex = 5;
             this.passwordTB.UseSystemPasswordChar = true;
             // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(-1, -1);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(286, 59);
-            this.pictureBox1.TabIndex = 6;
-            this.pictureBox1.TabStop = false;
-            // 
             // loginGB
             // 
             this.loginGB.BackColor = System.Drawing.Color.GhostWhite;
@@ -111,20 +104,39 @@
             this.loginGB.Controls.Add(this.usernameTB);
             this.loginGB.Controls.Add(this.label2);
             this.loginGB.Controls.Add(this.label1);
-            this.loginGB.Location = new System.Drawing.Point(13, 65);
+            this.loginGB.Location = new System.Drawing.Point(13, 74);
             this.loginGB.Name = "loginGB";
             this.loginGB.Size = new System.Drawing.Size(259, 113);
             this.loginGB.TabIndex = 7;
             this.loginGB.TabStop = false;
             this.loginGB.Text = "Ingresar sesión:";
             // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
+            this.pictureBox1.Location = new System.Drawing.Point(112, 0);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(62, 62);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox1.TabIndex = 0;
+            this.pictureBox1.TabStop = false;
+            // 
+            // panel1
+            // 
+            this.panel1.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.panel1.Controls.Add(this.pictureBox1);
+            this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(285, 63);
+            this.panel1.TabIndex = 8;
+            // 
             // FrmLogin
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.ClientSize = new System.Drawing.Size(284, 230);
-            this.Controls.Add(this.pictureBox1);
+            this.ClientSize = new System.Drawing.Size(284, 239);
+            this.Controls.Add(this.panel1);
             this.Controls.Add(this.cancelarBtn);
             this.Controls.Add(this.ingresarBtn);
             this.Controls.Add(this.loginGB);
@@ -133,9 +145,10 @@
             this.Name = "FrmLogin";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Inicio de sesión";
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.loginGB.ResumeLayout(false);
             this.loginGB.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            this.panel1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -148,7 +161,8 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox usernameTB;
         private System.Windows.Forms.TextBox passwordTB;
-        private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.GroupBox loginGB;
+        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.Panel panel1;
     }
 }

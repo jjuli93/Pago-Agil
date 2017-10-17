@@ -83,6 +83,7 @@
             this.continuarBtn.TabIndex = 4;
             this.continuarBtn.Text = "Continuar >>";
             this.continuarBtn.UseVisualStyleBackColor = true;
+            this.continuarBtn.Click += new System.EventHandler(this.continuarBtn_Click);
             // 
             // salirBtn
             // 
@@ -92,6 +93,7 @@
             this.salirBtn.TabIndex = 3;
             this.salirBtn.Text = "<< Salir";
             this.salirBtn.UseVisualStyleBackColor = true;
+            this.salirBtn.Click += new System.EventHandler(this.salirBtn_Click);
             // 
             // rolesCb
             // 
@@ -100,6 +102,7 @@
             this.rolesCb.Name = "rolesCb";
             this.rolesCb.Size = new System.Drawing.Size(178, 21);
             this.rolesCb.TabIndex = 2;
+            this.rolesCb.SelectedIndexChanged += new System.EventHandler(this.rolesCb_SelectedIndexChanged);
             // 
             // cerrarSesionHl
             // 
@@ -111,6 +114,7 @@
             this.cerrarSesionHl.Size = new System.Drawing.Size(67, 13);
             this.cerrarSesionHl.TabIndex = 1;
             this.cerrarSesionHl.Text = "cerrar sesión";
+            this.cerrarSesionHl.Click += new System.EventHandler(this.cerrarSesionHl_Click);
             // 
             // label1
             // 
