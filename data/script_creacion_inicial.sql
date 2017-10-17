@@ -893,6 +893,24 @@ as begin transaction
 GO
 
 
+create procedure SistemaCaido.BuscarEmpresas (@Nombre nvarchar(255), @CUIT nvarchar(50),  @IdRubro int)
+as begin
+	Select e.IdEmpresa, e.Nombre, e.CUIT, e.Direccion, e.Habilitada, r.Nombre
+	From SistemaCaido.Empresas e
+	Join SistemaCaido.Rubros r on e.IdRubro = r.IdRubro
+	where (@nombre is null or (e.nombre like CONCAT('%',@nombre,'%')))
+	and (@CUIT is null or (e.CUIT like CONCAT('%',@CUIT,'%')))
+	and (@IdRubro is null or (e.IdRubro = @IdRubro))
+end
+GO
+
+create procedure SistemaCaido.GetRubros
+as begin
+	Select r.IdRubro, r.Nombre
+	From SistemaCaido.Rubros r
+end
+GO
+
 --********************************* ABM de Sucursales ****************************************--
 
 create procedure [SistemaCaido].[AltaSucursal](@Nombre nvarchar(255), @Direccion nvarchar(255), @CodigoPostal varchar(4))
@@ -942,6 +960,17 @@ as begin transaction
 
 	commit transaction
 
+GO
+
+
+create procedure SistemaCaido.BuscarSucursales (@Nombre nvarchar(255), @CodigoPostal nvarchar(4),  @Direccion nvarchar(255))
+as begin
+	Select s.IdSucursal, s.CodigoPostal, s.Direccion, s.Habilitada, s.Nombre
+	From SistemaCaido.Sucursales s
+	where (@nombre is null or (s.Nombre like CONCAT('%',@nombre,'%')))
+	and (@CodigoPostal is null or (s.CodigoPostal like CONCAT('%',@CodigoPostal,'%')))
+	and (@Direccion is null or (s.Direccion like CONCAT('%', @Direccion,'%')))
+end
 GO
 
 
@@ -1046,6 +1075,16 @@ as begin transaction
 
 GO
 
+
+create procedure SistemaCaido.BuscarFacturas (@numeroFactura int)
+as begin
+	Select *
+	From SistemaCaido.Facturas f
+	where (@numeroFactura is null or (f.NumeroFactura = @numeroFactura))
+
+end
+GO
+
 --********************************* ABM de Clientes ****************************************--
 
 create procedure [SistemaCaido].[sp_alta_cliente] (@nombre varchar(250), @apellido varchar(250), @fechanac date, @dni numeric(10,0), @direccion varchar(250),@codpost numeric(18,0), @telefono numeric(18,0))
@@ -1122,6 +1161,15 @@ as begin transaction
 			commit transaction
 		end
 
+GO
+
+
+Create procedure SistemaCaido.GetFacturasCliente(@IdCliente INT)
+as begin
+	Select *
+	From SistemaCaido.Facturas f
+	where f.IdCliente = @IdCliente
+END
 GO
 
 --********************************* ABM de Rol ****************************************--
