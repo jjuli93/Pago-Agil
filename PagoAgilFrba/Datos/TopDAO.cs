@@ -6,11 +6,14 @@ using System.Threading.Tasks;
 using System.Data;
 using System.Data.Sql;
 using System.Data.SqlClient;
+using PagoAgilFrba.Helpers;
 
 namespace PagoAgilFrba.Datos
 {
     public class TopDAO
     {
+        private string connString = Singleton<Conexion>.Instance.getConnectionString();
+
         public DataTable consultar_listado(int year, int trimestre, int listado_id)
         {
             DataTable dt = new DataTable();
@@ -21,11 +24,25 @@ namespace PagoAgilFrba.Datos
             {
                 try
                 {
+                    using (SqlConnection conn = new SqlConnection(connString))
+                    using (SqlCommand cmd = new SqlCommand(sp, conn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@year", year);
+                        cmd.Parameters.AddWithValue("@trimestre", trimestre);
 
+                        conn.Open();
+                        SqlDataReader lector = cmd.ExecuteReader();
+
+                        dt.Load(lector);
+
+                        lector.Close();
+                    }
                 }
-                catch (Exception)
+                catch (SqlException)
                 {
-                    throw;
+
+                    //throw;
                 }
             }
 

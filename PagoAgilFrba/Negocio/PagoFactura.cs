@@ -9,6 +9,7 @@ namespace PagoAgilFrba.Negocio
 {
     public class PagoFactura
     {
+        int id;
         int nro_factura;
         DateTime fecha_cobro;
         string nombre_empresa;
@@ -18,6 +19,7 @@ namespace PagoAgilFrba.Negocio
         DateTime fecha_vencimiento;
         decimal importe;
         string sucursal;
+        bool habilitado;
 
         public void set_empresa(int id, string nombre)
         {
