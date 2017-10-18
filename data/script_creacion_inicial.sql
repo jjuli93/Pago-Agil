@@ -1185,22 +1185,22 @@ GO
 
 --********************************* ABM de Clientes ****************************************--
 
-create procedure [SistemaCaido].[sp_alta_cliente] (@nombre varchar(250), @apellido varchar(250), @fechanac date, @dni numeric(10,0), @direccion varchar(250),@codpost numeric(18,0), @telefono numeric(18,0))
+create procedure [SistemaCaido].[sp_alta_cliente] (@nombre varchar(250), @apellido varchar(250), @fechanac date, @dni numeric(10,0), @direccion varchar(250),@codpost numeric(18,0), @telefono numeric(18,0), @email nvarchar(255))
 as
 begin
 
 set xact_abort on
 begin tran
 
-	if((select count(*) from SistemaCaido.Clientes where DNI = @dni) > 0) THROW 51000, 'Ya existe un cliente con el numero de DNI ingresado.', 1;
-
+	if((select count(*) from SistemaCaido.Clientes where Mail = @email) > 0) THROW 51000, 'Ya existe un cliente con el mail ingresado ingresado.', 1;
+	
 	declare @usuario varchar(255)
 	declare @contraseña varchar(255)
 	set @usuario =   convert(varchar(255), @dni)
 	set @contraseña =   convert(varchar(255), @dni)
 
-	insert into SistemaCaido.Clientes(Nombre,Apellido,FechaNacimiento,DNI,Direccion,CodigoPostal,Telefono)
-	values(@nombre, @apellido, @fechanac, @dni, @direccion, @codpost, @telefono)
+	insert into SistemaCaido.Clientes(Nombre,Apellido,FechaNacimiento,DNI,Direccion,CodigoPostal,Telefono, Mail)
+	values(@nombre, @apellido, @fechanac, @dni, @direccion, @codpost, @telefono, @email)
 
 commit
 
