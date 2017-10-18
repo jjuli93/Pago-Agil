@@ -303,6 +303,14 @@ IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[SistemaCaid
 DROP PROCEDURE [SistemaCaido].[RealizarRendicion]
 GO
 
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[SistemaCaido].[GetFacturasPago]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [SistemaCaido].[GetFacturasPago]
+GO
+
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[SistemaCaido].[GetPagosCliente]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [SistemaCaido].[GetPagosCliente]
+GO
+
 
 --*************************************** Tipos *************************************************************--   
 
@@ -1317,6 +1325,26 @@ as begin
 		and YEAR(p.FechaCobro) = YEAR(@fecha)
 		and MONTH(p.FechaCobro) = MONTH(@fecha)
 END
+GO
+
+
+--********************************* Registrar devolucion ****************************************--
+
+Create procedure SistemaCaido.GetPagosCliente (@IdCliente INT)
+as begin
+	Select *
+	From SistemaCaido.Pagos p
+	where p.IdCliente = @IdCliente
+END
+GO
+
+Create procedure SistemaCaido.GetFacturasPago (@IdPago INT)
+as begin
+	Select f.*
+	From Facturas f
+	Inner join PagosXFacturas pf on pf.IdFactura = f.IdFactura
+	where pf.IdPago = @IdPago
+end
 GO
 
 
