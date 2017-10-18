@@ -822,6 +822,41 @@ end
 GO
 
 
+create procedure [SistemaCaido].[sp_obtenerPorcentajeActual] as
+begin
+	select top 1 p.IdPorcentaje, p.Porcentaje
+	from SistemaCaido.Porcentajes p
+	order by IdPorcentaje desc
+end
+
+GO
+
+create function SistemaCaido.GetSiguienteNumeroDeFactura ()
+returns int
+begin
+	
+	return(select MAX(f.NumeroFactura)+ 1 from SistemaCaido.Facturas f )
+END
+GO
+
+create function SistemaCaido.GetSiguienteNumeroDeFPago ()
+returns int
+begin
+	
+	return(select MAX(p.NumeroPago)+ 1 from SistemaCaido.Pagos p )
+END
+GO
+
+create function SistemaCaido.GetSiguienteNumeroDeRendicion()
+returns int
+begin
+	
+	return(select MAX(r.NumeroRendicion)+ 1 from SistemaCaido.Rendiciones r )
+END
+GO
+	
+
+
 --=============================================================================================================--
 --=============================================================================================================--
 --*************************************** Stored Procedures ***************************************************--                                 
@@ -1172,6 +1207,64 @@ as begin
 END
 GO
 
+
+--********************************* Registrar rendicion ****************************************--
+
+Create procedure SistemaCaido.GetFacturasRendicion (@IdEmpresa INT, @fecha datetime)
+as begin
+	Select f.*
+	From SistemaCaido.Facturas f
+	Inner join PagosXFacturas pf on pf.IdFactura = f.IdFactura
+	Inner join Pagos p  on p.IdPago = pf.IdPago
+	where f.IdEmpresa = @IdEmpresa
+	and YEAR(p.FechaCobro) = YEAR(@fecha)
+	and MONTH(p.FechaCobro) = MONTH(@fecha)
+END
+GO
+
+Create procedure SistemaCaido.GetTotalRendicion (@IdEmpresa INT, @fecha datetime)
+as begin
+	Select SUM(f.Importe)			--TODO falta importe con porcentaje
+	From SistemaCaido.Facturas f
+	Inner join PagosXFacturas pf on pf.IdFactura = f.IdFactura
+	Inner join Pagos p  on p.IdPago = pf.IdPago
+	where f.IdEmpresa = @IdEmpresa
+	and YEAR(p.FechaCobro) = YEAR(@fecha)
+	and MONTH(p.FechaCobro) = MONTH(@fecha)
+END
+GO
+
+Create procedure SistemaCaido.RealizarRendicion(@IdEmpresa INT, @fecha datetime)
+as begin
+	if((select count(*) from SistemaCaido.Rendiciones r where r.IdEmpresa = @IdEmpresa and YEAR(r.Fecha) = YEAR(@fecha) and MONTH(r.Fecha) = MONTH(@fecha)) > 0)
+		THROW 51000, 'Ya existe una rendicion para esta empresa en el mes actual', 1;
+	else
+		BEGIN
+		Insert into SistemaCaido.Rendiciones (Fecha, IdEmpresa, IdPorcentaje, Importe, NumeroRendicion)
+		Select @fecha, @IdEmpresa, (Select top 1 p.IdPorcentaje from SistemaCaido.Porcentajes p order by p.IdPorcentaje desc), SUM(f.Importe), SistemaCaido.GetSiguienteNumeroDeRendicion()     --TODO falta calcular importe con porcentaje
+		From SistemaCaido.Facturas f
+		Inner join PagosXFacturas pf on pf.IdFactura = f.IdFactura
+		Inner join Pagos p  on p.IdPago = pf.IdPago
+		where f.IdEmpresa = @IdEmpresa
+		and YEAR(p.FechaCobro) = YEAR(@fecha)
+		and MONTH(p.FechaCobro) = MONTH(@fecha)
+		END
+
+		Declare @IDRendicion INT
+		Set @IDrendicion = @@Identity
+
+		Insert into SistemaCaido.RendicionesXFacturas (IdFactura, IdRendicion)
+		Select f.IdFactura, @IDRendicion
+		From SistemaCaido.Facturas f
+		Inner join PagosXFacturas pf on pf.IdFactura = f.IdFactura
+		Inner join Pagos p  on p.IdPago = pf.IdPago
+		where f.IdEmpresa = @IdEmpresa
+		and YEAR(p.FechaCobro) = YEAR(@fecha)
+		and MONTH(p.FechaCobro) = MONTH(@fecha)
+END
+GO
+
+
 --********************************* ABM de Rol ****************************************--
 
 create procedure [SistemaCaido].[sp_alta_rol] (@nombre varchar(255), @habilitado  bit, @listaFuncionalidades sistemaCaido.listaIDs readonly)
@@ -1315,16 +1408,6 @@ and u.IdUsuario = ur.IdUsuario
 and ur.IdRol = r.IdRol
 and r.Habilitado = 1 	
 
-end
-
-GO
-
-
-create procedure [SistemaCaido].[sp_obtenerPorcentajeActual] as
-begin
-	select top 1 Porcentaje
-	from SistemaCaido.Porcentajes
-	order by IdPorcentaje desc
 end
 
 GO
