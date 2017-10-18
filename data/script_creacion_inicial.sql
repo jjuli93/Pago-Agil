@@ -43,6 +43,14 @@ IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[SistemaCaid
 DROP FUNCTION [SistemaCaido].[ClientesConMasPagos]
 GO
 
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[SistemaCaido].[ClientesConMayorPorcentajeFacturasPagadas]') AND type in (N'FN', N'IF', N'TF', N'FS', N'FT'))
+DROP FUNCTION [SistemaCaido].[ClientesConMayorPorcentajeFacturasPagadas]
+GO
+
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[SistemaCaido].[EmpresasConMayorPorcentajeFacturasCobradas]') AND type in (N'FN', N'IF', N'TF', N'FS', N'FT'))
+DROP FUNCTION [SistemaCaido].[EmpresasConMayorPorcentajeFacturasCobradas]
+GO
+
 
 --*************************************** Tablas *************************************************************--   
 
@@ -143,6 +151,19 @@ GO
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[SistemaCaido].[existeRolConMismoNombre]') AND type in (N'FN', N'IF', N'TF', N'FS', N'FT'))
 DROP FUNCTION [SistemaCaido].[existeRolConMismoNombre]
 GO
+
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[SistemaCaido].[GetSiguienteNumeroDeFactura]') AND type in (N'FN', N'IF', N'TF', N'FS', N'FT'))
+DROP FUNCTION [SistemaCaido].[GetSiguienteNumeroDeFactura]
+GO
+
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[SistemaCaido].[GetSiguienteNumeroDePago]') AND type in (N'FN', N'IF', N'TF', N'FS', N'FT'))
+DROP FUNCTION [SistemaCaido].[GetSiguienteNumeroDePago]
+GO
+
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[SistemaCaido].[GetSiguienteNumeroDeRendicion]') AND type in (N'FN', N'IF', N'TF', N'FS', N'FT'))
+DROP FUNCTION [SistemaCaido].[GetSiguienteNumeroDeRendicion]
+GO
+
 
 --*************************************** Stored procedures *************************************************************--   
 
@@ -249,6 +270,39 @@ GO
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[SistemaCaido].[AltaEmpresa]') AND type in (N'P', N'PC'))
 DROP PROCEDURE [SistemaCaido].[AltaEmpresa]
 GO
+
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[SistemaCaido].[BuscarEmpresas]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [SistemaCaido].[BuscarEmpresas]
+GO
+
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[SistemaCaido].[BuscarFacturas]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [SistemaCaido].[BuscarFacturas]
+GO
+
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[SistemaCaido].[BuscarSucursales]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [SistemaCaido].[BuscarSucursales]
+GO
+
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[SistemaCaido].[GetFacturasCliente]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [SistemaCaido].[GetFacturasCliente]
+GO
+
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[SistemaCaido].[GetFacturasRendicion]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [SistemaCaido].[GetFacturasRendicion]
+GO
+
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[SistemaCaido].[GetRubros]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [SistemaCaido].[GetRubros]
+GO
+
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[SistemaCaido].[GetTotalRendicion]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [SistemaCaido].[GetTotalRendicion]
+GO
+
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[SistemaCaido].[RealizarRendicion]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [SistemaCaido].[RealizarRendicion]
+GO
+
 
 --*************************************** Tipos *************************************************************--   
 
@@ -382,7 +436,8 @@ CREATE TABLE [SistemaCaido].[Rendiciones](
 	[NumeroRendicion] [numeric](18, 0) NOT NULL unique,
 	[Fecha] [datetime] NOT NULL,
 	[IdPorcentaje] [int] NOT NULL references SistemaCaido.Porcentajes,
-	[Importe] [numeric](18, 2) NOT NULL)
+	[ImporteTotal] [numeric](18, 2) NOT NULL,
+	[ImporteEmpresa] [numeric](18, 2) NOT NULL)
 GO
 
 CREATE TABLE [SistemaCaido].[RendicionesXFacturas](
@@ -715,8 +770,8 @@ JOIN SistemaCaido.Facturas f on f.NumeroFactura = m.Nro_Factura
 JOIN SistemaCaido.Pagos p on p.NumeroPago = m.Pago_nro
 
 /* Rendiciones */
-INSERT INTO SistemaCaido.Rendiciones (IdEmpresa, NumeroRendicion, Fecha, IdPorcentaje, Importe)
-SELECT distinct e.IdEmpresa, Rendicion_Nro, Rendicion_Fecha, p.IdPorcentaje, (SUM(f.Importe) * p.Porcentaje)
+INSERT INTO SistemaCaido.Rendiciones (IdEmpresa, NumeroRendicion, Fecha, IdPorcentaje,ImporteTotal, ImporteEmpresa)
+SELECT distinct e.IdEmpresa, Rendicion_Nro, Rendicion_Fecha, p.IdPorcentaje,SUM(f.importe), (SUM(f.Importe) * p.Porcentaje)
 FROM gd_esquema.Maestra m
 JOIN SistemaCaido.Empresas e ON Empresa_Nombre = e.Nombre
 JOIN SistemaCaido.Porcentajes p on p.IdPorcentaje = 1 
@@ -839,7 +894,7 @@ begin
 END
 GO
 
-create function SistemaCaido.GetSiguienteNumeroDeFPago ()
+create function SistemaCaido.GetSiguienteNumeroDePago ()
 returns int
 begin
 	
@@ -1224,7 +1279,7 @@ GO
 
 Create procedure SistemaCaido.GetTotalRendicion (@IdEmpresa INT, @fecha datetime)
 as begin
-	Select SUM(f.Importe)			--TODO falta importe con porcentaje
+	Select SUM(f.Importe) 'Importe_Total', SUM(f.Importe) * ((Select top 1 p.Porcentaje from SistemaCaido.Porcentajes p order by p.IdPorcentaje desc))	'Importe_Empresa'		
 	From SistemaCaido.Facturas f
 	Inner join PagosXFacturas pf on pf.IdFactura = f.IdFactura
 	Inner join Pagos p  on p.IdPago = pf.IdPago
@@ -1240,8 +1295,8 @@ as begin
 		THROW 51000, 'Ya existe una rendicion para esta empresa en el mes actual', 1;
 	else
 		BEGIN
-		Insert into SistemaCaido.Rendiciones (Fecha, IdEmpresa, IdPorcentaje, Importe, NumeroRendicion)
-		Select @fecha, @IdEmpresa, (Select top 1 p.IdPorcentaje from SistemaCaido.Porcentajes p order by p.IdPorcentaje desc), SUM(f.Importe), SistemaCaido.GetSiguienteNumeroDeRendicion()     --TODO falta calcular importe con porcentaje
+		Insert into SistemaCaido.Rendiciones (Fecha, IdEmpresa, IdPorcentaje, ImporteTotal, ImporteEmpresa, NumeroRendicion)
+		Select @fecha, @IdEmpresa, (Select top 1 p.IdPorcentaje from SistemaCaido.Porcentajes p order by p.IdPorcentaje desc), SUM(f.Importe), SUM(f.Importe) * ((Select top 1 p.Porcentaje from SistemaCaido.Porcentajes p order by p.IdPorcentaje desc)), SistemaCaido.GetSiguienteNumeroDeRendicion()   
 		From SistemaCaido.Facturas f
 		Inner join PagosXFacturas pf on pf.IdFactura = f.IdFactura
 		Inner join Pagos p  on p.IdPago = pf.IdPago
@@ -1491,13 +1546,13 @@ GO
 create function [SistemaCaido].[EmpresasConMayorMontoRendido](@Anio char(4), @Trimestre int)
 returns table
 as return(
-	select top 5 emp.Nombre Empresa, SUM(rend.Importe - (rend.Importe * porc.Porcentaje) / 100) MontoRendido
+	select top 5 emp.Nombre Empresa, SUM(ImporteEmpresa) MontoRendido
 	from SistemaCaido.Empresas emp
 	join SistemaCaido.Rendiciones rend on emp.IdEmpresa = rend.IdEmpresa
 	join SistemaCaido.Porcentajes porc on rend.IdPorcentaje = porc.IdPorcentaje
 	where year(rend.Fecha) = @Anio and
 		  month(rend.Fecha) between (3 * @Trimestre - 2) and (3 * @Trimestre)
-	group by emp.IdEmpresa, emp.Nombre, rend.Importe, porc.Porcentaje
+	group by emp.IdEmpresa, emp.Nombre, rend.ImporteEmpresa, porc.Porcentaje
 	order by 2 desc
 )
 GO
