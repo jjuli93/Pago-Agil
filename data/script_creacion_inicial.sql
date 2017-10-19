@@ -674,7 +674,7 @@ GO
 
 /* Usuario administrador */
 INSERT INTO SistemaCaido.Usuarios (Username, Password)
-VALUES('Admin', HASHBYTES('SHA2_256','w23e'))
+VALUES('Admin', HASHBYTES('SHA2_256','w23e')), ('prueba', HASHBYTES('SHA2_256','prueba'))
 
 /* Roles */
 INSERT INTO SistemaCaido.Roles (Nombre)
@@ -682,14 +682,13 @@ VALUES('Administrador'), ('Cobrador')
 
 /*Usuarios X Roles*/
 INSERT INTO SistemaCaido.UsuariosXRoles (IdRol, IdUsuario)
-VALUES (1,1)
+VALUES (1,1), (2,1), (2,2)
 
 /* Porcentajes*/
 INSERT INTO SistemaCaido.Porcentajes VALUES(CAST('0.1' as numeric(3,2)), CONVERT(datetime, GETDATE()), 1) 
 
 /* Funcionalidades */
 INSERT INTO SistemaCaido.Funcionalidades VALUES ('ABM de Rol')
-INSERT INTO SistemaCaido.Funcionalidades VALUES ('Login y Seguridad')
 INSERT INTO SistemaCaido.Funcionalidades VALUES ('Registro de Usuario')
 INSERT INTO SistemaCaido.Funcionalidades VALUES ('ABM de Cliente')
 INSERT INTO SistemaCaido.Funcionalidades VALUES ('ABM de Empresa')
@@ -701,7 +700,7 @@ INSERT INTO SistemaCaido.Funcionalidades VALUES ('Listado Estadistico')
 
 /* Funcionalidades X Roles */
 INSERT INTO SistemaCaido.RolesXFuncionalidades (IdRol, IdFuncionalidad)
-VALUES (1,1) ,(1,2) ,(1,3) ,(1,4) ,(1,5) ,(1,6) ,(1,7) ,(1,8) ,(1,9) ,(1,10)
+VALUES (1,1) ,(1,2) ,(1,3) ,(1,4) ,(1,5) ,(1,6) ,(1,7) ,(1,8) ,(1,9), (2,7)
 
 /* Clientes */
 INSERT INTO SistemaCaido.Clientes (Nombre, Apellido, DNI, Mail, Direccion, CodigoPostal, FechaNacimiento, Habilitado)
@@ -932,7 +931,7 @@ GO
 
 create procedure [SistemaCaido].[AltaEmpresa](@Nombre nvarchar(255), @CUIT nvarchar(50), @Direccion nvarchar(255), @IdRubro int)
 as begin transaction
-	insert into Empresas values (@Nombre, @CUIT, @Direccion, @IdRubro, 1)
+	insert into SistemaCaido.Empresas values (@Nombre, @CUIT, @Direccion, @IdRubro, 1)
 	if (@@ERROR != 0)
 		begin
 			raiserror('No se pudo dar de alta la empresa..', 1,1)
@@ -949,8 +948,8 @@ as begin transaction
 
 	declare @cantidadFacturas int
 
-	select @cantidadFacturas = count(*) from RendicionesXFacturas rxf
-	join Rendiciones ren on rxf.IdRendicion = ren.IdRendicion
+	select @cantidadFacturas = count(*) from SistemaCaido.RendicionesXFacturas rxf
+	join SistemaCaido.Rendiciones ren on rxf.IdRendicion = ren.IdRendicion
 	where ren.IdEmpresa = @IdEmpresa
 	
 	if @cantidadFacturas != 0
@@ -974,7 +973,7 @@ GO
 
 create procedure [SistemaCaido].[ModificacionEmpresa](@IdEmpresa int, @Nombre nvarchar(255), @CUIT nvarchar(50), @Direccion nvarchar(255), @IdRubro int, @Habilitada char)
 as begin transaction
-	update Empresas
+	update SistemaCaido.Empresas
 	set Nombre = @Nombre,
 		CUIT = @CUIT,
 		Direccion = @Direccion,
@@ -1013,7 +1012,7 @@ GO
 
 create procedure [SistemaCaido].[AltaSucursal](@Nombre nvarchar(255), @Direccion nvarchar(255), @CodigoPostal varchar(4))
 as begin transaction
-	insert into Sucursales values (@Nombre, @Direccion, @CodigoPostal, 1)	
+	insert into SistemaCaido.Sucursales values (@Nombre, @Direccion, @CodigoPostal, 1)	
 	if (@@ERROR != 0)
 		begin
 			raiserror('No se pudo dar de alta la sucursal..', 1,1)
@@ -1028,7 +1027,7 @@ GO
 create procedure [SistemaCaido].[BajaSucursal](@IdSucursal int)
 as begin transaction
 	-- Eliminacion logica
-	update Sucursales set Habilitada = 0 where IdSucursal = @IdSucursal
+	update SistemaCaido.Sucursales set Habilitada = 0 where IdSucursal = @IdSucursal
 	if (@@ERROR != 0)
 		begin
 			raiserror('No se pudo dar de baja la sucursal..', 1,1)
@@ -1043,7 +1042,7 @@ GO
 create procedure [SistemaCaido].[ModificacionSucursal]
 (@IdSucursal int, @Nombre nvarchar(255), @Direccion nvarchar(255), @CodigoPostal varchar(4), @Habilitada char) 
 as begin transaction
-	update Sucursales
+	update SistemaCaido.Sucursales
 	set Nombre = @Nombre,
 		Direccion = @Direccion,
 		CodigoPostal = @CodigoPostal,
@@ -1087,7 +1086,7 @@ as begin transaction
 	set @Importe = 0
 
 	-- Agregar la factura con importe 0
-	insert into Facturas (IdCliente, IdEmpresa, NumeroFactura, FechaAlta, FechaVencimiento, Importe)
+	insert into SistemaCaido.Facturas (IdCliente, IdEmpresa, NumeroFactura, FechaAlta, FechaVencimiento, Importe)
 	values (@IdCliente, @IdEmpresa, @NumeroFactura, sysdatetime(), @FechaVencimiento, @Importe)	
 	if (@@ERROR != 0)
 		begin
@@ -1108,7 +1107,7 @@ as begin transaction
 
 			while(@@FETCH_STATUS = 0) 
 			begin
-				select @Monto = isnull(Precio,0) from Productos where IdProducto = @Producto
+				select @Monto = isnull(Precio,0) from SistemaCaido.Productos where IdProducto = @Producto
 				if (@Monto = 0)
 					begin
 						--No existe el producto
@@ -1117,7 +1116,7 @@ as begin transaction
 					end
 				else
 					begin
-						insert into ProductosXFacturas values(@Producto, @IdFactura, @Cantidad)
+						insert into SistemaCaido.ProductosXFacturas values(@Producto, @IdFactura, @Cantidad)
 						if (@@ERROR != 0)
 							begin
 								raiserror('No se pudo dar de alta el item de factura..', 1,1)
@@ -1129,7 +1128,7 @@ as begin transaction
 			end
 
 			-- Actualizo el importe de la factura recientemente ingresada
-			update Facturas set Importe = @Importe where IdFactura = @IdFactura
+			update SistemaCaido.Facturas set Importe = @Importe where IdFactura = @IdFactura
 			
 		end
 	commit transaction
@@ -1140,7 +1139,7 @@ GO
 create procedure [SistemaCaido].[BajaFactura](@IdFactura int)
 as begin transaction
 	--Se borra la factura?
-	delete from Facturas where IdFactura = @IdFactura
+	delete from SistemaCaido.Facturas where IdFactura = @IdFactura
 	if (@@ERROR != 0)
 		begin
 			raiserror('No se pudo dar de baja la factura..', 1,1)
@@ -1155,7 +1154,7 @@ GO
 create procedure [SistemaCaido].[ModificacionFactura]
 (@IdFactura int, @IdCliente int, @IdEmpresa int, @NumeroFactura int, @FechaAlta datetime, @FechaVencimiento datetime, @Importe numeric(18,2))
 as begin transaction
-	update Facturas
+	update SistemaCaido.Facturas
 	set IdCliente = @IdCliente,
 		IdEmpresa = @IdEmpresa,
 		NumeroFactura = @NumeroFactura,
@@ -1250,7 +1249,7 @@ as begin transaction
 
 	if(@ImporteTotal != 0)
 		begin
-			insert into Pagos values (@NumeroPago, sysdatetime(), @Cliente, @ImporteTotal, @Sucursal, @MedioPago)
+			insert into SistemaCaido.Pagos values (@NumeroPago, sysdatetime(), @Cliente, @ImporteTotal, @Sucursal, @MedioPago)
 			if (@@ERROR != 0)
 				begin
 					raiserror('No se pudo registrar el pago..', 1,1)
@@ -1277,8 +1276,8 @@ Create procedure SistemaCaido.GetFacturasRendicion (@IdEmpresa INT, @fecha datet
 as begin
 	Select f.*
 	From SistemaCaido.Facturas f
-	Inner join PagosXFacturas pf on pf.IdFactura = f.IdFactura
-	Inner join Pagos p  on p.IdPago = pf.IdPago
+	Inner join SistemaCaido.PagosXFacturas pf on pf.IdFactura = f.IdFactura
+	Inner join SistemaCaido.Pagos p  on p.IdPago = pf.IdPago
 	where f.IdEmpresa = @IdEmpresa
 	and YEAR(p.FechaCobro) = YEAR(@fecha)
 	and MONTH(p.FechaCobro) = MONTH(@fecha)
@@ -1289,8 +1288,8 @@ Create procedure SistemaCaido.GetTotalRendicion (@IdEmpresa INT, @fecha datetime
 as begin
 	Select SUM(f.Importe) 'Importe_Total', SUM(f.Importe) * ((Select top 1 p.Porcentaje from SistemaCaido.Porcentajes p order by p.IdPorcentaje desc))	'Importe_Empresa'		
 	From SistemaCaido.Facturas f
-	Inner join PagosXFacturas pf on pf.IdFactura = f.IdFactura
-	Inner join Pagos p  on p.IdPago = pf.IdPago
+	Inner join SistemaCaido.PagosXFacturas pf on pf.IdFactura = f.IdFactura
+	Inner join SistemaCaido.Pagos p  on p.IdPago = pf.IdPago
 	where f.IdEmpresa = @IdEmpresa
 	and YEAR(p.FechaCobro) = YEAR(@fecha)
 	and MONTH(p.FechaCobro) = MONTH(@fecha)
@@ -1306,8 +1305,8 @@ as begin
 		Insert into SistemaCaido.Rendiciones (Fecha, IdEmpresa, IdPorcentaje, ImporteTotal, ImporteEmpresa, NumeroRendicion)
 		Select @fecha, @IdEmpresa, (Select top 1 p.IdPorcentaje from SistemaCaido.Porcentajes p order by p.IdPorcentaje desc), SUM(f.Importe), SUM(f.Importe) * ((Select top 1 p.Porcentaje from SistemaCaido.Porcentajes p order by p.IdPorcentaje desc)), SistemaCaido.GetSiguienteNumeroDeRendicion()   
 		From SistemaCaido.Facturas f
-		Inner join PagosXFacturas pf on pf.IdFactura = f.IdFactura
-		Inner join Pagos p  on p.IdPago = pf.IdPago
+		Inner join SistemaCaido.PagosXFacturas pf on pf.IdFactura = f.IdFactura
+		Inner join SistemaCaido.Pagos p  on p.IdPago = pf.IdPago
 		where f.IdEmpresa = @IdEmpresa
 		and YEAR(p.FechaCobro) = YEAR(@fecha)
 		and MONTH(p.FechaCobro) = MONTH(@fecha)
@@ -1319,8 +1318,8 @@ as begin
 		Insert into SistemaCaido.RendicionesXFacturas (IdFactura, IdRendicion)
 		Select f.IdFactura, @IDRendicion
 		From SistemaCaido.Facturas f
-		Inner join PagosXFacturas pf on pf.IdFactura = f.IdFactura
-		Inner join Pagos p  on p.IdPago = pf.IdPago
+		Inner join SistemaCaido.PagosXFacturas pf on pf.IdFactura = f.IdFactura
+		Inner join SistemaCaido.Pagos p  on p.IdPago = pf.IdPago
 		where f.IdEmpresa = @IdEmpresa
 		and YEAR(p.FechaCobro) = YEAR(@fecha)
 		and MONTH(p.FechaCobro) = MONTH(@fecha)
@@ -1341,8 +1340,8 @@ GO
 Create procedure SistemaCaido.GetFacturasPago (@IdPago INT)
 as begin
 	Select f.*
-	From Facturas f
-	Inner join PagosXFacturas pf on pf.IdFactura = f.IdFactura
+	From SistemaCaido.Facturas f
+	Inner join SistemaCaido.PagosXFacturas pf on pf.IdFactura = f.IdFactura
 	where pf.IdPago = @IdPago
 end
 GO
@@ -1473,7 +1472,7 @@ as
 begin
 
 select IdRol as ID, Nombre as Descripcion, Habilitado as Habilitado
-from Roles
+from SistemaCaido.Roles
 
 end
 
