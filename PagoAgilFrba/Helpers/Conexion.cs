@@ -12,7 +12,7 @@ namespace PagoAgilFrba.Helpers
 {
     public class Conexion
     {
-        private static string connectionString = ConfigurationManager.ConnectionStrings["GD1C2017"].ConnectionString;
+        private static string connectionString = ConfigurationManager.ConnectionStrings["GD2C2017"].ConnectionString;
         private static DateTime fecha_default = Convert.ToDateTime(ConfigurationManager.AppSettings["current_date"]);
 
         public string getConnectionString()

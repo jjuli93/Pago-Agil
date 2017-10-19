@@ -23,7 +23,7 @@ namespace PagoAgilFrba.Datos
             try
             {
                 using (SqlConnection conn = new SqlConnection(connString))
-                using (SqlCommand cmd = new SqlCommand("DDG.sp_get_roles", conn))
+                using (SqlCommand cmd = new SqlCommand("SistemaCaido.sp_get_roles", conn))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
 
@@ -52,7 +52,7 @@ namespace PagoAgilFrba.Datos
             try
             {
                 using (SqlConnection conn = new SqlConnection(connString))
-                using (SqlCommand cmd = new SqlCommand("DDG.sp_update_rol", conn))
+                using (SqlCommand cmd = new SqlCommand("SistemaCaido.sp_update_rol", conn))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
 
@@ -96,7 +96,7 @@ namespace PagoAgilFrba.Datos
             try
             {
                 using (SqlConnection conn = new SqlConnection(connString))
-                using (SqlCommand cmd = new SqlCommand("DDG.sp_baja_rol", conn))
+                using (SqlCommand cmd = new SqlCommand("SistemaCaido.sp_baja_rol", conn))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
 
@@ -122,7 +122,7 @@ namespace PagoAgilFrba.Datos
             try
             {
                 using (SqlConnection conn = new SqlConnection(connString))
-                using (SqlCommand cmd = new SqlCommand("DDG.sp_alta_rol", conn))
+                using (SqlCommand cmd = new SqlCommand("SistemaCaido.sp_alta_rol", conn))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
 
@@ -177,7 +177,7 @@ namespace PagoAgilFrba.Datos
             List<Funcionalidad> funcionalidades = new List<Funcionalidad>();
 
             using (SqlConnection conn = new SqlConnection(connString))
-            using (SqlCommand cmd = new SqlCommand("DDG.sp_get_funcionalidades", conn))
+            using (SqlCommand cmd = new SqlCommand("SistemaCaido.sp_get_funcionalidades", conn))
             {
                 cmd.CommandType = CommandType.StoredProcedure;
 
@@ -205,7 +205,7 @@ namespace PagoAgilFrba.Datos
             List<Funcionalidad> funcionalidades = new List<Funcionalidad>();
 
             using (SqlConnection conn = new SqlConnection(connString))
-            using (SqlCommand cmd = new SqlCommand("DDG.sp_get_funcionalidades_rol", conn))
+            using (SqlCommand cmd = new SqlCommand("SistemaCaido.sp_get_funcionalidades_rol", conn))
             {
                 cmd.CommandType = CommandType.StoredProcedure;
 
@@ -218,7 +218,7 @@ namespace PagoAgilFrba.Datos
                 {
                     while (lector.Read())
                     {
-                        Funcionalidad f = new Funcionalidad(Convert.ToInt32(lector["funcionalidad_ID"]), lector["funcionalidad_descripcion"].ToString());
+                        Funcionalidad f = new Funcionalidad(Convert.ToInt32(lector["IdFuncionalidad"]), lector["Nombre"].ToString());
 
                         funcionalidades.Add(f);
                     }

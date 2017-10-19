@@ -18,6 +18,7 @@ namespace PagoAgilFrba.Login
         ControlHelper ctrl_helper = Singleton<ControlHelper>.Instance;
         RolDAO rolDao = Singleton<RolDAO>.Instance;
         Rol rol = null;
+        private Funcionalidad funcionalidadSeleccionada = null;
 
         public FrmSeleccionFuncionalidad(Rol _rol)
         {
@@ -26,6 +27,8 @@ namespace PagoAgilFrba.Login
             this.AcceptButton = seleccionarBtn;
             this.CancelButton = exitBtn;
             inicializar_funcionalidades();
+            seleccionarBtn.Enabled = false;
+            funcionalidadSeleccionada = null;
 
             if (this.Owner == null)
             {
@@ -37,12 +40,8 @@ namespace PagoAgilFrba.Login
         private void inicializar_funcionalidades()
         {
             funcionalidadesLb.Items.Clear();
-            //obtener las funcionales desde el dao
-
-            foreach (var f in rol.funcionalidades)
-            {
-                
-            }
+            rol.funcionalidades = rolDao.get_funcionalidades_by_Rol(rol.Id);
+            rol.funcionalidades.ForEach(f => funcionalidadesLb.Items.Add(new ItemControlHelper.itemListBox(f.Nombre, f.Id)));
         }
 
         private void exitBtn_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -63,7 +62,29 @@ namespace PagoAgilFrba.Login
 
         private void seleccionarBtn_Click(object sender, EventArgs e)
         {
+            //obtener el form a partir de la funcionalidad seleccionada
+        }
 
+        private void funcionalidadesLb_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (funcionalidadesLb.SelectedItem == null)
+                return;
+
+            ItemControlHelper.itemListBox funcSelected = this.funcionalidadesLb.SelectedItem as ItemControlHelper.itemListBox;
+
+            foreach (Funcionalidad item in this.rol.funcionalidades)
+            {
+                if ((item.Id == funcSelected.id_item) && (item.Nombre.Equals(funcSelected.nombre_item)))
+                {
+                    funcionalidadSeleccionada = item;
+                    break;
+                }
+            }
+
+            if (funcionalidadSeleccionada != null)
+            {
+                seleccionarBtn.Enabled = true;
+            }
         }
     }
 }

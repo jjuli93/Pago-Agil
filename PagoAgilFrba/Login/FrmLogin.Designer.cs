@@ -98,7 +98,7 @@
             // 
             // loginGB
             // 
-            this.loginGB.BackColor = System.Drawing.Color.GhostWhite;
+            this.loginGB.BackColor = System.Drawing.Color.Silver;
             this.loginGB.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.loginGB.Controls.Add(this.passwordTB);
             this.loginGB.Controls.Add(this.usernameTB);
@@ -134,7 +134,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.BackColor = System.Drawing.SystemColors.ScrollBar;
             this.ClientSize = new System.Drawing.Size(284, 239);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.cancelarBtn);

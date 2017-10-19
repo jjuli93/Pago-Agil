@@ -96,6 +96,7 @@
             this.funcionalidadesLb.Name = "funcionalidadesLb";
             this.funcionalidadesLb.Size = new System.Drawing.Size(181, 121);
             this.funcionalidadesLb.TabIndex = 1;
+            this.funcionalidadesLb.SelectedIndexChanged += new System.EventHandler(this.funcionalidadesLb_SelectedIndexChanged);
             // 
             // label1
             // 
