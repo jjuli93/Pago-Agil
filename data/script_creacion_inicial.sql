@@ -43,6 +43,14 @@ IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[SistemaCaid
 DROP FUNCTION [SistemaCaido].[ClientesConMasPagos]
 GO
 
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[SistemaCaido].[ClientesConMayorPorcentajeFacturasPagadas]') AND type in (N'FN', N'IF', N'TF', N'FS', N'FT'))
+DROP FUNCTION [SistemaCaido].[ClientesConMayorPorcentajeFacturasPagadas]
+GO
+
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[SistemaCaido].[EmpresasConMayorPorcentajeFacturasCobradas]') AND type in (N'FN', N'IF', N'TF', N'FS', N'FT'))
+DROP FUNCTION [SistemaCaido].[EmpresasConMayorPorcentajeFacturasCobradas]
+GO
+
 
 --*************************************** Tablas *************************************************************--   
 
@@ -143,6 +151,19 @@ GO
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[SistemaCaido].[existeRolConMismoNombre]') AND type in (N'FN', N'IF', N'TF', N'FS', N'FT'))
 DROP FUNCTION [SistemaCaido].[existeRolConMismoNombre]
 GO
+
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[SistemaCaido].[GetSiguienteNumeroDeFactura]') AND type in (N'FN', N'IF', N'TF', N'FS', N'FT'))
+DROP FUNCTION [SistemaCaido].[GetSiguienteNumeroDeFactura]
+GO
+
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[SistemaCaido].[GetSiguienteNumeroDePago]') AND type in (N'FN', N'IF', N'TF', N'FS', N'FT'))
+DROP FUNCTION [SistemaCaido].[GetSiguienteNumeroDePago]
+GO
+
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[SistemaCaido].[GetSiguienteNumeroDeRendicion]') AND type in (N'FN', N'IF', N'TF', N'FS', N'FT'))
+DROP FUNCTION [SistemaCaido].[GetSiguienteNumeroDeRendicion]
+GO
+
 
 --*************************************** Stored procedures *************************************************************--   
 
@@ -249,6 +270,47 @@ GO
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[SistemaCaido].[AltaEmpresa]') AND type in (N'P', N'PC'))
 DROP PROCEDURE [SistemaCaido].[AltaEmpresa]
 GO
+
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[SistemaCaido].[BuscarEmpresas]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [SistemaCaido].[BuscarEmpresas]
+GO
+
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[SistemaCaido].[BuscarFacturas]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [SistemaCaido].[BuscarFacturas]
+GO
+
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[SistemaCaido].[BuscarSucursales]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [SistemaCaido].[BuscarSucursales]
+GO
+
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[SistemaCaido].[GetFacturasCliente]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [SistemaCaido].[GetFacturasCliente]
+GO
+
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[SistemaCaido].[GetFacturasRendicion]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [SistemaCaido].[GetFacturasRendicion]
+GO
+
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[SistemaCaido].[GetRubros]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [SistemaCaido].[GetRubros]
+GO
+
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[SistemaCaido].[GetTotalRendicion]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [SistemaCaido].[GetTotalRendicion]
+GO
+
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[SistemaCaido].[RealizarRendicion]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [SistemaCaido].[RealizarRendicion]
+GO
+
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[SistemaCaido].[GetFacturasPago]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [SistemaCaido].[GetFacturasPago]
+GO
+
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[SistemaCaido].[GetPagosCliente]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [SistemaCaido].[GetPagosCliente]
+GO
+
 
 --*************************************** Tipos *************************************************************--   
 
@@ -382,7 +444,8 @@ CREATE TABLE [SistemaCaido].[Rendiciones](
 	[NumeroRendicion] [numeric](18, 0) NOT NULL unique,
 	[Fecha] [datetime] NOT NULL,
 	[IdPorcentaje] [int] NOT NULL references SistemaCaido.Porcentajes,
-	[Importe] [numeric](18, 2) NOT NULL)
+	[ImporteTotal] [numeric](18, 2) NOT NULL,
+	[ImporteEmpresa] [numeric](18, 2) NOT NULL)
 GO
 
 CREATE TABLE [SistemaCaido].[RendicionesXFacturas](
@@ -611,7 +674,7 @@ GO
 
 /* Usuario administrador */
 INSERT INTO SistemaCaido.Usuarios (Username, Password)
-VALUES('Admin', HASHBYTES('SHA2_256','w23e'))
+VALUES('Admin', HASHBYTES('SHA2_256','w23e')), ('prueba', HASHBYTES('SHA2_256','prueba'))
 
 /* Roles */
 INSERT INTO SistemaCaido.Roles (Nombre)
@@ -619,14 +682,13 @@ VALUES('Administrador'), ('Cobrador')
 
 /*Usuarios X Roles*/
 INSERT INTO SistemaCaido.UsuariosXRoles (IdRol, IdUsuario)
-VALUES (1,1)
+VALUES (1,1), (2,1), (2,2)
 
 /* Porcentajes*/
 INSERT INTO SistemaCaido.Porcentajes VALUES(CAST('0.1' as numeric(3,2)), CONVERT(datetime, GETDATE()), 1) 
 
 /* Funcionalidades */
 INSERT INTO SistemaCaido.Funcionalidades VALUES ('ABM de Rol')
-INSERT INTO SistemaCaido.Funcionalidades VALUES ('Login y Seguridad')
 INSERT INTO SistemaCaido.Funcionalidades VALUES ('Registro de Usuario')
 INSERT INTO SistemaCaido.Funcionalidades VALUES ('ABM de Cliente')
 INSERT INTO SistemaCaido.Funcionalidades VALUES ('ABM de Empresa')
@@ -638,7 +700,7 @@ INSERT INTO SistemaCaido.Funcionalidades VALUES ('Listado Estadistico')
 
 /* Funcionalidades X Roles */
 INSERT INTO SistemaCaido.RolesXFuncionalidades (IdRol, IdFuncionalidad)
-VALUES (1,1) ,(1,2) ,(1,3) ,(1,4) ,(1,5) ,(1,6) ,(1,7) ,(1,8) ,(1,9) ,(1,10)
+VALUES (1,1) ,(1,2) ,(1,3) ,(1,4) ,(1,5) ,(1,6) ,(1,7) ,(1,8) ,(1,9), (2,7)
 
 /* Clientes */
 INSERT INTO SistemaCaido.Clientes (Nombre, Apellido, DNI, Mail, Direccion, CodigoPostal, FechaNacimiento, Habilitado)
@@ -715,8 +777,8 @@ JOIN SistemaCaido.Facturas f on f.NumeroFactura = m.Nro_Factura
 JOIN SistemaCaido.Pagos p on p.NumeroPago = m.Pago_nro
 
 /* Rendiciones */
-INSERT INTO SistemaCaido.Rendiciones (IdEmpresa, NumeroRendicion, Fecha, IdPorcentaje, Importe)
-SELECT distinct e.IdEmpresa, Rendicion_Nro, Rendicion_Fecha, p.IdPorcentaje, (SUM(f.Importe) * p.Porcentaje)
+INSERT INTO SistemaCaido.Rendiciones (IdEmpresa, NumeroRendicion, Fecha, IdPorcentaje,ImporteTotal, ImporteEmpresa)
+SELECT distinct e.IdEmpresa, Rendicion_Nro, Rendicion_Fecha, p.IdPorcentaje,SUM(f.importe), (SUM(f.Importe) * p.Porcentaje)
 FROM gd_esquema.Maestra m
 JOIN SistemaCaido.Empresas e ON Empresa_Nombre = e.Nombre
 JOIN SistemaCaido.Porcentajes p on p.IdPorcentaje = 1 
@@ -822,6 +884,41 @@ end
 GO
 
 
+create procedure [SistemaCaido].[sp_obtenerPorcentajeActual] as
+begin
+	select top 1 p.IdPorcentaje, p.Porcentaje
+	from SistemaCaido.Porcentajes p
+	order by IdPorcentaje desc
+end
+
+GO
+
+create function SistemaCaido.GetSiguienteNumeroDeFactura ()
+returns int
+begin
+	
+	return(select MAX(f.NumeroFactura)+ 1 from SistemaCaido.Facturas f )
+END
+GO
+
+create function SistemaCaido.GetSiguienteNumeroDePago ()
+returns int
+begin
+	
+	return(select MAX(p.NumeroPago)+ 1 from SistemaCaido.Pagos p )
+END
+GO
+
+create function SistemaCaido.GetSiguienteNumeroDeRendicion()
+returns int
+begin
+	
+	return(select MAX(r.NumeroRendicion)+ 1 from SistemaCaido.Rendiciones r )
+END
+GO
+	
+
+
 --=============================================================================================================--
 --=============================================================================================================--
 --*************************************** Stored Procedures ***************************************************--                                 
@@ -834,7 +931,7 @@ GO
 
 create procedure [SistemaCaido].[AltaEmpresa](@Nombre nvarchar(255), @CUIT nvarchar(50), @Direccion nvarchar(255), @IdRubro int)
 as begin transaction
-	insert into Empresas values (@Nombre, @CUIT, @Direccion, @IdRubro, 1)
+	insert into SistemaCaido.Empresas values (@Nombre, @CUIT, @Direccion, @IdRubro, 1)
 	if (@@ERROR != 0)
 		begin
 			raiserror('No se pudo dar de alta la empresa..', 1,1)
@@ -851,8 +948,8 @@ as begin transaction
 
 	declare @cantidadFacturas int
 
-	select @cantidadFacturas = count(*) from RendicionesXFacturas rxf
-	join Rendiciones ren on rxf.IdRendicion = ren.IdRendicion
+	select @cantidadFacturas = count(*) from SistemaCaido.RendicionesXFacturas rxf
+	join SistemaCaido.Rendiciones ren on rxf.IdRendicion = ren.IdRendicion
 	where ren.IdEmpresa = @IdEmpresa
 	
 	if @cantidadFacturas != 0
@@ -876,7 +973,7 @@ GO
 
 create procedure [SistemaCaido].[ModificacionEmpresa](@IdEmpresa int, @Nombre nvarchar(255), @CUIT nvarchar(50), @Direccion nvarchar(255), @IdRubro int, @Habilitada char)
 as begin transaction
-	update Empresas
+	update SistemaCaido.Empresas
 	set Nombre = @Nombre,
 		CUIT = @CUIT,
 		Direccion = @Direccion,
@@ -915,7 +1012,7 @@ GO
 
 create procedure [SistemaCaido].[AltaSucursal](@Nombre nvarchar(255), @Direccion nvarchar(255), @CodigoPostal varchar(4))
 as begin transaction
-	insert into Sucursales values (@Nombre, @Direccion, @CodigoPostal, 1)	
+	insert into SistemaCaido.Sucursales values (@Nombre, @Direccion, @CodigoPostal, 1)	
 	if (@@ERROR != 0)
 		begin
 			raiserror('No se pudo dar de alta la sucursal..', 1,1)
@@ -930,7 +1027,7 @@ GO
 create procedure [SistemaCaido].[BajaSucursal](@IdSucursal int)
 as begin transaction
 	-- Eliminacion logica
-	update Sucursales set Habilitada = 0 where IdSucursal = @IdSucursal
+	update SistemaCaido.Sucursales set Habilitada = 0 where IdSucursal = @IdSucursal
 	if (@@ERROR != 0)
 		begin
 			raiserror('No se pudo dar de baja la sucursal..', 1,1)
@@ -945,7 +1042,7 @@ GO
 create procedure [SistemaCaido].[ModificacionSucursal]
 (@IdSucursal int, @Nombre nvarchar(255), @Direccion nvarchar(255), @CodigoPostal varchar(4), @Habilitada char) 
 as begin transaction
-	update Sucursales
+	update SistemaCaido.Sucursales
 	set Nombre = @Nombre,
 		Direccion = @Direccion,
 		CodigoPostal = @CodigoPostal,
@@ -989,7 +1086,7 @@ as begin transaction
 	set @Importe = 0
 
 	-- Agregar la factura con importe 0
-	insert into Facturas (IdCliente, IdEmpresa, NumeroFactura, FechaAlta, FechaVencimiento, Importe)
+	insert into SistemaCaido.Facturas (IdCliente, IdEmpresa, NumeroFactura, FechaAlta, FechaVencimiento, Importe)
 	values (@IdCliente, @IdEmpresa, @NumeroFactura, sysdatetime(), @FechaVencimiento, @Importe)	
 	if (@@ERROR != 0)
 		begin
@@ -1010,7 +1107,7 @@ as begin transaction
 
 			while(@@FETCH_STATUS = 0) 
 			begin
-				select @Monto = isnull(Precio,0) from Productos where IdProducto = @Producto
+				select @Monto = isnull(Precio,0) from SistemaCaido.Productos where IdProducto = @Producto
 				if (@Monto = 0)
 					begin
 						--No existe el producto
@@ -1019,7 +1116,7 @@ as begin transaction
 					end
 				else
 					begin
-						insert into ProductosXFacturas values(@Producto, @IdFactura, @Cantidad)
+						insert into SistemaCaido.ProductosXFacturas values(@Producto, @IdFactura, @Cantidad)
 						if (@@ERROR != 0)
 							begin
 								raiserror('No se pudo dar de alta el item de factura..', 1,1)
@@ -1031,7 +1128,7 @@ as begin transaction
 			end
 
 			-- Actualizo el importe de la factura recientemente ingresada
-			update Facturas set Importe = @Importe where IdFactura = @IdFactura
+			update SistemaCaido.Facturas set Importe = @Importe where IdFactura = @IdFactura
 			
 		end
 	commit transaction
@@ -1042,7 +1139,7 @@ GO
 create procedure [SistemaCaido].[BajaFactura](@IdFactura int)
 as begin transaction
 	--Se borra la factura?
-	delete from Facturas where IdFactura = @IdFactura
+	delete from SistemaCaido.Facturas where IdFactura = @IdFactura
 	if (@@ERROR != 0)
 		begin
 			raiserror('No se pudo dar de baja la factura..', 1,1)
@@ -1057,7 +1154,7 @@ GO
 create procedure [SistemaCaido].[ModificacionFactura]
 (@IdFactura int, @IdCliente int, @IdEmpresa int, @NumeroFactura int, @FechaAlta datetime, @FechaVencimiento datetime, @Importe numeric(18,2))
 as begin transaction
-	update Facturas
+	update SistemaCaido.Facturas
 	set IdCliente = @IdCliente,
 		IdEmpresa = @IdEmpresa,
 		NumeroFactura = @NumeroFactura,
@@ -1087,22 +1184,22 @@ GO
 
 --********************************* ABM de Clientes ****************************************--
 
-create procedure [SistemaCaido].[sp_alta_cliente] (@nombre varchar(250), @apellido varchar(250), @fechanac date, @dni numeric(10,0), @direccion varchar(250),@codpost numeric(18,0), @telefono numeric(18,0))
+create procedure [SistemaCaido].[sp_alta_cliente] (@nombre varchar(250), @apellido varchar(250), @fechanac date, @dni numeric(10,0), @direccion varchar(250),@codpost numeric(18,0), @telefono numeric(18,0), @email nvarchar(255))
 as
 begin
 
 set xact_abort on
 begin tran
 
-	if((select count(*) from SistemaCaido.Clientes where DNI = @dni) > 0) THROW 51000, 'Ya existe un cliente con el numero de DNI ingresado.', 1;
-
+	if((select count(*) from SistemaCaido.Clientes where Mail = @email) > 0) THROW 51000, 'Ya existe un cliente con el mail ingresado ingresado.', 1;
+	
 	declare @usuario varchar(255)
 	declare @contraseña varchar(255)
 	set @usuario =   convert(varchar(255), @dni)
 	set @contraseña =   convert(varchar(255), @dni)
 
-	insert into SistemaCaido.Clientes(Nombre,Apellido,FechaNacimiento,DNI,Direccion,CodigoPostal,Telefono)
-	values(@nombre, @apellido, @fechanac, @dni, @direccion, @codpost, @telefono)
+	insert into SistemaCaido.Clientes(Nombre,Apellido,FechaNacimiento,DNI,Direccion,CodigoPostal,Telefono, Mail)
+	values(@nombre, @apellido, @fechanac, @dni, @direccion, @codpost, @telefono, @email)
 
 commit
 
@@ -1152,7 +1249,7 @@ as begin transaction
 
 	if(@ImporteTotal != 0)
 		begin
-			insert into Pagos values (@NumeroPago, sysdatetime(), @Cliente, @ImporteTotal, @Sucursal, @MedioPago)
+			insert into SistemaCaido.Pagos values (@NumeroPago, sysdatetime(), @Cliente, @ImporteTotal, @Sucursal, @MedioPago)
 			if (@@ERROR != 0)
 				begin
 					raiserror('No se pudo registrar el pago..', 1,1)
@@ -1171,6 +1268,84 @@ as begin
 	where f.IdCliente = @IdCliente
 END
 GO
+
+
+--********************************* Registrar rendicion ****************************************--
+
+Create procedure SistemaCaido.GetFacturasRendicion (@IdEmpresa INT, @fecha datetime)
+as begin
+	Select f.*
+	From SistemaCaido.Facturas f
+	Inner join SistemaCaido.PagosXFacturas pf on pf.IdFactura = f.IdFactura
+	Inner join SistemaCaido.Pagos p  on p.IdPago = pf.IdPago
+	where f.IdEmpresa = @IdEmpresa
+	and YEAR(p.FechaCobro) = YEAR(@fecha)
+	and MONTH(p.FechaCobro) = MONTH(@fecha)
+END
+GO
+
+Create procedure SistemaCaido.GetTotalRendicion (@IdEmpresa INT, @fecha datetime)
+as begin
+	Select SUM(f.Importe) 'Importe_Total', SUM(f.Importe) * ((Select top 1 p.Porcentaje from SistemaCaido.Porcentajes p order by p.IdPorcentaje desc))	'Importe_Empresa'		
+	From SistemaCaido.Facturas f
+	Inner join SistemaCaido.PagosXFacturas pf on pf.IdFactura = f.IdFactura
+	Inner join SistemaCaido.Pagos p  on p.IdPago = pf.IdPago
+	where f.IdEmpresa = @IdEmpresa
+	and YEAR(p.FechaCobro) = YEAR(@fecha)
+	and MONTH(p.FechaCobro) = MONTH(@fecha)
+END
+GO
+
+Create procedure SistemaCaido.RealizarRendicion(@IdEmpresa INT, @fecha datetime)
+as begin
+	if((select count(*) from SistemaCaido.Rendiciones r where r.IdEmpresa = @IdEmpresa and YEAR(r.Fecha) = YEAR(@fecha) and MONTH(r.Fecha) = MONTH(@fecha)) > 0)
+		THROW 51000, 'Ya existe una rendicion para esta empresa en el mes actual', 1;
+	else
+		BEGIN
+		Insert into SistemaCaido.Rendiciones (Fecha, IdEmpresa, IdPorcentaje, ImporteTotal, ImporteEmpresa, NumeroRendicion)
+		Select @fecha, @IdEmpresa, (Select top 1 p.IdPorcentaje from SistemaCaido.Porcentajes p order by p.IdPorcentaje desc), SUM(f.Importe), SUM(f.Importe) * ((Select top 1 p.Porcentaje from SistemaCaido.Porcentajes p order by p.IdPorcentaje desc)), SistemaCaido.GetSiguienteNumeroDeRendicion()   
+		From SistemaCaido.Facturas f
+		Inner join SistemaCaido.PagosXFacturas pf on pf.IdFactura = f.IdFactura
+		Inner join SistemaCaido.Pagos p  on p.IdPago = pf.IdPago
+		where f.IdEmpresa = @IdEmpresa
+		and YEAR(p.FechaCobro) = YEAR(@fecha)
+		and MONTH(p.FechaCobro) = MONTH(@fecha)
+		END
+
+		Declare @IDRendicion INT
+		Set @IDrendicion = @@Identity
+
+		Insert into SistemaCaido.RendicionesXFacturas (IdFactura, IdRendicion)
+		Select f.IdFactura, @IDRendicion
+		From SistemaCaido.Facturas f
+		Inner join SistemaCaido.PagosXFacturas pf on pf.IdFactura = f.IdFactura
+		Inner join SistemaCaido.Pagos p  on p.IdPago = pf.IdPago
+		where f.IdEmpresa = @IdEmpresa
+		and YEAR(p.FechaCobro) = YEAR(@fecha)
+		and MONTH(p.FechaCobro) = MONTH(@fecha)
+END
+GO
+
+
+--********************************* Registrar devolucion ****************************************--
+
+Create procedure SistemaCaido.GetPagosCliente (@IdCliente INT)
+as begin
+	Select *
+	From SistemaCaido.Pagos p
+	where p.IdCliente = @IdCliente
+END
+GO
+
+Create procedure SistemaCaido.GetFacturasPago (@IdPago INT)
+as begin
+	Select f.*
+	From SistemaCaido.Facturas f
+	Inner join SistemaCaido.PagosXFacturas pf on pf.IdFactura = f.IdFactura
+	where pf.IdPago = @IdPago
+end
+GO
+
 
 --********************************* ABM de Rol ****************************************--
 
@@ -1297,7 +1472,7 @@ as
 begin
 
 select IdRol as ID, Nombre as Descripcion, Habilitado as Habilitado
-from Roles
+from SistemaCaido.Roles
 
 end
 
@@ -1315,16 +1490,6 @@ and u.IdUsuario = ur.IdUsuario
 and ur.IdRol = r.IdRol
 and r.Habilitado = 1 	
 
-end
-
-GO
-
-
-create procedure [SistemaCaido].[sp_obtenerPorcentajeActual] as
-begin
-	select top 1 Porcentaje
-	from SistemaCaido.Porcentajes
-	order by IdPorcentaje desc
 end
 
 GO
@@ -1408,13 +1573,13 @@ GO
 create function [SistemaCaido].[EmpresasConMayorMontoRendido](@Anio char(4), @Trimestre int)
 returns table
 as return(
-	select top 5 emp.Nombre Empresa, SUM(rend.Importe - (rend.Importe * porc.Porcentaje) / 100) MontoRendido
+	select top 5 emp.Nombre Empresa, SUM(ImporteEmpresa) MontoRendido
 	from SistemaCaido.Empresas emp
 	join SistemaCaido.Rendiciones rend on emp.IdEmpresa = rend.IdEmpresa
 	join SistemaCaido.Porcentajes porc on rend.IdPorcentaje = porc.IdPorcentaje
 	where year(rend.Fecha) = @Anio and
 		  month(rend.Fecha) between (3 * @Trimestre - 2) and (3 * @Trimestre)
-	group by emp.IdEmpresa, emp.Nombre, rend.Importe, porc.Porcentaje
+	group by emp.IdEmpresa, emp.Nombre, rend.ImporteEmpresa, porc.Porcentaje
 	order by 2 desc
 )
 GO
