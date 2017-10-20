@@ -183,12 +183,12 @@ namespace PagoAgilFrba.Datos
 
                 conn.Open();
                 SqlDataReader lector = cmd.ExecuteReader();
-
+                
                 if (lector.HasRows)
                 {
                     while (lector.Read())
                     {
-                        Funcionalidad f = new Funcionalidad(Convert.ToInt32(lector["funcionalidad_ID"]), lector["funcionalidad_descripcion"].ToString());
+                        Funcionalidad f = new Funcionalidad(Convert.ToInt32(lector["IdFuncionalidad"]), lector["Nombre"].ToString());
 
                         funcionalidades.Add(f);
                     }
@@ -214,11 +214,20 @@ namespace PagoAgilFrba.Datos
                 conn.Open();
                 SqlDataReader lector = cmd.ExecuteReader();
 
+                var funID = 0;
+                var funDesc = "";
+
                 if (lector.HasRows)
                 {
                     while (lector.Read())
                     {
-                        Funcionalidad f = new Funcionalidad(Convert.ToInt32(lector["IdFuncionalidad"]), lector["Nombre"].ToString());
+                        funID = Convert.ToInt32(lector["IdFuncionalidad"]);
+                        funDesc = lector["Nombre"].ToString();
+
+                        if (funID == 2 & funDesc == "Registro de Usuario")
+                            continue;
+
+                        Funcionalidad f = new Funcionalidad(funID, funDesc);
 
                         funcionalidades.Add(f);
                     }

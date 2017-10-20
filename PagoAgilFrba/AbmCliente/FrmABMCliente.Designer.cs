@@ -599,6 +599,7 @@
             this.clientesDt.Name = "clientesDt";
             this.clientesDt.Size = new System.Drawing.Size(492, 234);
             this.clientesDt.TabIndex = 1;
+            this.clientesDt.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.clientesDt_CellClick);
             // 
             // filtrosGB
             // 

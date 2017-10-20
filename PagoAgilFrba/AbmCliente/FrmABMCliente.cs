@@ -8,17 +8,22 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using PagoAgilFrba.Helpers;
+using PagoAgilFrba.Datos;
+using PagoAgilFrba.Negocio;
 
 namespace PagoAgilFrba.AbmCliente
 {
     public partial class FrmABMCliente : Form
     {
-        private string default_description = "null";
+        private string default_description = string.Empty;
         private List<Control> label_obligatorios;
         private List<Control> campos_obligatorios;
         private List<Label> campo_labels;
         ControlHelper helper = Singleton<ControlHelper>.Instance;
+        ClienteDAO clienteDAO = Singleton<ClienteDAO>.Instance;
         int fila_seleccionada = -1;
+        int id_cliente = -1;
+        bool cliente_habilitado = false;
 
         public FrmABMCliente()
         {
@@ -30,17 +35,6 @@ namespace PagoAgilFrba.AbmCliente
             helper.visualizar_controles(label_obligatorios, false);
             habilitar_todo(false);
             habilitadoChk.Enabled = false;
-        }
-
-        public void habilitar_todo(bool valor_hab)
-        {
-            helper.habilitar_controles(campos_obligatorios, valor_hab);
-            habilitadoChk.Enabled = valor_hab;
-
-            if (valor_hab)
-                helper.cambiar_color_labels(campo_labels, Color.Black);
-            else
-                helper.cambiar_color_labels(campo_labels, Color.DarkGray);
         }
 
         #region "Botones de salida"
@@ -69,6 +63,8 @@ namespace PagoAgilFrba.AbmCliente
             descripcionLbl.Text = "Crear Cliente";
             helper.visualizar_controles(label_obligatorios, true);
             habilitar_todo(true);
+            limpiar_campos();
+            frmTabCtrl.SelectedTab = principalPage;
         }
 
         private void modificarBtn_Click(object sender, EventArgs e)
@@ -79,6 +75,7 @@ namespace PagoAgilFrba.AbmCliente
             helper.visualizar_controles(label_obligatorios, true);
             habilitar_todo(true);
             habilitadoChk.Visible = true;
+            frmTabCtrl.SelectedTab = principalPage;
         }
 
         private void eliminarBtn_Click(object sender, EventArgs e)
@@ -86,6 +83,7 @@ namespace PagoAgilFrba.AbmCliente
             confirmPnl.Visible = true;
             abmPnl.Visible = false;
             descripcionLbl.Text = "Eliminar Cliente";
+            frmTabCtrl.SelectedTab = principalPage;
         }
 
         private void aceptarBtn_Click(object sender, EventArgs e)
@@ -123,7 +121,14 @@ namespace PagoAgilFrba.AbmCliente
             {
                 try
                 {
-                    //execute
+                    if (clienteDAO.crear_cliente(obtener_cliente_desde_form()))
+                    {
+                        MessageBox.Show("Alta de cliente exitosa.", "Nuevo Cliente", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                    }
+                    else
+                    {
+                        MessageBox.Show("No se ha podido crear el nuevo cliente.", "Nuevo Cliente", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -142,7 +147,14 @@ namespace PagoAgilFrba.AbmCliente
             {
                 try
                 {
-                    //execute
+                    if (clienteDAO.crear_cliente(obtener_cliente_desde_form()))
+                    {
+                        MessageBox.Show("Modificación de cliente exitosa.", "Modificación Cliente", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                    }
+                    else
+                    {
+                        MessageBox.Show("No se han podido guardar los cambios realizados.", "Modificación Cliente", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -159,7 +171,19 @@ namespace PagoAgilFrba.AbmCliente
         {
             try
             {
-                //execute
+                Cliente clienteSeleccionado = null;
+
+                if (clienteSeleccionado != null)
+                {
+                    if (clienteDAO.eliminar_cliente(clienteSeleccionado.id))
+                    {
+                        MessageBox.Show("Baja de cliente exitosa.", "Baja de Cliente", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                    }
+                    else
+                    {
+                        MessageBox.Show("No se han podido eliminar el cliente seleccionado.", "Baja de Cliente", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -169,6 +193,17 @@ namespace PagoAgilFrba.AbmCliente
         #endregion
 
         #region "Commons"
+        public void habilitar_todo(bool valor_hab)
+        {
+            helper.habilitar_controles(campos_obligatorios, valor_hab);
+            habilitadoChk.Enabled = valor_hab;
+
+            if (valor_hab)
+                helper.cambiar_color_labels(campo_labels, Color.Black);
+            else
+                helper.cambiar_color_labels(campo_labels, Color.DarkGray);
+        }
+
         private void restablecer_controles()
         {
             confirmPnl.Visible = false;
@@ -178,6 +213,61 @@ namespace PagoAgilFrba.AbmCliente
             habilitar_todo(false);
             habilitadoChk.Visible = false;
             helper.limpiar_errorProvider(campos_obligatorios, errorProvider);
+        }
+
+        private void limpiar_campos()
+        {
+            nombreTb.Text = string.Empty;
+            apellidoTb.Text = string.Empty;
+            dniTb.Text = string.Empty;
+            direccionTb.Text = string.Empty;
+            telefonoTb.Text = string.Empty;
+            codpostTb.Text = string.Empty;
+            emailTb.Text = string.Empty;
+            fecnacDtp.Text = string.Empty;
+        }
+
+        private Cliente obtener_cliente_desde_form()
+        {
+            Cliente cliente = new Cliente()
+            {
+                id = this.id_cliente,
+                habilitado = this.cliente_habilitado,
+                nombre = nombreTb.Text,
+                apellido = apellidoTb.Text,
+                dni = Convert.ToUInt32(dniTb.Text),
+                mail = emailTb.Text,
+                telefono = Convert.ToUInt32(telefonoTb.Text),
+                direccion = direccionTb.Text,
+                codigoPostal = Convert.ToInt32(codpostTb.Text),
+                fecha_nacimiento = Convert.ToDateTime(fecnacDtp.Value)
+            };
+
+            return cliente;
+        }
+
+        private void cargar_cliente_desde_grilla()
+        {
+            if (fila_seleccionada < 0)
+                return;
+
+            DataGridViewRow fila = clientesDt.Rows[fila_seleccionada];
+            
+            this.id_cliente = Convert.ToInt32(fila.Cells["ID"].Value);
+
+            if (fila.Cells["Habilitado"].Value.ToString() == "1")
+                this.cliente_habilitado = this.habilitadoChk.Checked = true;
+            else
+                this.cliente_habilitado = this.habilitadoChk.Checked = false;
+
+            nombreTb.Text = fila.Cells["Nombre"].Value.ToString();
+            apellidoTb.Text = fila.Cells["Apellido"].Value.ToString();
+            dniTb.Text = fila.Cells["DNI"].Value.ToString();
+            //emailTb.Text = fila.Cells["Email"].Value.ToString();
+            telefonoTb.Text = fila.Cells["Telefono"].Value.ToString();
+            direccionTb.Text = fila.Cells["Direccion"].Value.ToString();
+            codpostTb.Text = fila.Cells["Codigo_Postal"].Value.ToString();
+            fecnacDtp.Value = Convert.ToDateTime(fila.Cells["Fecha_Nacimiento"].Value);
         }
         #endregion
 
@@ -195,7 +285,12 @@ namespace PagoAgilFrba.AbmCliente
         {
             try
             {
+                var dt = clienteDAO.buscar_clientes(fltNombre.Text, fltApellido.Text, fltDNI.Text, "");
 
+                if (dt.Rows.Count == 0)
+                    MessageBox.Show("No se han encontrado registros", "Buscador de Clientes");
+                else
+                    clientesDt.DataSource = dt;
             }
             catch (Exception ex)
             {
@@ -204,5 +299,16 @@ namespace PagoAgilFrba.AbmCliente
             }
         }
         #endregion
+
+        private void clientesDt_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0)
+            {
+                return;
+            }
+
+            this.fila_seleccionada = e.RowIndex;
+            cargar_cliente_desde_grilla();
+        }
     }
 }

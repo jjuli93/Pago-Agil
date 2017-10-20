@@ -107,6 +107,7 @@
             // cerrarSesionHl
             // 
             this.cerrarSesionHl.AutoSize = true;
+            this.cerrarSesionHl.Cursor = System.Windows.Forms.Cursors.Hand;
             this.cerrarSesionHl.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cerrarSesionHl.ForeColor = System.Drawing.Color.Blue;
             this.cerrarSesionHl.Location = new System.Drawing.Point(172, 20);

@@ -53,8 +53,8 @@ namespace PagoAgilFrba.Login
             if (rol_seleccionado != null)
             {
                 FrmSeleccionFuncionalidad menuFuncionalidades = new FrmSeleccionFuncionalidad(rol_seleccionado);
-                menuFuncionalidades.Show(this);
                 this.Hide();
+                menuFuncionalidades.Show(this);
             }
         }
 

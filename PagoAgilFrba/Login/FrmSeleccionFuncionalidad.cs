@@ -29,7 +29,10 @@ namespace PagoAgilFrba.Login
             inicializar_funcionalidades();
             seleccionarBtn.Enabled = false;
             funcionalidadSeleccionada = null;
+        }
 
+        private void FrmSeleccionFuncionalidad_Load(object sender, EventArgs e)
+        {
             if (this.Owner == null)
             {
                 volverBtn.Enabled = false;
@@ -62,7 +65,12 @@ namespace PagoAgilFrba.Login
 
         private void seleccionarBtn_Click(object sender, EventArgs e)
         {
-            //obtener el form a partir de la funcionalidad seleccionada
+            if (funcionalidadSeleccionada == null)
+                return;
+
+            Form frm = funcionalidadSeleccionada.get_form();
+            frm.Show(this);
+            this.Hide();
         }
 
         private void funcionalidadesLb_SelectedIndexChanged(object sender, EventArgs e)
@@ -86,5 +94,6 @@ namespace PagoAgilFrba.Login
                 seleccionarBtn.Enabled = true;
             }
         }
+
     }
 }

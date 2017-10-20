@@ -57,8 +57,9 @@ namespace PagoAgilFrba.Helpers
                     break;
                 case "ComboBox":
                     if (!(cumple = validator.validate_comboBox(c as ComboBox)))
-                        e.SetError(c, "Debe seleccionar uno");
+                        e.SetError(c, "Debe ingresar una fecha");
                     break;
+                case "DateTimePicker":
                 default:
                     cumple = true;
                     break;
