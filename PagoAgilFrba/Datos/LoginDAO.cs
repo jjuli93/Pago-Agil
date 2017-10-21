@@ -65,8 +65,8 @@ namespace PagoAgilFrba.Datos
                 {
                     while (lector2.Read())
                     {
-                        Rol rol = new Rol(Convert.ToInt32(lector2["rol_ID"]), lector2["rol_nombre"].ToString());
-                        rol.habilitado = Convert.ToBoolean(lector2["rol_habilitado"]);
+                        Rol rol = new Rol(Convert.ToInt32(lector2["IdRol"]), lector2["Nombre"].ToString());
+                        rol.habilitado = Convert.ToBoolean(lector2["Habilitado"]);
                         user.roles.Add(rol);
                     }
                 }

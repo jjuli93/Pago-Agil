@@ -22,6 +22,7 @@ namespace PagoAgilFrba.Login
             InitializeComponent();
             this.AcceptButton = this.ingresarBtn;
             this.CancelButton = this.cancelarBtn;
+            ActiveControl = usernameTB;
         }
 
         private void ingresarBtn_Click(object sender, EventArgs e)

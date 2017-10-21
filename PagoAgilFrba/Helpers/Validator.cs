@@ -24,6 +24,9 @@ namespace PagoAgilFrba.Helpers
             return chkList.CheckedItems.Count > 0;
         }
 
-        
+        public bool validate_dateTimePicker(DateTimePicker dtp)
+        {
+            return (dtp.Value.ToString() != "");
+        }
     }
 }

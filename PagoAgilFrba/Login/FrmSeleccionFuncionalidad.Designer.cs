@@ -80,6 +80,7 @@
             // cerrarSesionHl
             // 
             this.cerrarSesionHl.AutoSize = true;
+            this.cerrarSesionHl.Cursor = System.Windows.Forms.Cursors.Hand;
             this.cerrarSesionHl.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cerrarSesionHl.ForeColor = System.Drawing.Color.Blue;
             this.cerrarSesionHl.Location = new System.Drawing.Point(254, 16);
@@ -96,6 +97,7 @@
             this.funcionalidadesLb.Name = "funcionalidadesLb";
             this.funcionalidadesLb.Size = new System.Drawing.Size(181, 121);
             this.funcionalidadesLb.TabIndex = 1;
+            this.funcionalidadesLb.SelectedIndexChanged += new System.EventHandler(this.funcionalidadesLb_SelectedIndexChanged);
             // 
             // label1
             // 
@@ -154,6 +156,7 @@
             this.Name = "FrmSeleccionFuncionalidad";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Menú de Funcionalidades";
+            this.Load += new System.EventHandler(this.FrmSeleccionFuncionalidad_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();

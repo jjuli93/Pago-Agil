@@ -5,8 +5,6 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using PagoAgilFrba.Login;
 
-using PagoAgilFrba.ListadoEstadistico;
-
 namespace PagoAgilFrba
 {
     static class Program
@@ -19,8 +17,7 @@ namespace PagoAgilFrba
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            //Application.Run(new FrmLogin());
-            Application.Run(new FrmTopEstadistico());
+            Application.Run(new FrmLogin());
         }
     }
 }

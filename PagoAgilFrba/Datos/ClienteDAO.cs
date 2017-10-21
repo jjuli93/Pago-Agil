@@ -26,7 +26,7 @@ namespace PagoAgilFrba.Datos
             try
             {
                 using (SqlConnection conn = new SqlConnection(connString))
-                using (SqlCommand cmd = new SqlCommand("DDG.sp_alta_cliente", conn))
+                using (SqlCommand cmd = new SqlCommand("SistemaCaido.sp_alta_cliente", conn))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
 
@@ -66,7 +66,7 @@ namespace PagoAgilFrba.Datos
             try
             {
                 using (SqlConnection conn = new SqlConnection(connString))
-                using (SqlCommand cmd = new SqlCommand("DDG.sp_update_cliente", conn))
+                using (SqlCommand cmd = new SqlCommand("SistemaCaido.sp_update_cliente", conn))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
 
@@ -102,7 +102,7 @@ namespace PagoAgilFrba.Datos
             try
             {
                 using (SqlConnection conn = new SqlConnection(connString))
-                using (SqlCommand cmd = new SqlCommand("DDG.sp_baja_cliente", conn))
+                using (SqlCommand cmd = new SqlCommand("SistemaCaido.sp_baja_cliente", conn))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
 
@@ -145,28 +145,28 @@ namespace PagoAgilFrba.Datos
             return cliente;
         }
 
-        public DataTable get_clientes(string nombre, string apellido, string dni, string habilitados)
+        public DataTable buscar_clientes(string nombre, string apellido, string dni, string habilitados)
         {
-            DataTable clientes = null;
+            DataTable clientes = new DataTable();
 
             try
             {
                 using (SqlConnection conn = new SqlConnection(connString))
-                using (SqlCommand cmd = new SqlCommand("DDG.sp_get_clientes", conn))
+                using (SqlCommand cmd = new SqlCommand("SistemaCaido.sp_get_clientes", conn))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
 
-                    if (nombre != null)
+                    if (!string.IsNullOrWhiteSpace(nombre))
                         cmd.Parameters.Add("@nombre", SqlDbType.VarChar).Value = nombre;
                     else
                         cmd.Parameters.AddWithValue("@nombre", DBNull.Value);
 
-                    if (apellido != null)
+                    if (!string.IsNullOrWhiteSpace(apellido))
                         cmd.Parameters.Add("@apellido", SqlDbType.VarChar).Value = apellido;
                     else
                         cmd.Parameters.AddWithValue("@apellido", DBNull.Value);
 
-                    if (dni != null)
+                    if (!string.IsNullOrWhiteSpace(dni))
                     {
                         Int32 dni_num = 0;
 
@@ -186,7 +186,6 @@ namespace PagoAgilFrba.Datos
                     conn.Open();
                     SqlDataReader lector = cmd.ExecuteReader();
 
-                    clientes = new DataTable();
                     clientes.Load(lector);
 
                     lector.Close();
@@ -194,8 +193,7 @@ namespace PagoAgilFrba.Datos
             }
             catch (SqlException)
             {
-
-                //throw;
+                throw;
             }
 
             return clientes;
