@@ -190,6 +190,17 @@ namespace PagoAgilFrba.AbmRol
             else
                 fnsChkList.BackColor = Color.LightGray;
         }
+
+        private void limpiar_campos()
+        {
+            nombreTb.Text = string.Empty;
+            fnsChkList.Items.Clear();
+            fnsChkList.SelectedIndex = -1;
+            fnsChkList.SelectedItem = null;
+            fnsChkList.SelectedValue = null;
+            fila_seleccionada = -1;
+            habilitadoChk.Checked = false;
+        }
         #endregion
     }
 }

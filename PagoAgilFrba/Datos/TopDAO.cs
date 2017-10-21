@@ -28,7 +28,7 @@ namespace PagoAgilFrba.Datos
                     using (SqlCommand cmd = new SqlCommand(sp, conn))
                     {
                         cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.AddWithValue("@year", year);
+                        cmd.Parameters.AddWithValue("@Anio", year);
                         cmd.Parameters.AddWithValue("@trimestre", trimestre);
 
                         conn.Open();
@@ -41,8 +41,7 @@ namespace PagoAgilFrba.Datos
                 }
                 catch (SqlException)
                 {
-
-                    //throw;
+                    throw;
                 }
             }
 
@@ -56,16 +55,16 @@ namespace PagoAgilFrba.Datos
             switch (id)
             {
                 case 1:
-                    sp = "";
+                    sp = "SistemaCaido.EmpresasConMayorPorcentajeFacturasCobradas";
                     break;
                 case 2:
-                    sp = "";
+                    sp = "[SistemaCaido].[EmpresasConMayorMontoRendido]";
                     break;
                 case 3:
-                    sp = "";
+                    sp = "[SistemaCaido].[ClientesConMasPagos]";
                     break;
                 case 4:
-                    sp = "";
+                    sp = "SistemaCaido.ClientesConMayorPorcentajeFacturasPagadas";
                     break;
                 default:
                     break;

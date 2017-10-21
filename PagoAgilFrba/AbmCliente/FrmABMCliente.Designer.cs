@@ -594,9 +594,14 @@
             // 
             // clientesDt
             // 
+            this.clientesDt.AllowUserToAddRows = false;
+            this.clientesDt.AllowUserToDeleteRows = false;
             this.clientesDt.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.clientesDt.Location = new System.Drawing.Point(20, 139);
+            this.clientesDt.MultiSelect = false;
             this.clientesDt.Name = "clientesDt";
+            this.clientesDt.ReadOnly = true;
+            this.clientesDt.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.clientesDt.Size = new System.Drawing.Size(492, 234);
             this.clientesDt.TabIndex = 1;
             this.clientesDt.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.clientesDt_CellClick);

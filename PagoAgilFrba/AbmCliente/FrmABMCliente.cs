@@ -35,6 +35,7 @@ namespace PagoAgilFrba.AbmCliente
             helper.visualizar_controles(label_obligatorios, false);
             habilitar_todo(false);
             habilitadoChk.Enabled = false;
+            habilitadoChk.Visible = false;
         }
 
         #region "Botones de salida"
@@ -147,7 +148,7 @@ namespace PagoAgilFrba.AbmCliente
             {
                 try
                 {
-                    if (clienteDAO.crear_cliente(obtener_cliente_desde_form()))
+                    if (clienteDAO.modificar_cliente(obtener_cliente_desde_form()))
                     {
                         MessageBox.Show("Modificación de cliente exitosa.", "Modificación Cliente", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
                     }
@@ -171,11 +172,9 @@ namespace PagoAgilFrba.AbmCliente
         {
             try
             {
-                Cliente clienteSeleccionado = null;
-
-                if (clienteSeleccionado != null)
+                if (id_cliente > 0)
                 {
-                    if (clienteDAO.eliminar_cliente(clienteSeleccionado.id))
+                    if (clienteDAO.eliminar_cliente(id_cliente))
                     {
                         MessageBox.Show("Baja de cliente exitosa.", "Baja de Cliente", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
                     }

@@ -30,9 +30,9 @@ namespace PagoAgilFrba.ListadoEstadistico
         private void inicializar_trimestres()
         {
             trimestreCb.Items.Add(new ItemControlHelper.itemComboBox("1er Trimestre [Ene-Mar]", 1));
-            trimestreCb.Items.Add(new ItemControlHelper.itemComboBox("2do Trimestre [Abr-Jun]", 1));
-            trimestreCb.Items.Add(new ItemControlHelper.itemComboBox("3ro Trimestre [Jul-Sep]", 1));
-            trimestreCb.Items.Add(new ItemControlHelper.itemComboBox("4to Trimestre [Oct-Dic]", 1));
+            trimestreCb.Items.Add(new ItemControlHelper.itemComboBox("2do Trimestre [Abr-Jun]", 2));
+            trimestreCb.Items.Add(new ItemControlHelper.itemComboBox("3ro Trimestre [Jul-Sep]", 3));
+            trimestreCb.Items.Add(new ItemControlHelper.itemComboBox("4to Trimestre [Oct-Dic]", 4));
         }
 
         private RadioButton obtener_seleccionado()
@@ -73,7 +73,25 @@ namespace PagoAgilFrba.ListadoEstadistico
         {
             if (validar())
             {
-                
+                TopDAO topDao = new TopDAO();
+                int anio = (int)yearNud.Value;
+                ItemControlHelper.itemComboBox trimestre = (ItemControlHelper.itemComboBox)trimestreCb.SelectedItem;
+                int listado = rbs.IndexOf(obtener_seleccionado()) + 1;
+
+                try
+                {
+                    DataTable dt = topDao.consultar_listado(anio, trimestre.id_item, listado);
+
+                    if (dt.Rows.Count != 0)
+                        listadoDgv.DataSource = dt;
+                    else
+                        MessageBox.Show("No se han encontrado registros.", "Listado Estadistico", MessageBoxButtons.OK);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Error en Listado Estadisco", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    //throw;
+                }
             }
         }
 
@@ -102,8 +120,7 @@ namespace PagoAgilFrba.ListadoEstadistico
         private void refreshBtn_Click(object sender, EventArgs e)
         {
             clean_fields();
-            listadoDgv.Rows.Clear();
-            listadoDgv.DataSource = null;
+            //TODO LIMPIAR GRILLA
         }
 
         private void exitBtn_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
