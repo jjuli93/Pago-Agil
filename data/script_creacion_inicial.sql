@@ -35,20 +35,20 @@ GO
 
 --*************************************** Listados estadisticos *************************************************************--   
 
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[SistemaCaido].[EmpresasConMayorMontoRendido]') AND type in (N'FN', N'IF', N'TF', N'FS', N'FT'))
-DROP FUNCTION [SistemaCaido].[EmpresasConMayorMontoRendido]
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[SistemaCaido].[EmpresasConMayorPorcentajeFacturasCobradas]') AND type in (N'P', N'PC'))
+DROP procedure [SistemaCaido].[EmpresasConMayorMontoRendido]
 GO
 
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[SistemaCaido].[ClientesConMasPagos]') AND type in (N'FN', N'IF', N'TF', N'FS', N'FT'))
-DROP FUNCTION [SistemaCaido].[ClientesConMasPagos]
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[SistemaCaido].[EmpresasConMayorPorcentajeFacturasCobradas]') AND type in (N'P', N'PC'))
+DROP procedure [SistemaCaido].[ClientesConMasPagos]
 GO
 
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[SistemaCaido].[ClientesConMayorPorcentajeFacturasPagadas]') AND type in (N'FN', N'IF', N'TF', N'FS', N'FT'))
-DROP FUNCTION [SistemaCaido].[ClientesConMayorPorcentajeFacturasPagadas]
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[SistemaCaido].[EmpresasConMayorPorcentajeFacturasCobradas]') AND type in (N'P', N'PC'))
+DROP procedure [SistemaCaido].[ClientesConMayorPorcentajeFacturasPagadas]
 GO
 
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[SistemaCaido].[EmpresasConMayorPorcentajeFacturasCobradas]') AND type in (N'FN', N'IF', N'TF', N'FS', N'FT'))
-DROP FUNCTION [SistemaCaido].[EmpresasConMayorPorcentajeFacturasCobradas]
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[SistemaCaido].[EmpresasConMayorPorcentajeFacturasCobradas]') AND type in (N'P', N'PC'))
+DROP procedure [SistemaCaido].[EmpresasConMayorPorcentajeFacturasCobradas]
 GO
 
 
@@ -287,16 +287,12 @@ IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[SistemaCaid
 DROP PROCEDURE [SistemaCaido].[GetFacturasCliente]
 GO
 
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[SistemaCaido].[GetFacturasRendicion]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [SistemaCaido].[GetFacturasRendicion]
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[SistemaCaido].[GetDatosRendicion]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [SistemaCaido].[GetDatosRendicion]
 GO
 
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[SistemaCaido].[GetRubros]') AND type in (N'P', N'PC'))
 DROP PROCEDURE [SistemaCaido].[GetRubros]
-GO
-
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[SistemaCaido].[GetTotalRendicion]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [SistemaCaido].[GetTotalRendicion]
 GO
 
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[SistemaCaido].[RealizarRendicion]') AND type in (N'P', N'PC'))
@@ -1192,7 +1188,7 @@ begin
 set xact_abort on
 begin tran
 
-	if((select count(*) from SistemaCaido.Clientes where Mail = @email) > 0) THROW 51000, 'Ya existe un cliente con el mail ingresado ingresado.', 1;
+	if((select count(*) from SistemaCaido.Clientes where Mail = @email) > 0) THROW 51000, 'Ya existe un cliente con el mail ingresado.', 1;
 	
 	declare @usuario varchar(255)
 	declare @contraseña varchar(255)
@@ -1219,10 +1215,37 @@ end
 GO
 
 
+create procedure [SistemaCaido].[sp_update_cliente] (@nombre varchar(250),  @apellido varchar(250), @DNI numeric(18), @fechaNacimiento date, @direccion varchar(250), @codPostal numeric, @telefono numeric(18,0), @habilitado numeric(1,0), @idcliente numeric(10,0), @email nvarchar(255)) as
+begin
+
+set xact_abort on
+begin tran	
+
+if((select count(*) from SistemaCaido.Clientes where Mail = @email and @idcliente != IdCliente) > 0) THROW 51000, 'Ya existe un cliente con el mail ingresado.', 1;
+
+update SistemaCaido.Clientes
+set Nombre = @nombre,
+Apellido = @apellido,
+FechaNacimiento = @fechaNacimiento,
+Direccion = @direccion,
+CodigoPostal = @codPostal,
+Telefono = @telefono,
+DNI = @DNI,
+Mail = @email,
+Habilitado = @habilitado
+where IdCliente = @idcliente
+
+commit
+
+end
+
+GO
+
+
 create procedure [SistemaCaido].[sp_get_clientes](@nombre varchar(250), @apellido varchar(250), @dni numeric(18,0), @habilitado bit) as
 begin
 
-select IdCliente as ID, Nombre as Nombre ,Apellido as Apellido ,CodigoPostal as Codigo_Postal,Direccion as Direccion ,DNI as DNI,FechaNacimiento as Fecha_Nacimiento ,Telefono as Telefono,Habilitado as Habilitado
+select IdCliente as ID, Nombre as Nombre ,Apellido as Apellido ,CodigoPostal as Codigo_Postal,Direccion as Direccion ,DNI as DNI,FechaNacimiento as Fecha_Nacimiento ,ISNULL(Telefono, '') as Telefono,Habilitado as Habilitado, Mail as Mail
 from SistemaCaido.Clientes
 where (@apellido is null or (Apellido like CONCAT('%',@apellido,'%')))
 and   (@nombre is null or   (Nombre like CONCAT('%',@nombre,'%')))
@@ -1273,7 +1296,7 @@ GO
 
 --********************************* Registrar rendicion ****************************************--
 
-Create procedure SistemaCaido.GetFacturasRendicion (@IdEmpresa INT, @fecha datetime)
+Create procedure SistemaCaido.GetDatosRendicion (@IdEmpresa INT, @fecha datetime)
 as begin
 	Select f.*
 	From SistemaCaido.Facturas f
@@ -1282,11 +1305,7 @@ as begin
 	where f.IdEmpresa = @IdEmpresa
 	and YEAR(p.FechaCobro) = YEAR(@fecha)
 	and MONTH(p.FechaCobro) = MONTH(@fecha)
-END
-GO
 
-Create procedure SistemaCaido.GetTotalRendicion (@IdEmpresa INT, @fecha datetime)
-as begin
 	Select SUM(f.Importe) 'Importe_Total', SUM(f.Importe) * ((Select top 1 p.Porcentaje from SistemaCaido.Porcentajes p order by p.IdPorcentaje desc))	'Importe_Empresa'		
 	From SistemaCaido.Facturas f
 	Inner join SistemaCaido.PagosXFacturas pf on pf.IdFactura = f.IdFactura
@@ -1294,6 +1313,11 @@ as begin
 	where f.IdEmpresa = @IdEmpresa
 	and YEAR(p.FechaCobro) = YEAR(@fecha)
 	and MONTH(p.FechaCobro) = MONTH(@fecha)
+
+	select top 1 p.Porcentaje * 100  --armar string 
+	From SistemaCaido.Porcentajes p
+	order by p.IdPorcentaje desc
+
 END
 GO
 
@@ -1496,31 +1520,6 @@ end
 GO
 
 
-create procedure [SistemaCaido].[sp_update_cliente] (@nombre varchar(250),  @apellido varchar(250), @DNI numeric(18), @fechaNacimiento date, @direccion varchar(250), @codPostal numeric, @telefono numeric(18,0), @habilitado numeric(1,0), @idcliente numeric(10,0)) as
-begin
-
-set xact_abort on
-begin tran	
-
-if((select count(*) from SistemaCaido.Clientes where DNI = @dni and @idcliente != IdCliente) > 0) THROW 51000, 'Ya existe un cliente con el numero de DNI ingresado.', 1;
-
-update SistemaCaido.Clientes
-set Nombre = @nombre,
-Apellido = @apellido,
-FechaNacimiento = @fechaNacimiento,
-Direccion = @direccion,
-CodigoPostal = @codPostal,
-Telefono = @telefono,
-DNI = @DNI,
-Habilitado = @habilitado
-where IdCliente = @idcliente
-
-commit
-
-end
-
-GO
-
 
 create procedure [SistemaCaido].[sp_update_rol] (@id numeric(10,0), @nombre varchar(255), @habilitado bit, @listaFuncionalidades SistemaCaido.listaIDs readonly)	
 as
@@ -1556,24 +1555,22 @@ GO
 --=============================================================================================================--
 
 
-create function [SistemaCaido].[ClientesConMasPagos](@Anio char(4), @Trimestre int)
-returns table
-as return(
+create procedure [SistemaCaido].[ClientesConMasPagos](@Anio int, @Trimestre int)
+as begin
 	select top 5 c.Nombre, c.Apellido, count(*) CantidadPagos 
 	from SistemaCaido.Pagos p
 	Join SistemaCaido.Clientes c on p.IdCliente = c.IdCliente
 	where year(FechaCobro) = @Anio and
 		  month(FechaCobro) between (3 * @Trimestre - 2) and (3 * @Trimestre)
   group by c.IdCliente, c.Nombre, c.Apellido
-  order by 2 desc
-)
+  order by CantidadPagos desc
+end
 
 GO
 
 
-create function [SistemaCaido].[EmpresasConMayorMontoRendido](@Anio char(4), @Trimestre int)
-returns table
-as return(
+create procedure [SistemaCaido].[EmpresasConMayorMontoRendido](@Anio int, @Trimestre int)
+as begin
 	select top 5 emp.Nombre Empresa, SUM(ImporteEmpresa) MontoRendido
 	from SistemaCaido.Empresas emp
 	join SistemaCaido.Rendiciones rend on emp.IdEmpresa = rend.IdEmpresa
@@ -1581,19 +1578,18 @@ as return(
 	where year(rend.Fecha) = @Anio and
 		  month(rend.Fecha) between (3 * @Trimestre - 2) and (3 * @Trimestre)
 	group by emp.IdEmpresa, emp.Nombre, rend.ImporteEmpresa, porc.Porcentaje
-	order by 2 desc
-)
+	order by MontoRendido desc
+end
 GO
 
 
-Create function SistemaCaido.EmpresasConMayorPorcentajeFacturasCobradas (@Anio char(4), @Trimestre int)
-returns table
-as return(
+Create procedure SistemaCaido.EmpresasConMayorPorcentajeFacturasCobradas (@Anio int, @Trimestre int)
+as begin
 	Select top 5 e.Nombre , ((COUNT(distinct f.IdFactura) * 100) / (select count(*) 
 							  from SistemaCaido.PagosXFacturas pf2 
 							  Join SistemaCaido.Pagos p2 on pf2.IdPago = p2.IdPago 
 					   		  where  YEAR(p2.FechaCobro) = @Anio
-							  And MONTH(p2.FechaCobro) between (3 * @Trimestre - 2) and (3 * @Trimestre) )) Porentaje_Facturas
+							  And MONTH(p2.FechaCobro) between (3 * @Trimestre - 2) and (3 * @Trimestre) )) Porcentaje_Facturas
 	From SistemaCaido.Empresas e
 	Join SistemaCaido.Facturas f on f.IdEmpresa = e.IdEmpresa
 	Join SistemaCaido.PagosXFacturas pf on f.IdFactura = pf.IdFactura
@@ -1601,19 +1597,18 @@ as return(
 	where  YEAR(p.FechaCobro) = @Anio
 	And MONTH(p.FechaCobro) between (3 * @Trimestre - 2) and (3 * @Trimestre)
 	group by e.IdEmpresa, e.Nombre
-	order by 2 desc
-)
+	order by Porcentaje_Facturas desc
+end
 GO
 
 
-Create function SistemaCaido.ClientesConMayorPorcentajeFacturasPagadas (@Anio char(4), @Trimestre int)
-returns table
-as return(
+Create procedure SistemaCaido.ClientesConMayorPorcentajeFacturasPagadas (@Anio int, @Trimestre int)
+as begin
 	Select top 5 c.Nombre, c.Apellido, ((COUNT(distinct f.IdFactura) * 100) / (select count(*) 
 							  from SistemaCaido.PagosXFacturas pf2 
 							  Join SistemaCaido.Pagos p2 on pf2.IdPago = p2.IdPago 
 					   		  where  YEAR(p2.FechaCobro) = @Anio
-							  And MONTH(p2.FechaCobro) between (3 * @Trimestre - 2) and (3 * @Trimestre) )) Porentaje_Facturas
+							  And MONTH(p2.FechaCobro) between (3 * @Trimestre - 2) and (3 * @Trimestre) )) Porcentaje_Facturas
 	From SistemaCaido.Clientes c
 	Join SistemaCaido.Facturas f on c.IdCliente = f.IdCliente
 	Join SistemaCaido.PagosXFacturas pf on f.IdFactura = pf.IdFactura
@@ -1621,8 +1616,8 @@ as return(
 	where  YEAR(p.FechaCobro) = @Anio
 	And MONTH(p.FechaCobro) between (3 * @Trimestre - 2) and (3 * @Trimestre)
 	group by c.IdCliente, c.Nombre, c.Apellido
-	order by 3 desc
-)
+	order by Porcentaje_Facturas desc
+end
 GO
 
 
