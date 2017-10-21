@@ -682,10 +682,11 @@ VALUES('Administrador'), ('Cobrador')
 
 /*Usuarios X Roles*/
 INSERT INTO SistemaCaido.UsuariosXRoles (IdRol, IdUsuario)
-VALUES (1,1), (2,1), (2,2)
+VALUES (1,1), (1,2), (2,2)
 
 /* Porcentajes*/
-INSERT INTO SistemaCaido.Porcentajes VALUES(CAST('0.1' as numeric(3,2)), CONVERT(datetime, GETDATE()), 1) 
+INSERT INTO SistemaCaido.Porcentajes (Porcentaje, FechaAlta, IdUsuario) 
+VALUES(CAST('0.1' as numeric(3,2)), CONVERT(datetime, GETDATE()), 1) 
 
 /* Funcionalidades */
 INSERT INTO SistemaCaido.Funcionalidades VALUES ('ABM de Rol')
