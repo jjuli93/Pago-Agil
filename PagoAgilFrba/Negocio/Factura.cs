@@ -22,4 +22,12 @@ namespace PagoAgilFrba.Negocio
         /// </summary>
         bool procesada;
     }
+
+    public class FacturaSimpleViewModel
+    {
+        public int numeroFactura { get; set; }
+        public DateTime fechaAlta { get; set; }
+        public DateTime fechaVencimiento { get; set; }
+        public double importe { get; set; }
+    }
 }

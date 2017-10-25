@@ -118,6 +118,7 @@
     <Compile Include="Negocio\Funcionalidad.cs" />
     <Compile Include="Negocio\ItemFactura.cs" />
     <Compile Include="Negocio\PagoFactura.cs" />
+    <Compile Include="Negocio\Rendicion.cs" />
     <Compile Include="Negocio\Rol.cs" />
     <Compile Include="Negocio\Sucursal.cs" />
     <Compile Include="Negocio\Usuario.cs" />
