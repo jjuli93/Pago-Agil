@@ -248,25 +248,19 @@
   <metadata name="toolStrip1.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
-  <metadata name="toolStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 17</value>
-  </metadata>
-  <metadata name="toolStrip1.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
   <data name="limpiarBtn.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
         YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAIwSURBVDhPYwCBbbkM7Msy2OYvz+AoBwuQChalsyccnBH2
-        f0297b81hRLBUGHiwfQYVv3d9RqvDjdJ/N9ULb+rPpSBDSpFPFhbLF24L0/27/p8/u/T41msT63mN/z/
-        n4ERKk0cWJotuGFDrcj/S5sd7j+9GHb+/HwGAagUYXB+PYPApU0i015edf75+lz2/x0RZj8nCDKdh0oT
-        BsdWMggdXym4aWGM+L+j5tr/z5pr/1mTqPTuxgG1+VdWMfBAleEHjUwMWfNZGX6v9eD//vxM9v/fz/z+
+        f3W97b81hRLBUGHiwfQYVv3d9RqvDjdJ/N9ULb+rPpSBDSpFPFhbLF24L1f27/p8/u/T41msT63mN/z/
+        n4ERKk0cWJotuGFDrcj/S5sd7j+9GHb+/HwGAagUYXB+PYPApU0i015edfr5+lz2/x0RZj8nCDKdh0oT
+        BsdWMggdXym4aUGM+L+j5tr/z5pp/VmTqPTuxgG1+VdWMfBAleEHjUwMWfNZGX6v9eD//vxM9v/fz/z+
         v7qm+//6fqUTh1cxyEGV4QahDAzMK7OZ8j/cdgNqDv3/+bbL//fXNf7fPCz0/9YZt5sXNovrQJXiBmfX
         Mxg/OWf0/8ttg/+/Hjv8f3RS9v+9k2L/bx6S/v/wXNCzSzs1Y6BKsYOD8xhkrxzRevXsrOT/D9c0/j8/
         o/b/zmHZ/3ePyf+/dVjt/6Nz/t8vbhFfCFWOAThEuBgkT21WOn7nsMz/B8fk/r+4ZPb/3lGV/1d38/9/
-        dN7h/8X95h/XTBNMA6rFCFhuIJYGYu2p9fwNJzcb/rt9WPX/3SPS/+8eN/1/Zr/934OLhe64WjKEWOoy
-        2AHVyQMxPxDDAcwALSC2PLBc5czNg4b/j+y3/LlvseSdKTU8Kzg5Gfz4uRkcgfJ6QIxhAAiA8oAoECuI
-        iTHoTatlqEoOYohSkADbaATEoFhQBmIJIOYCYryACYhZgZgDikGGMwMxEmBgAABryt+L5bZWkQAAAABJ
+        dN7h/8X95h/XTBNMA6rFCFhuIJYGYu2p9fwNJzYZ/rt9WPX/3SPS/+8eN/1/er/934OLhe64WjKEWOoy
+        2AHVyQMxPxDDAcwALSC2PLBc5czNg4b/D++3/LlvseSdKTU8Kzg5Gfz4uRkcgfJ6QIxhAAiA8oAoECuI
+        iTHoTatlqEoOYohSkADbaATEoFhQBmIJIOYCYryACYhZgZgDikGGMwMxEmBgAABXZ9+BNxxPhQAAAABJ
         RU5ErkJggg==
 </value>
   </data>

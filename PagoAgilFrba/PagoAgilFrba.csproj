@@ -83,6 +83,18 @@
     <Compile Include="Datos\RolDAO.cs" />
     <Compile Include="Datos\SucursalDAO.cs" />
     <Compile Include="Datos\TopDAO.cs" />
+    <Compile Include="DevolucionFacturas\FrmDevolucionFacturas.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DevolucionFacturas\FrmDevolucionFacturas.Designer.cs">
+      <DependentUpon>FrmDevolucionFacturas.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DevolucionFacturas\frmDevolucionFacturas2.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DevolucionFacturas\frmDevolucionFacturas2.Designer.cs">
+      <DependentUpon>frmDevolucionFacturas2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Helpers\Conexion.cs" />
     <Compile Include="Helpers\ControlHelper.cs" />
     <Compile Include="Helpers\ItemControlHelper.cs" />
@@ -156,6 +168,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="AbmSucursal\FrmABMSucursal.resx">
       <DependentUpon>FrmABMSucursal.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DevolucionFacturas\FrmDevolucionFacturas.resx">
+      <DependentUpon>FrmDevolucionFacturas.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ListadoEstadistico\FrmTopEstadistico.resx">
       <DependentUpon>FrmTopEstadistico.cs</DependentUpon>

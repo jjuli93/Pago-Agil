@@ -311,6 +311,14 @@ IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[SistemaCaid
 DROP PROCEDURE [SistemaCaido].[GetEmpresasHabilitadas]
 GO
 
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[SistemaCaido].[GetFacturasParaDevolucionCliente]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [SistemaCaido].[GetFacturasParaDevolucionCliente]
+GO
+
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[SistemaCaido].[RealizarDevolucion]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [SistemaCaido].[RealizarDevolucion]
+GO
+
 
 --*************************************** Tipos *************************************************************--   
 
@@ -694,8 +702,8 @@ INSERT INTO SistemaCaido.Funcionalidades VALUES ('ABM de Cliente')
 INSERT INTO SistemaCaido.Funcionalidades VALUES ('ABM de Empresa')
 INSERT INTO SistemaCaido.Funcionalidades VALUES ('ABM de Sucursal')
 INSERT INTO SistemaCaido.Funcionalidades VALUES ('ABM de Facturas')
-INSERT INTO SistemaCaido.Funcionalidades VALUES ('Registro de Pago de Facturas')
 INSERT INTO SistemaCaido.Funcionalidades VALUES ('Devoluciones de Facturas')
+INSERT INTO SistemaCaido.Funcionalidades VALUES ('Registro de Pago de Facturas')
 INSERT INTO SistemaCaido.Funcionalidades VALUES ('Rendicion de Facturas Cobradas')
 INSERT INTO SistemaCaido.Funcionalidades VALUES ('Listado Estadistico')
 
@@ -1371,21 +1379,39 @@ GO
 
 --********************************* Registrar devolucion ****************************************--
 
-Create procedure SistemaCaido.GetPagosCliente (@IdCliente INT)
+Create Procedure SistemaCaido.GetFacturasParaDevolucionCliente(@IdCliente INT)
 as begin
 	Select *
-	From SistemaCaido.Pagos p
-	where p.IdCliente = @IdCliente
+	From SistemaCaido.Facturas f
+	Inner join SistemaCaido.PagosXFacturas pf on pf.IdFactura = f.IdFactura
+	Inner join SistemaCaido.Pagos p on p.IdPago = pf.IdPago
+	where (p.FechaCobro > (select top 1 ISNULL(d.Fecha, 0)
+						   from SistemaCaido.Facturas f2
+						   left join SistemaCaido.DevolucionesXFacturas df on df.IdFactura = f2.IdFactura
+						   left join SistemaCaido.Devoluciones d on d.IdDevolucion = df.IdDevolucion
+						   where f2.IdFactura = f.IdFactura
+						   order by d.Fecha desc))  --No haya sido devuelta
+	And (f.IdFactura not in (select rf.IdFactura
+							 from SistemaCaido.RendicionesXFacturas rf)) --No haya sido rendida
+	And f.IdCliente = @IdCliente
 END
 GO
 
-Create procedure SistemaCaido.GetFacturasPago (@IdPago INT)
+Create procedure SistemaCaido.RealizarDevolucion (@IdCliente INT, @Motivo nvarchar(255), @IdUsuario INT, @Fecha DateTime, @ListaIdsFacturas SistemaCaido.listaIDs readonly)
 as begin
-	Select f.*
-	From SistemaCaido.Facturas f
-	Inner join SistemaCaido.PagosXFacturas pf on pf.IdFactura = f.IdFactura
-	where pf.IdPago = @IdPago
-end
+
+set xact_abort on
+begin tran
+
+Insert into SistemaCaido.Devoluciones (Fecha, IdCliente, IdUsuario, Motivo)
+values(@Fecha, @IdCliente, @IdUsuario, @Motivo)
+
+Insert into SistemaCaido.DevolucionesXFacturas (IdDevolucion, IdFactura)
+Select @@IDENTITY, f.id
+From @ListaIdsFacturas f
+
+commit
+END
 GO
 
 
