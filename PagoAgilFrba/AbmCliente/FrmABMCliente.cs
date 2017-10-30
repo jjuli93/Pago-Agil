@@ -142,22 +142,21 @@ namespace PagoAgilFrba.AbmCliente
                 {
                     if (clienteDAO.crear_cliente(obtener_cliente_desde_form()))
                     {
-                        MessageBox.Show("Alta de cliente exitosa.", "Nuevo Cliente", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                        msgHelper.mostrar_aviso("Alta de cliente exitosa.", "Nuevo Cliente");
+                        this.limpiar_campos();
                     }
                     else
                     {
-                        MessageBox.Show("No se ha podido crear el nuevo cliente.", "Nuevo Cliente", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        msgHelper.mostrar_error("No se ha podido crear el nuevo cliente.", "Error en ABM Clientes");
                     }
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message, "Error en la aplicación", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    msgHelper.mostrar_error(ex.Message, "Error en ABM Clientes");
                 }
-
-                this.restablecer_controles();
             }
             else
-                MessageBox.Show("Por favor ingrese todos los datos obligatorios", "Campos incompletos", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                msgHelper.mostrar_CamposIncompletos();
         }
 
         private void do_update()
@@ -168,22 +167,25 @@ namespace PagoAgilFrba.AbmCliente
                 {
                     if (clienteDAO.modificar_cliente(obtener_cliente_desde_form()))
                     {
-                        MessageBox.Show("Modificación de cliente exitosa.", "Modificación Cliente", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                        msgHelper.mostrar_aviso("Modificación de cliente exitosa.", "Modificación Cliente");
+                        limpiar_campos();
+                        restablecer_controles();
+                        this.limpiarBtn_Click(null, null);
                     }
                     else
                     {
-                        MessageBox.Show("No se han podido guardar los cambios realizados.", "Modificación Cliente", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        msgHelper.mostrar_error("No se ha podido modificar el cliente seleccionado.", "Error en ABM Clientes");
                     }
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message, "Error en la aplicación", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    msgHelper.mostrar_error(ex.Message, "Error en ABM Clientes");
                 }
 
                 this.restablecer_controles();
             }
             else
-                MessageBox.Show("Por favor ingrese todos los datos obligatorios", "Campos incompletos", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                msgHelper.mostrar_CamposIncompletos();
         }
 
         private void do_delete()
@@ -194,17 +196,20 @@ namespace PagoAgilFrba.AbmCliente
                 {
                     if (clienteDAO.eliminar_cliente(id_cliente))
                     {
-                        MessageBox.Show("Baja de cliente exitosa.", "Baja de Cliente", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                        msgHelper.mostrar_aviso("Baja de cliente exitosa.", "Baja de Cliente");
+                        limpiar_campos();
+                        restablecer_controles();
+                        this.limpiarBtn_Click(null, null);
                     }
                     else
                     {
-                        MessageBox.Show("No se han podido eliminar el cliente seleccionado.", "Baja de Cliente", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        msgHelper.mostrar_error("No se ha podido modificar el cliente seleccionado.", "Error en ABM Clientes");
                     }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Error en la aplicación", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                msgHelper.mostrar_error(ex.Message, "Error en ABM Clientes");
             }
         }
         #endregion
@@ -277,7 +282,7 @@ namespace PagoAgilFrba.AbmCliente
             nombreTb.Text = fila.Cells["Nombre"].Value.ToString();
             apellidoTb.Text = fila.Cells["Apellido"].Value.ToString();
             dniTb.Text = fila.Cells["DNI"].Value.ToString();
-            emailTb.Text = fila.Cells["Email"].Value.ToString();
+            emailTb.Text = fila.Cells["Mail"].Value.ToString();
             telefonoTb.Text = fila.Cells["Telefono"].Value.ToString();
             direccionTb.Text = fila.Cells["Direccion"].Value.ToString();
             codpostTb.Text = fila.Cells["Codigo_Postal"].Value.ToString();
@@ -299,7 +304,7 @@ namespace PagoAgilFrba.AbmCliente
         {
             try
             {
-                var dt = clienteDAO.buscar_clientes(fltNombre.Text, fltApellido.Text, fltDNI.Text, "");
+                var dt = clienteDAO.buscar_clientes(fltNombre.Text.Trim(), fltApellido.Text.Trim(), fltDNI.Text.Trim(), "");
 
                 if (dt.Rows.Count == 0)
                     MessageBox.Show("No se han encontrado registros", "Buscador de Clientes");
@@ -308,8 +313,7 @@ namespace PagoAgilFrba.AbmCliente
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Error en el buscador de clientes", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                //throw;
+                msgHelper.mostrar_error(ex.Message, "Error en el buscador de clientes");
             }
         }
         #endregion
@@ -321,8 +325,32 @@ namespace PagoAgilFrba.AbmCliente
                 return;
             }
 
-            this.fila_seleccionada = e.RowIndex;
-            cargar_cliente_desde_grilla();
+            try
+            {
+                restablecer_controles();
+                this.fila_seleccionada = e.RowIndex;
+                cargar_cliente_desde_grilla();
+            }
+            catch (Exception ex)
+            {
+                msgHelper.mostrar_error(ex.Message, "Error en ABM Cliente");
+            }
+            
+        }
+
+        private void telefonoTb_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            helper.onlyIntNumbers_event(sender, e);
+        }
+
+        private void codpostTb_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            helper.onlyIntNumbers_event(sender, e);
+        }
+
+        private void dniTb_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            helper.onlyIntNumbers_event(sender, e);
         }
     }
 }

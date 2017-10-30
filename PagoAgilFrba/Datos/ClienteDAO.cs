@@ -33,12 +33,9 @@ namespace PagoAgilFrba.Datos
                     cmd.Parameters.Add("@nombre", SqlDbType.VarChar).Value = cliente.nombre;
                     cmd.Parameters.Add("@apellido", SqlDbType.VarChar).Value = cliente.apellido;
                     cmd.Parameters.Add("@fechanac", SqlDbType.Date).Value = cliente.fecha_nacimiento;
-                    //cmd.Parameters.Add("@dni", SqlDbType.Decimal).Value = cliente.dni;
                     cmd.Parameters.AddWithValue("@dni", Convert.ToInt32(cliente.dni));
                     cmd.Parameters.Add("@direccion", SqlDbType.VarChar).Value = cliente.direccion;
-                    //cmd.Parameters.Add("@codpost", SqlDbType.Decimal).Value = cliente.codigoPostal;
                     cmd.Parameters.AddWithValue("@codpost", Convert.ToInt32(cliente.codigoPostal));
-                    //cmd.Parameters.Add("@telefono", SqlDbType.Decimal).Value = cliente.telefono;
                     cmd.Parameters.AddWithValue("@telefono", Convert.ToInt32(cliente.telefono));
                     cmd.Parameters.Add("@email", SqlDbType.VarChar).Value = cliente.mail;
 
@@ -46,11 +43,9 @@ namespace PagoAgilFrba.Datos
                     cmd.ExecuteNonQuery();
                 }
             }
-            catch (SqlException e)
+            catch (SqlException)
             {
-                MessageBox.Show(e.Message, "Error en Alta de Cliente", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                result = false;
-                //throw;
+                throw;
             }
 
             return result;
@@ -77,7 +72,7 @@ namespace PagoAgilFrba.Datos
                     cmd.Parameters.Add("@direccion", SqlDbType.VarChar).Value = cliente.direccion;
                     cmd.Parameters.Add("@codPostal", SqlDbType.Decimal).Value = cliente.codigoPostal;
                     cmd.Parameters.Add("@telefono", SqlDbType.Decimal).Value = cliente.telefono;
-                    //cmd.Parameters.Add("@email", SqlDbType.VarChar).Value = cliente.mail;
+                    cmd.Parameters.Add("@email", SqlDbType.VarChar).Value = cliente.mail;
                     cmd.Parameters.AddWithValue("@habilitado", cliente.habilitado);
                     cmd.Parameters.AddWithValue("@idcliente", cliente.id);
 
@@ -87,9 +82,7 @@ namespace PagoAgilFrba.Datos
             }
             catch (SqlException e)
             {
-                MessageBox.Show(e.Message, "Error en Modificación de Cliente", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                result = false;
-                //throw;
+                throw;
             }
 
             return result;
@@ -114,8 +107,7 @@ namespace PagoAgilFrba.Datos
             }
             catch (SqlException)
             {
-                result = false;
-                //throw;
+                throw;
             }
 
             return result;

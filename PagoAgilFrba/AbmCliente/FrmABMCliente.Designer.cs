@@ -364,16 +364,20 @@
             // telefonoTb
             // 
             this.telefonoTb.Location = new System.Drawing.Point(26, 262);
+            this.telefonoTb.MaxLength = 10;
             this.telefonoTb.Name = "telefonoTb";
             this.telefonoTb.Size = new System.Drawing.Size(193, 20);
             this.telefonoTb.TabIndex = 7;
+            this.telefonoTb.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.telefonoTb_KeyPress);
             // 
             // codpostTb
             // 
             this.codpostTb.Location = new System.Drawing.Point(26, 199);
+            this.codpostTb.MaxLength = 4;
             this.codpostTb.Name = "codpostTb";
             this.codpostTb.Size = new System.Drawing.Size(193, 20);
             this.codpostTb.TabIndex = 6;
+            this.codpostTb.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.codpostTb_KeyPress);
             // 
             // obligatorio5
             // 
@@ -529,9 +533,11 @@
             // dniTb
             // 
             this.dniTb.Location = new System.Drawing.Point(25, 123);
+            this.dniTb.MaxLength = 10;
             this.dniTb.Name = "dniTb";
             this.dniTb.Size = new System.Drawing.Size(193, 20);
             this.dniTb.TabIndex = 5;
+            this.dniTb.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.dniTb_KeyPress);
             // 
             // nombreTb
             // 

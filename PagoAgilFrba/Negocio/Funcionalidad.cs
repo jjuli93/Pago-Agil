@@ -30,19 +30,19 @@ namespace PagoAgilFrba.Negocio
                     frm = new PagoAgilFrba.AbmRol.FrmABMRol();
                     break;
                 case 2:
-                    //not defined
-                    break;
-                case 3:
                     frm = new PagoAgilFrba.AbmCliente.FrmABMCliente();
                     break;
-                case 4:
+                case 3:
                     frm = new PagoAgilFrba.AbmEmpresa.FrmABMEmpresa();
                     break;
-                case 5:
+                case 4:
                     frm = new PagoAgilFrba.AbmSucursal.FrmABMSucursal();
                     break;
-                case 6:
+                case 5:
                     frm = new PagoAgilFrba.AbmFactura.FrmABMFactura();
+                    break;
+                case 6:
+                    frm = new PagoAgilFrba.DevolucionFacturas.FrmDevolucionFacturas();
                     break;
                 case 7:
                     frm = new PagoAgilFrba.RegistroPago.FrmRegistroPagoFactura();

@@ -147,10 +147,16 @@ namespace PagoAgilFrba.Helpers
 
         public void limpiar_tabla(DataGridView tabla)
         {
-            //TODO: Ver el tema de la nulidad de la tabla y su datasource
             tabla.ClearSelection();
-            tabla.Rows.Clear();
             tabla.DataSource = null;
+        }
+
+        public void onlyIntNumbers_event(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
+            {
+                e.Handled = true;
+            }
         }
     }
 }
