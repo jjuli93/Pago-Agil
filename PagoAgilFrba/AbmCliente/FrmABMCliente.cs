@@ -20,6 +20,7 @@ namespace PagoAgilFrba.AbmCliente
         private List<Control> campos_obligatorios;
         private List<Label> campo_labels;
         ControlHelper helper = Singleton<ControlHelper>.Instance;
+        MessageHelper msgHelper = Singleton<MessageHelper>.Instance;
         ClienteDAO clienteDAO = Singleton<ClienteDAO>.Instance;
         int fila_seleccionada = -1;
         int id_cliente = -1;
@@ -36,6 +37,8 @@ namespace PagoAgilFrba.AbmCliente
             habilitar_todo(false);
             habilitadoChk.Enabled = false;
             habilitadoChk.Visible = false;
+            clientesDt.ClearSelection();
+            clientesDt.CurrentCell = null;
         }
 
         #region "Botones de salida"
@@ -70,21 +73,35 @@ namespace PagoAgilFrba.AbmCliente
 
         private void modificarBtn_Click(object sender, EventArgs e)
         {
-            confirmPnl.Visible = true;
-            abmPnl.Visible = false;
-            descripcionLbl.Text = "Modificar Cliente";
-            helper.visualizar_controles(label_obligatorios, true);
-            habilitar_todo(true);
-            habilitadoChk.Visible = true;
-            frmTabCtrl.SelectedTab = principalPage;
+            if (fila_seleccionada >= 0)
+            {
+                confirmPnl.Visible = true;
+                abmPnl.Visible = false;
+                descripcionLbl.Text = "Modificar Cliente";
+                helper.visualizar_controles(label_obligatorios, true);
+                habilitar_todo(true);
+                habilitadoChk.Visible = true;
+                frmTabCtrl.SelectedTab = principalPage;
+            }
+            else
+            {
+                msgHelper.mostrar_FilaNoSeleccionada();
+            }
         }
 
         private void eliminarBtn_Click(object sender, EventArgs e)
         {
-            confirmPnl.Visible = true;
-            abmPnl.Visible = false;
-            descripcionLbl.Text = "Eliminar Cliente";
-            frmTabCtrl.SelectedTab = principalPage;
+            if (fila_seleccionada >= 0)
+            {
+                confirmPnl.Visible = true;
+                abmPnl.Visible = false;
+                descripcionLbl.Text = "Eliminar Cliente";
+                frmTabCtrl.SelectedTab = principalPage;
+            }
+            else
+            {
+                msgHelper.mostrar_FilaNoSeleccionada();
+            }
         }
 
         private void aceptarBtn_Click(object sender, EventArgs e)
@@ -92,7 +109,7 @@ namespace PagoAgilFrba.AbmCliente
             string operacion = descripcionLbl.Text;
             string msg = string.Format("¿Confirmar <{0}>?", operacion);
 
-            if (MessageBox.Show("¿Confirmar Operación?", "PagoAgil FRBA App", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            if (MessageBox.Show(msg, "PagoAgil FRBA App", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
                 switch (operacion)
                 {
@@ -111,7 +128,8 @@ namespace PagoAgilFrba.AbmCliente
 
         private void cancelarBtn_Click(object sender, EventArgs e)
         {
-            this.restablecer_controles();
+            limpiar_campos();
+            restablecer_controles();
         }
         #endregion
 
@@ -196,11 +214,6 @@ namespace PagoAgilFrba.AbmCliente
         {
             helper.habilitar_controles(campos_obligatorios, valor_hab);
             habilitadoChk.Enabled = valor_hab;
-
-            if (valor_hab)
-                helper.cambiar_color_labels(campo_labels, Color.Black);
-            else
-                helper.cambiar_color_labels(campo_labels, Color.DarkGray);
         }
 
         private void restablecer_controles()
@@ -224,6 +237,8 @@ namespace PagoAgilFrba.AbmCliente
             codpostTb.Text = string.Empty;
             emailTb.Text = string.Empty;
             fecnacDtp.Text = string.Empty;
+            fila_seleccionada = -1;
+            id_cliente = -1;
         }
 
         private Cliente obtener_cliente_desde_form()
@@ -262,7 +277,7 @@ namespace PagoAgilFrba.AbmCliente
             nombreTb.Text = fila.Cells["Nombre"].Value.ToString();
             apellidoTb.Text = fila.Cells["Apellido"].Value.ToString();
             dniTb.Text = fila.Cells["DNI"].Value.ToString();
-            //emailTb.Text = fila.Cells["Email"].Value.ToString();
+            emailTb.Text = fila.Cells["Email"].Value.ToString();
             telefonoTb.Text = fila.Cells["Telefono"].Value.ToString();
             direccionTb.Text = fila.Cells["Direccion"].Value.ToString();
             codpostTb.Text = fila.Cells["Codigo_Postal"].Value.ToString();

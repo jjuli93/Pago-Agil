@@ -39,16 +39,51 @@ namespace PagoAgilFrba.Datos
             }
             catch (SqlException)
             {
-                //throw;
+                throw;
             }
 
             return roles;
         }
 
-        public bool modificar_rol(Rol rol_modificado)
+        public void crear_rol(string nombre_rol, List<Funcionalidad> funcionalidades)
         {
-            bool result = true;
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connString))
+                using (SqlCommand cmd = new SqlCommand("SistemaCaido.sp_alta_rol", conn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
 
+                    cmd.Parameters.Add("@nombre", SqlDbType.VarChar).Value = nombre_rol;
+                    cmd.Parameters.Add("@habilitado", SqlDbType.Bit).Value = 1;
+
+                    var table = new DataTable();
+
+                    table.Columns.Add("id", typeof(int));
+
+                    foreach (Funcionalidad item in funcionalidades)
+                    {
+                        table.Rows.Add(item.Id);
+                    }
+
+                    var plist = new SqlParameter("@listaFuncionalidades", SqlDbType.Structured);
+                    plist.TypeName = "SistemaCaido.listaIDs";
+                    plist.Value = table;
+
+                    cmd.Parameters.Add(plist);
+
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                }
+            }
+            catch (SqlException e)
+            {
+                throw;
+            }
+        }
+
+        public void modificar_rol(Rol rol_modificado)
+        {
             try
             {
                 using (SqlConnection conn = new SqlConnection(connString))
@@ -70,7 +105,7 @@ namespace PagoAgilFrba.Datos
                     }
 
                     var plist = new SqlParameter("@listaFuncionalidades", SqlDbType.Structured);
-                    plist.TypeName = "ddg.listaIDs";
+                    plist.TypeName = "SistemaCaido.listaIDs";
                     plist.Value = table;
 
                     cmd.Parameters.Add(plist);
@@ -79,20 +114,14 @@ namespace PagoAgilFrba.Datos
                     cmd.ExecuteNonQuery();
                 }
             }
-            catch (SqlException e)
+            catch (SqlException)
             {
-                MessageBox.Show(e.Message, "Error en Modificación Rol", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                result = false;
-                //throw;
+                throw;
             }
-
-            return result;
         }
 
-        public bool eliminar_rol(int id_rol)
+        public void eliminar_rol(int id_rol)
         {
-            bool result = true;
-
             try
             {
                 using (SqlConnection conn = new SqlConnection(connString))
@@ -108,132 +137,120 @@ namespace PagoAgilFrba.Datos
             }
             catch (SqlException)
             {
-
                 throw;
             }
-
-            return result;
         }
 
-        internal bool crear_rol(string nombre_rol, List<ItemControlHelper.itemListBox> funcionalidades)
+        /// <summary>
+        /// Crea un objeto Rol a partir de una fila
+        /// </summary>
+        /// <param name="row">DataGridViewRow</param>
+        /// <returns>Rol</returns>
+        public Rol obtenerRol(System.Windows.Forms.DataGridViewRow row)
         {
-            bool result = true;
+            Rol rol = null;
 
             try
             {
-                using (SqlConnection conn = new SqlConnection(connString))
-                using (SqlCommand cmd = new SqlCommand("SistemaCaido.sp_alta_rol", conn))
-                {
-                    cmd.CommandType = CommandType.StoredProcedure;
+                if (row.Cells[0].Value == null || row.Cells[1].Value == null || row.Cells[2].Value == null)
+                    return null;
 
-                    cmd.Parameters.Add("@nombre", SqlDbType.VarChar).Value = nombre_rol;
-                    cmd.Parameters.Add("@habilitado", SqlDbType.Bit).Value = 1;
+                rol = new Rol(Convert.ToInt32(row.Cells[0].Value), row.Cells[1].Value.ToString());
 
-                    var table = new DataTable();
+                rol.habilitado = Convert.ToBoolean(row.Cells[2].Value);
 
-                    table.Columns.Add("id", typeof(int));
-
-                    foreach (ItemControlHelper.itemListBox item in funcionalidades)
-                    {
-                        table.Rows.Add(item.id_item);
-                    }
-
-                    var plist = new SqlParameter("@listaFuncionalidades", SqlDbType.Structured);
-                    plist.TypeName = "ddg.listaIDs";
-                    plist.Value = table;
-
-                    cmd.Parameters.Add(plist);
-
-                    conn.Open();
-                    cmd.ExecuteNonQuery();
-                }
+                rol.funcionalidades = get_funcionalidades_by_Rol(rol.Id);
             }
-            catch (SqlException e)
+            catch (Exception)
             {
-                MessageBox.Show(e.Message, "Error en Alta Rol", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                result = false;
-                //throw;
+                throw;
             }
-
-            return result;
-        }
-
-        public Rol obtenerRol(System.Windows.Forms.DataGridViewRow row)
-        {
-            if (row.Cells[0].Value == null || row.Cells[1].Value == null || row.Cells[2].Value == null)
-                return null;
-
-            Rol rol = new Rol(Convert.ToInt32(row.Cells[0].Value), row.Cells[1].Value.ToString());
-
-            rol.habilitado = Convert.ToBoolean(row.Cells[2].Value);
-
-            rol.funcionalidades = get_funcionalidades_by_Rol(rol.Id);
 
             return rol;
         }
 
+        /// <summary>
+        /// Obtiene todas las funcionalidades del sistema
+        /// </summary>
+        /// <returns></returns>
         public List<Funcionalidad> get_funcionalidades()
         {
             List<Funcionalidad> funcionalidades = new List<Funcionalidad>();
 
-            using (SqlConnection conn = new SqlConnection(connString))
-            using (SqlCommand cmd = new SqlCommand("SistemaCaido.sp_get_funcionalidades", conn))
+            try
             {
-                cmd.CommandType = CommandType.StoredProcedure;
-
-                conn.Open();
-                SqlDataReader lector = cmd.ExecuteReader();
-                
-                if (lector.HasRows)
+                using (SqlConnection conn = new SqlConnection(connString))
+                using (SqlCommand cmd = new SqlCommand("SistemaCaido.sp_get_funcionalidades", conn))
                 {
-                    while (lector.Read())
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    conn.Open();
+                    SqlDataReader lector = cmd.ExecuteReader();
+
+                    if (lector.HasRows)
                     {
-                        Funcionalidad f = new Funcionalidad(Convert.ToInt32(lector["IdFuncionalidad"]), lector["Nombre"].ToString());
+                        while (lector.Read())
+                        {
+                            Funcionalidad f = new Funcionalidad(Convert.ToInt32(lector["IdFuncionalidad"]), lector["Nombre"].ToString());
 
-                        funcionalidades.Add(f);
+                            funcionalidades.Add(f);
+                        }
                     }
-                }
 
-                lector.Close();
+                    lector.Close();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
             }
 
             return funcionalidades;
         }
 
+        /// <summary>
+        /// Obtiene las funcionalidades habilitadas de un rol
+        /// </summary>
+        /// <param name="id_rol"></param>
+        /// <returns></returns>
         public List<Funcionalidad> get_funcionalidades_by_Rol(int id_rol)
         {
             List<Funcionalidad> funcionalidades = new List<Funcionalidad>();
 
-            using (SqlConnection conn = new SqlConnection(connString))
-            using (SqlCommand cmd = new SqlCommand("SistemaCaido.sp_get_funcionalidades_rol", conn))
+            try
             {
-                cmd.CommandType = CommandType.StoredProcedure;
-
-                cmd.Parameters.AddWithValue("@idRol", id_rol);
-
-                conn.Open();
-                SqlDataReader lector = cmd.ExecuteReader();
-
-                var funID = 0;
-                var funDesc = "";
-
-                if (lector.HasRows)
+                using (SqlConnection conn = new SqlConnection(connString))
+                using (SqlCommand cmd = new SqlCommand("SistemaCaido.sp_get_funcionalidades_rol", conn))
                 {
-                    while (lector.Read())
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.AddWithValue("@idRol", id_rol);
+
+                    conn.Open();
+                    SqlDataReader lector = cmd.ExecuteReader();
+
+                    var funID = 0;
+                    var funDesc = "";
+
+                    if (lector.HasRows)
                     {
-                        funID = Convert.ToInt32(lector["IdFuncionalidad"]);
-                        funDesc = lector["Nombre"].ToString();
+                        while (lector.Read())
+                        {
+                            funID = Convert.ToInt32(lector["IdFuncionalidad"]);
+                            funDesc = lector["Nombre"].ToString();
 
-                        if (funID == 2 & funDesc == "Registro de Usuario")
-                            continue;
+                            Funcionalidad f = new Funcionalidad(funID, funDesc);
 
-                        Funcionalidad f = new Funcionalidad(funID, funDesc);
-
-                        funcionalidades.Add(f);
+                            funcionalidades.Add(f);
+                        }
                     }
-                }
 
-                lector.Close();
+                    lector.Close();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
             }
 
             return funcionalidades;

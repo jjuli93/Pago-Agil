@@ -333,11 +333,17 @@
             // 
             // rolesGrid
             // 
+            this.rolesGrid.AllowUserToAddRows = false;
+            this.rolesGrid.AllowUserToDeleteRows = false;
             this.rolesGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.rolesGrid.Location = new System.Drawing.Point(33, 21);
+            this.rolesGrid.MultiSelect = false;
             this.rolesGrid.Name = "rolesGrid";
+            this.rolesGrid.ReadOnly = true;
+            this.rolesGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.rolesGrid.Size = new System.Drawing.Size(360, 122);
             this.rolesGrid.TabIndex = 0;
+            this.rolesGrid.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.rolesGrid_CellClick);
             // 
             // FrmABMRol
             // 

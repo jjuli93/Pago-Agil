@@ -98,6 +98,7 @@
     <Compile Include="Helpers\Conexion.cs" />
     <Compile Include="Helpers\ControlHelper.cs" />
     <Compile Include="Helpers\ItemControlHelper.cs" />
+    <Compile Include="Helpers\MessageHelper.cs" />
     <Compile Include="Helpers\Singleton.cs" />
     <Compile Include="Helpers\Validator.cs" />
     <Compile Include="ListadoEstadistico\FrmTopEstadistico.cs">

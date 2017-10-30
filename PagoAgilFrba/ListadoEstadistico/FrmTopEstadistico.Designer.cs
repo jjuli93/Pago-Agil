@@ -299,6 +299,8 @@
             // 
             // listadoDgv
             // 
+            this.listadoDgv.AllowUserToAddRows = false;
+            this.listadoDgv.AllowUserToDeleteRows = false;
             this.listadoDgv.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.listadoDgv.Location = new System.Drawing.Point(12, 221);
             this.listadoDgv.Name = "listadoDgv";

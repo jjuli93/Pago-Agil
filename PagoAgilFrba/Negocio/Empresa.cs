@@ -9,11 +9,11 @@ namespace PagoAgilFrba.Negocio
 {
     public class Empresa
     {
-        int id;
-        string nombre;
-        UInt32 cuit;
-        string direccion;
-        ItemControlHelper.itemComboBox rubro;
-        bool habilitado;
+        public int id { get; set; }
+        public string nombre { get; set; }
+        public UInt32 cuit { get; set; }
+        public string direccion { get; set; }
+        public ItemControlHelper.itemComboBox rubro { get; set; }
+        public bool habilitado { get; set; }
     }
 }

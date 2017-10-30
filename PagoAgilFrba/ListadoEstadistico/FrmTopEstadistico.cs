@@ -73,13 +73,13 @@ namespace PagoAgilFrba.ListadoEstadistico
         {
             if (validar())
             {
-                TopDAO topDao = new TopDAO();
-                int anio = (int)yearNud.Value;
-                ItemControlHelper.itemComboBox trimestre = (ItemControlHelper.itemComboBox)trimestreCb.SelectedItem;
-                int listado = rbs.IndexOf(obtener_seleccionado()) + 1;
-
                 try
                 {
+                    TopDAO topDao = new TopDAO();
+                    int anio = (int)yearNud.Value;
+                    ItemControlHelper.itemComboBox trimestre = (ItemControlHelper.itemComboBox)trimestreCb.SelectedItem;
+                    int listado = rbs.IndexOf(obtener_seleccionado()) + 1;
+
                     DataTable dt = topDao.consultar_listado(anio, trimestre.id_item, listado);
 
                     if (dt.Rows.Count != 0)
@@ -120,7 +120,7 @@ namespace PagoAgilFrba.ListadoEstadistico
         private void refreshBtn_Click(object sender, EventArgs e)
         {
             clean_fields();
-            //TODO LIMPIAR GRILLA
+            listadoDgv.DataSource = null;
         }
 
         private void exitBtn_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

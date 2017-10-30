@@ -8,9 +8,9 @@ namespace PagoAgilFrba.Negocio
 {
     public class ItemFactura
     {
-        int id;
-        int descripcion;
-        double monto;
-        int cantidad;
+        public int id { get; set; }
+        public int descripcion { get; set; }
+        public double monto { get; set; }
+        public int cantidad { get; set; }
     }
 }
