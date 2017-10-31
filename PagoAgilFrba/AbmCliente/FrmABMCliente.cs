@@ -111,6 +111,8 @@ namespace PagoAgilFrba.AbmCliente
 
             if (MessageBox.Show(msg, "PagoAgil FRBA App", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
+                helper.limpiar_errorProvider(campos_obligatorios, errorProvider);
+
                 switch (operacion)
                 {
                     case "Crear Cliente":
@@ -244,6 +246,7 @@ namespace PagoAgilFrba.AbmCliente
             fecnacDtp.Text = string.Empty;
             fila_seleccionada = -1;
             id_cliente = -1;
+            helper.limpiar_errorProvider(campos_obligatorios, errorProvider);
         }
 
         private Cliente obtener_cliente_desde_form()
@@ -327,6 +330,7 @@ namespace PagoAgilFrba.AbmCliente
 
             try
             {
+                limpiar_campos();
                 restablecer_controles();
                 this.fila_seleccionada = e.RowIndex;
                 cargar_cliente_desde_grilla();

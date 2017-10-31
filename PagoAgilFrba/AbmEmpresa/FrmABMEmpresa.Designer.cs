@@ -402,11 +402,16 @@
             // 
             // empresasDt
             // 
+            this.empresasDt.AllowUserToAddRows = false;
+            this.empresasDt.AllowUserToDeleteRows = false;
             this.empresasDt.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.empresasDt.Location = new System.Drawing.Point(17, 234);
             this.empresasDt.Name = "empresasDt";
+            this.empresasDt.ReadOnly = true;
+            this.empresasDt.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.empresasDt.Size = new System.Drawing.Size(527, 232);
             this.empresasDt.TabIndex = 11;
+            this.empresasDt.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.empresasDt_CellClick);
             // 
             // FrmABMEmpresa
             // 

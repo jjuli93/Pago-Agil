@@ -30,7 +30,7 @@ namespace PagoAgilFrba.Datos
                     //@Nombre nvarchar(255), @CUIT nvarchar(50), @Direccion nvarchar(255), @IdRubro int
 
                     cmd.Parameters.Add("@Nombre", SqlDbType.VarChar).Value = empresa.nombre;
-                    cmd.Parameters.Add("@CUIT", SqlDbType.NVarChar).Value = empresa.cuit.ToString();
+                    cmd.Parameters.Add("@CUIT", SqlDbType.NVarChar).Value = empresa.cuit;
                     cmd.Parameters.Add("@Direccion", SqlDbType.NVarChar).Value = empresa.direccion;
                     cmd.Parameters.Add("@IdRubro", SqlDbType.Int).Value = empresa.rubro.id_item;
 
@@ -60,7 +60,7 @@ namespace PagoAgilFrba.Datos
 
                     cmd.Parameters.Add("@IdEmpresa", SqlDbType.Int).Value = empresa.id;
                     cmd.Parameters.Add("@Nombre", SqlDbType.VarChar).Value = empresa.nombre;
-                    cmd.Parameters.Add("@CUIT", SqlDbType.NVarChar).Value = empresa.cuit.ToString();
+                    cmd.Parameters.Add("@CUIT", SqlDbType.NVarChar).Value = empresa.cuit;
                     cmd.Parameters.Add("@Direccion", SqlDbType.NVarChar).Value = empresa.direccion;
                     cmd.Parameters.Add("@IdRubro", SqlDbType.NVarChar).Value = empresa.rubro.id_item;
                     //cmd.Parameters.Add("@Habilitada", SqlDbType.Char).Value = empresa.habilitado;
