@@ -79,6 +79,7 @@
     <Compile Include="Datos\EmpresaDAO.cs" />
     <Compile Include="Datos\FacturaDAO.cs" />
     <Compile Include="Datos\LoginDAO.cs" />
+    <Compile Include="Datos\PagoDAO.cs" />
     <Compile Include="Datos\RendicionDAO.cs" />
     <Compile Include="Datos\RolDAO.cs" />
     <Compile Include="Datos\SucursalDAO.cs" />

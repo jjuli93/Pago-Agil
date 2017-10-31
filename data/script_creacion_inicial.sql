@@ -283,8 +283,8 @@ IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[SistemaCaid
 DROP PROCEDURE [SistemaCaido].[BuscarSucursales]
 GO
 
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[SistemaCaido].[GetFacturasCliente]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [SistemaCaido].[GetFacturasCliente]
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[SistemaCaido].[GetFacturasClienteParaPago]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [SistemaCaido].[GetFacturasClienteParaPago]
 GO
 
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[SistemaCaido].[GetDatosRendicion]') AND type in (N'P', N'PC'))
@@ -321,10 +321,6 @@ GO
 
 
 --*************************************** Tipos *************************************************************--   
-
-IF  EXISTS (SELECT * FROM sys.types st JOIN sys.schemas ss ON st.schema_id = ss.schema_id WHERE st.name = N'tablaFacturas' AND ss.name = N'SistemaCaido')
-DROP TYPE [SistemaCaido].[tablaFacturas]
-GO
 
 IF  EXISTS (SELECT * FROM sys.types st JOIN sys.schemas ss ON st.schema_id = ss.schema_id WHERE st.name = N'listaIDs' AND ss.name = N'SistemaCaido')
 DROP TYPE [SistemaCaido].[listaIDs]
@@ -825,17 +821,6 @@ CREATE TYPE [SistemaCaido].[listaIDs] AS TABLE(
 )
 GO
 
-CREATE TYPE [SistemaCaido].[tablaFacturas] AS TABLE(
-	[NumeroFactura] [int] NULL,
-	[FechaCobro] [datetime] NULL DEFAULT (sysdatetime()),
-	[Empresa] [int] NULL,
-	[Cliente] [int] NULL,
-	[FechaVencimiento] [datetime] NULL,
-	[Importe] [numeric](18, 2) NULL,
-	[Sucursal] [int] NULL
-)
-GO
-
 
 --=============================================================================================================--
 --=============================================================================================================--
@@ -1271,38 +1256,61 @@ GO
 
 --********************************* Registrar Pago ****************************************--
 
-create procedure [SistemaCaido].[RegistrarPago](@Facturas SistemaCaido.tablaFacturas readonly,
+create procedure [SistemaCaido].[RegistrarPago](@IdsFacturas SistemaCaido.listaIDs readonly,
 											  @Cliente int, @Sucursal int, @MedioPago int)
 as begin transaction
 	declare @ImporteTotal numeric(18,2) 
 	declare @NumeroPago int
+	declare @IdPago int
 
 	set @ImporteTotal = 0
 	set @NumeroPago = 0
 
-	select @ImporteTotal = SUM(fact1.Importe) from Facturas fact1
-	join @Facturas fact2 on fact1.IdFactura = fact2.NumeroFactura
+	select @ImporteTotal = SUM(fact1.Importe) 
+	from Facturas fact1
+	join @IdsFacturas fact2 on fact1.IdFactura = fact2.id
+
+	select @NumeroPago = SistemaCaido.GetSiguienteNumeroDePago()
 
 	if(@ImporteTotal != 0)
-		begin
-			insert into SistemaCaido.Pagos values (@NumeroPago, sysdatetime(), @Cliente, @ImporteTotal, @Sucursal, @MedioPago)
-			if (@@ERROR != 0)
-				begin
-					raiserror('No se pudo registrar el pago..', 1,1)
-					rollback transaction
-				end
-			commit transaction
-		end
+		raiserror('No se pudo registrar el pago, el importe total es 0', 1,1)
+	
+	insert into SistemaCaido.Pagos (NumeroPago, FechaCobro, IdCliente, Importe, IdSucursal, IdMedioPago)
+	values (@NumeroPago, sysdatetime(), @Cliente, @ImporteTotal, @Sucursal, @MedioPago)
+
+	set @IdPago = SCOPE_IDENTITY()
+
+	insert into SistemaCaido.PagosXFacturas (IdFactura, IdPago)
+	Select f.id, @IdPago
+	From @IdsFacturas f
+
+commit transaction
 
 GO
 
 
-Create procedure SistemaCaido.GetFacturasCliente(@IdCliente INT)
+Create procedure SistemaCaido.GetFacturasClienteParaPago(@IdCliente INT)
 as begin
 	Select *
 	From SistemaCaido.Facturas f
 	where f.IdCliente = @IdCliente
+	and f.IdFactura not in (select f2.IdFactura
+							from SistemaCaido.Facturas f2
+							Inner join SistemaCaido.PagosXFacturas pf on pf.IdFactura = f2.IdFactura
+							Inner join SistemaCaido.Pagos p on pf.IdPago = p.IdPago
+							left join SistemaCaido.DevolucionesXFacturas df on df.IdFactura = f2.IdFactura
+							left join SistemaCaido.Devoluciones d on d.IdDevolucion = df.IdDevolucion
+							where d.IdDevolucion is null
+							or d.Fecha < p.FechaCobro )
 END
+GO
+
+
+create procedure SistemaCaido.GetMediosDePago
+as begin
+	Select *
+	From SistemaCaido.MediosPago
+end
 GO
 
 
@@ -1452,6 +1460,35 @@ end
 
 GO
 
+
+create procedure [SistemaCaido].[sp_update_rol] (@id numeric(10,0), @nombre varchar(255), @habilitado bit, @listaFuncionalidades SistemaCaido.listaIDs readonly)	
+as
+begin
+
+set xact_abort on
+begin tran
+
+if(SistemaCaido.existeRolConMismoNombre(@nombre, @id) = 1) THROW 51000, 'Ya existe un Rol con el nombre ingresado.', 1;
+
+update SistemaCaido.Roles
+set Nombre = @nombre, Habilitado = @habilitado
+where IdRol = @id
+
+delete from SistemaCaido.RolesXFuncionalidades
+where IdRol = @id
+
+insert into SistemaCaido.RolesXFuncionalidades (IdRol, IdFuncionalidad)
+select  @id, id
+from @listaFuncionalidades
+
+commit
+
+end
+
+GO
+
+
+
 create procedure [SistemaCaido].[sp_get_funcionalidades] as
 begin
 	select * 
@@ -1557,34 +1594,6 @@ where u.IdUsuario = @idUsuario
 and u.IdUsuario = ur.IdUsuario
 and ur.IdRol = r.IdRol
 and r.Habilitado = 1 	
-
-end
-
-GO
-
-
-
-create procedure [SistemaCaido].[sp_update_rol] (@id numeric(10,0), @nombre varchar(255), @habilitado bit, @listaFuncionalidades SistemaCaido.listaIDs readonly)	
-as
-begin
-
-set xact_abort on
-begin tran
-
-if(SistemaCaido.existeRolConMismoNombre(@nombre, @id) = 1) THROW 51000, 'Ya existe un Rol con el nombre ingresado.', 1;
-
-update SistemaCaido.Roles
-set Nombre = @nombre, Habilitado = @habilitado
-where IdRol = @id
-
-delete from SistemaCaido.RolesXFuncionalidades
-where IdRol = @id
-
-insert into SistemaCaido.RolesXFuncionalidades (IdRol, IdFuncionalidad)
-select  @id, id
-from @listaFuncionalidades
-
-commit
 
 end
 
