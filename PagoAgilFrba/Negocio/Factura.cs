@@ -8,19 +8,20 @@ namespace PagoAgilFrba.Negocio
 {
     public class Factura
     {
-        int id;
-        int id_cliente;
-        string nombre_cliente;
-        int id_empresa;
-        string nombre_empresa;
-        UInt32 numero_factura;
-        DateTime fecha_alta;
-        DateTime fecha_vencimiento;
-        List<ItemFactura> items = new List<ItemFactura>();
+        public int id { get; set; }
+        public int id_cliente { get; set; }
+        public string nombre_cliente { get; set; }
+        public int id_empresa { get; set; }
+        public string nombre_empresa { get; set; }
+
+        public UInt32 numero_factura { get; set; }
+        public DateTime fecha_alta { get; set; }
+        public DateTime fecha_vencimiento { get; set; }
+        public List<ItemFactura> items = new List<ItemFactura>();
         /// <summary>
         /// Pagada o Rendida
         /// </summary>
-        bool procesada;
+        public bool procesada { get; set; }
     }
 
     public class FacturaSimpleViewModel
