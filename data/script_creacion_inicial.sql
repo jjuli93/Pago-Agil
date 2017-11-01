@@ -360,7 +360,7 @@ CREATE TABLE [SistemaCaido].[Clientes](
 	[Direccion] [nvarchar](255) NOT NULL,
 	[CodigoPostal] [nvarchar](4) NOT NULL,
 	[FechaNacimiento] [datetime] NOT NULL,
-	[Habilitado] [varchar](1) NOT NULL default(1))
+	[Habilitado] bit NOT NULL default(1))
 GO
 
 CREATE TABLE [SistemaCaido].[Rubros](
@@ -374,7 +374,7 @@ CREATE TABLE [SistemaCaido].[Empresas](
 	[CUIT] [nvarchar](50) NOT NULL UNIQUE,
 	[Direccion] [nvarchar](255) NOT NULL,
 	[IdRubro] [int] NOT NULL references SistemaCaido.Rubros,
-	[Habilitada] [char](1) NOT NULL default(1))
+	[Habilitada] bit NOT NULL default(1))
 GO
 
 CREATE TABLE [SistemaCaido].[Facturas](
@@ -385,7 +385,7 @@ CREATE TABLE [SistemaCaido].[Facturas](
 	[FechaAlta] [datetime] NOT NULL,
 	[FechaVencimiento] [datetime] NOT NULL,
 	[Importe] [numeric](18, 2) NOT NULL,
-	[Habilitada] [char](1) NOT NULL default(1))
+	[Habilitada] bit NOT NULL default(1))
 GO
 
 CREATE TABLE [SistemaCaido].[Funcionalidades](
@@ -403,7 +403,7 @@ CREATE TABLE [SistemaCaido].[Sucursales](
 	[Nombre] [nvarchar](255) NOT NULL,
 	[Direccion] [nvarchar](255) NOT NULL,
 	[CodigoPostal] [varchar](4) NOT NULL,
-	[Habilitada] [char](1) NOT NULL default(1))
+	[Habilitada] bit NOT NULL default(1))
 GO
 
 CREATE TABLE [SistemaCaido].[Pagos](
@@ -551,7 +551,7 @@ as begin
 	declare @FechaVenc datetime
 	declare @Empresa int
 	declare @ImporteFactura numeric(18,2)
-	declare @Habilitada char
+	declare @Habilitada bit
 	declare @NumeroFactura int
 	declare @IdFactura int
 
@@ -965,7 +965,7 @@ as begin transaction
 GO
 
 
-create procedure [SistemaCaido].[ModificacionEmpresa](@IdEmpresa int, @Nombre nvarchar(255), @CUIT nvarchar(50), @Direccion nvarchar(255), @IdRubro int, @Habilitada char)
+create procedure [SistemaCaido].[ModificacionEmpresa](@IdEmpresa int, @Nombre nvarchar(255), @CUIT nvarchar(50), @Direccion nvarchar(255), @IdRubro int, @Habilitada bit)
 as begin transaction
 	update SistemaCaido.Empresas
 	set Nombre = @Nombre,
@@ -986,7 +986,7 @@ GO
 
 create procedure SistemaCaido.BuscarEmpresas (@Nombre nvarchar(255), @CUIT nvarchar(50),  @IdRubro int)
 as begin
-	Select e.IdEmpresa, e.Nombre, e.CUIT, e.Direccion, e.Habilitada, r.Nombre
+	Select e.IdEmpresa, e.Nombre 'empresa', e.CUIT, e.Direccion, e.Habilitada, r.Nombre 'rubro'
 	From SistemaCaido.Empresas e
 	Join SistemaCaido.Rubros r on e.IdRubro = r.IdRubro
 	where (@nombre is null or (e.nombre like CONCAT('%',@nombre,'%')))
@@ -1034,7 +1034,7 @@ GO
 
 
 create procedure [SistemaCaido].[ModificacionSucursal]
-(@IdSucursal int, @Nombre nvarchar(255), @Direccion nvarchar(255), @CodigoPostal varchar(4), @Habilitada char) 
+(@IdSucursal int, @Nombre nvarchar(255), @Direccion nvarchar(255), @CodigoPostal varchar(4), @Habilitada bit) 
 as begin transaction
 	update SistemaCaido.Sucursales
 	set Nombre = @Nombre,
