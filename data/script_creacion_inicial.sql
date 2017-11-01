@@ -986,7 +986,7 @@ GO
 
 create procedure SistemaCaido.BuscarEmpresas (@Nombre nvarchar(255), @CUIT nvarchar(50),  @IdRubro int)
 as begin
-	Select e.IdEmpresa, e.Nombre, e.CUIT, e.Direccion, e.Habilitada, r.Nombre
+	Select e.IdEmpresa, e.Nombre 'empresa', e.CUIT, e.Direccion, e.Habilitada, r.Nombre 'rubro'
 	From SistemaCaido.Empresas e
 	Join SistemaCaido.Rubros r on e.IdRubro = r.IdRubro
 	where (@nombre is null or (e.nombre like CONCAT('%',@nombre,'%')))
