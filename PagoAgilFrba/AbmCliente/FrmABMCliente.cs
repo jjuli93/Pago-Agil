@@ -146,6 +146,7 @@ namespace PagoAgilFrba.AbmCliente
                     {
                         msgHelper.mostrar_aviso("Alta de cliente exitosa.", "Nuevo Cliente");
                         this.limpiar_campos();
+                        this.limpiarBtn_Click(null, null);
                     }
                     else
                     {

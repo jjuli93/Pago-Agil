@@ -15,7 +15,7 @@ namespace PagoAgilFrba.AbmEmpresa
 {
     public partial class FrmABMEmpresa : Form
     {
-        private string default_description = "null";
+        private string default_description = "";
         private List<Control> label_obligatorios;
         private List<Control> campos_obligatorios;
         private List<Label> campo_labels;
@@ -259,7 +259,10 @@ namespace PagoAgilFrba.AbmEmpresa
             {
                 if (helper.cumple_campos_obligatorios(campos_obligatorios, errorProvider))
                 {
-                    empresaDao.modificar_empresa(obtener_empresa_desde_form());
+                    Empresa emp = obtener_empresa_desde_form();
+                    emp.id = Convert.ToInt32(empresasDt.CurrentRow.Cells["IdEmpresa"].Value);
+
+                    empresaDao.modificar_empresa(emp);
                     msgHelper.mostrar_aviso("Se ha modificado la empresa.", "Modificación de Empresa");
                     limpiar_campos();
                     restablecer_controles();
@@ -329,7 +332,7 @@ namespace PagoAgilFrba.AbmEmpresa
             }
             catch (Exception ex)
             {
-                msgHelper.mostrar_error(ex.Message, "Error en ABM Cliente");
+                msgHelper.mostrar_error(ex.Message, "Error en ABM Empresa");
             }
         }
     }

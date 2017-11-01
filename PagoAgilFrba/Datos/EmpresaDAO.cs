@@ -76,10 +76,8 @@ namespace PagoAgilFrba.Datos
             }
         }
 
-        public bool eliminar_empresa(int id)
+        public void eliminar_empresa(int id)
         {
-            bool result = true;
-
             try
             {
                 using (SqlConnection conn = new SqlConnection(connString))
@@ -96,12 +94,8 @@ namespace PagoAgilFrba.Datos
             }
             catch (SqlException e)
             {
-                MessageBox.Show(e.Message, "Error en Alta de Empresa", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                result = false;
-                //throw;
+                throw;
             }
-
-            return result;
         }
 
         public void setRubrosCB(ComboBox combo)

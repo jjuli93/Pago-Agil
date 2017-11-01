@@ -51,10 +51,10 @@
             this.obligatorio2 = new System.Windows.Forms.Label();
             this.obligatoriosLbl = new System.Windows.Forms.Label();
             this.habilitadoChk = new System.Windows.Forms.CheckBox();
-            this.cuitTb = new System.Windows.Forms.TextBox();
+            this.cpTb = new System.Windows.Forms.TextBox();
             this.direccionTb = new System.Windows.Forms.TextBox();
             this.nombreTb = new System.Windows.Forms.TextBox();
-            this.cuitLb = new System.Windows.Forms.Label();
+            this.cpLb = new System.Windows.Forms.Label();
             this.dirLb = new System.Windows.Forms.Label();
             this.nombreLb = new System.Windows.Forms.Label();
             this.sucursalesDt = new System.Windows.Forms.DataGridView();
@@ -239,10 +239,10 @@
             this.groupBox1.Controls.Add(this.obligatorio2);
             this.groupBox1.Controls.Add(this.obligatoriosLbl);
             this.groupBox1.Controls.Add(this.habilitadoChk);
-            this.groupBox1.Controls.Add(this.cuitTb);
+            this.groupBox1.Controls.Add(this.cpTb);
             this.groupBox1.Controls.Add(this.direccionTb);
             this.groupBox1.Controls.Add(this.nombreTb);
-            this.groupBox1.Controls.Add(this.cuitLb);
+            this.groupBox1.Controls.Add(this.cpLb);
             this.groupBox1.Controls.Add(this.dirLb);
             this.groupBox1.Controls.Add(this.nombreLb);
             this.groupBox1.Location = new System.Drawing.Point(12, 78);
@@ -308,12 +308,12 @@
             this.habilitadoChk.Text = "Habilitado";
             this.habilitadoChk.UseVisualStyleBackColor = true;
             // 
-            // cuitTb
+            // cpTb
             // 
-            this.cuitTb.Location = new System.Drawing.Point(329, 36);
-            this.cuitTb.Name = "cuitTb";
-            this.cuitTb.Size = new System.Drawing.Size(164, 20);
-            this.cuitTb.TabIndex = 6;
+            this.cpTb.Location = new System.Drawing.Point(366, 36);
+            this.cpTb.Name = "cpTb";
+            this.cpTb.Size = new System.Drawing.Size(127, 20);
+            this.cpTb.TabIndex = 6;
             // 
             // direccionTb
             // 
@@ -329,15 +329,15 @@
             this.nombreTb.Size = new System.Drawing.Size(164, 20);
             this.nombreTb.TabIndex = 4;
             // 
-            // cuitLb
+            // cpLb
             // 
-            this.cuitLb.AutoSize = true;
-            this.cuitLb.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cuitLb.Location = new System.Drawing.Point(286, 39);
-            this.cuitLb.Name = "cuitLb";
-            this.cuitLb.Size = new System.Drawing.Size(35, 13);
-            this.cuitLb.TabIndex = 2;
-            this.cuitLb.Text = "CUIT:";
+            this.cpLb.AutoSize = true;
+            this.cpLb.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cpLb.Location = new System.Drawing.Point(286, 39);
+            this.cpLb.Name = "cpLb";
+            this.cpLb.Size = new System.Drawing.Size(74, 13);
+            this.cpLb.TabIndex = 2;
+            this.cpLb.Text = "Código postal:";
             // 
             // dirLb
             // 
@@ -361,11 +361,16 @@
             // 
             // sucursalesDt
             // 
+            this.sucursalesDt.AllowUserToAddRows = false;
+            this.sucursalesDt.AllowUserToDeleteRows = false;
             this.sucursalesDt.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.sucursalesDt.Location = new System.Drawing.Point(14, 205);
             this.sucursalesDt.Name = "sucursalesDt";
+            this.sucursalesDt.ReadOnly = true;
+            this.sucursalesDt.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.sucursalesDt.Size = new System.Drawing.Size(531, 259);
             this.sucursalesDt.TabIndex = 12;
+            this.sucursalesDt.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.sucursalesDt_CellClick);
             // 
             // errorProvider
             // 
@@ -422,10 +427,10 @@
         private System.Windows.Forms.Label obligatorio2;
         private System.Windows.Forms.Label obligatoriosLbl;
         private System.Windows.Forms.CheckBox habilitadoChk;
-        private System.Windows.Forms.TextBox cuitTb;
+        private System.Windows.Forms.TextBox cpTb;
         private System.Windows.Forms.TextBox direccionTb;
         private System.Windows.Forms.TextBox nombreTb;
-        private System.Windows.Forms.Label cuitLb;
+        private System.Windows.Forms.Label cpLb;
         private System.Windows.Forms.Label dirLb;
         private System.Windows.Forms.Label nombreLb;
         private System.Windows.Forms.DataGridView sucursalesDt;

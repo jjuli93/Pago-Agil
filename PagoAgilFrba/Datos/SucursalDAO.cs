@@ -16,22 +16,23 @@ namespace PagoAgilFrba.Datos
     {
         private string connString = Singleton<Conexion>.Instance.getConnectionString();
 
-        public bool crear_sucursal(Sucursal sucursal)
+        public void crear_sucursal(Sucursal sucursal)
         {
             if (sucursal == null)
-                return false;
-
-            bool result = true;
+                throw new Exception("Empresa nula en crear_sucursal", new NullReferenceException());
 
             try
             {
                 using (SqlConnection conn = new SqlConnection(connString))
-                using (SqlCommand cmd = new SqlCommand("", conn))
+                using (SqlCommand cmd = new SqlCommand("SistemaCaido.AltaSucursal", conn))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
 
-                    //cmd.Parameters.Add("@nombre", SqlDbType.VarChar).Value = cliente.nombre;
-                    
+                    //[SistemaCaido].[AltaSucursal](@Nombre nvarchar(255), @Direccion nvarchar(255), @CodigoPostal varchar(4))
+
+                    cmd.Parameters.Add("@Nombre", SqlDbType.VarChar).Value = sucursal.nombre;
+                    cmd.Parameters.Add("@Direccion", SqlDbType.VarChar).Value = sucursal.nombre;
+                    cmd.Parameters.Add("@CodigoPostal", SqlDbType.VarChar).Value = sucursal.nombre;
 
                     conn.Open();
                     cmd.ExecuteNonQuery();
@@ -39,30 +40,32 @@ namespace PagoAgilFrba.Datos
             }
             catch (SqlException e)
             {
-                MessageBox.Show(e.Message, "Error en Alta de Sucursal", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                result = false;
-                //throw;
+                throw;
             }
-
-            return result;
         }
 
-        public bool modificar_sucursal(Sucursal sucursal)
+        public void modificar_sucursal(Sucursal sucursal)
         {
             if (sucursal == null)
-                return false;
-
-            bool result = true;
+                throw new Exception("Empresa nula en modificar_sucursal", new NullReferenceException());
 
             try
             {
                 using (SqlConnection conn = new SqlConnection(connString))
-                using (SqlCommand cmd = new SqlCommand("", conn))
+                using (SqlCommand cmd = new SqlCommand("SistemaCaido.ModificacionSucursal", conn))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
+        //(@IdSucursal int, @Nombre nvarchar(255), @Direccion nvarchar(255), @CodigoPostal varchar(4), @Habilitada char)
 
-                    //cmd.Parameters.Add("@nombre", SqlDbType.VarChar).Value = cliente.nombre;
+                    cmd.Parameters.Add("@IdSucursal", SqlDbType.Int).Value = sucursal.id;
+                    cmd.Parameters.Add("@Nombre", SqlDbType.VarChar).Value = sucursal.nombre;
+                    cmd.Parameters.Add("@Direccion", SqlDbType.VarChar).Value = sucursal.nombre;
+                    cmd.Parameters.Add("@CodigoPostal", SqlDbType.VarChar).Value = sucursal.codPostal;
 
+                    if (sucursal.habilitado)
+                        cmd.Parameters.Add("@Habilitada", SqlDbType.Bit).Value = 1;
+                    else
+                        cmd.Parameters.Add("@Habilitada", SqlDbType.Bit).Value = 0;
 
                     conn.Open();
                     cmd.ExecuteNonQuery();
@@ -70,27 +73,20 @@ namespace PagoAgilFrba.Datos
             }
             catch (SqlException e)
             {
-                MessageBox.Show(e.Message, "Error en Modificación de Sucursal", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                result = false;
-                //throw;
+                throw;
             }
-
-            return result;
         }
 
-        public bool eliminar_sucursal(int id)
+        public void eliminar_sucursal(int id)
         {
-            bool result = true;
-
             try
             {
                 using (SqlConnection conn = new SqlConnection(connString))
-                using (SqlCommand cmd = new SqlCommand("", conn))
+                using (SqlCommand cmd = new SqlCommand("SistemaCaido.BajaSucursal", conn))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
 
-                    //cmd.Parameters.Add("@nombre", SqlDbType.VarChar).Value = cliente.nombre;
-
+                    cmd.Parameters.Add("@IdSucursal", SqlDbType.Int).Value = id;
 
                     conn.Open();
                     cmd.ExecuteNonQuery();
@@ -98,12 +94,51 @@ namespace PagoAgilFrba.Datos
             }
             catch (SqlException e)
             {
-                MessageBox.Show(e.Message, "Error en Baja de Sucursal", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                result = false;
-                //throw;
+                throw;
             }
+        }
 
-            return result;
+        public DataTable buscar_sucursales(string nombre, string direccion, string cp)
+        {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connString))
+                using (SqlCommand cmd = new SqlCommand("SistemaCaido.BuscarSucursales", conn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    //@Nombre nvarchar(255), @CodigoPostal nvarchar(4),  @Direccion nvarchar(255)
+
+                    if (!string.IsNullOrWhiteSpace(nombre))
+                        cmd.Parameters.Add("@Nombre", SqlDbType.NVarChar).Value = nombre;
+                    else
+                        cmd.Parameters.AddWithValue("@Nombre", DBNull.Value);
+
+                    if (!string.IsNullOrWhiteSpace(cp))
+                        cmd.Parameters.Add("@CodigoPostal", SqlDbType.NVarChar).Value = cp;
+                    else
+                        cmd.Parameters.AddWithValue("@CodigoPostal", DBNull.Value);
+
+                    if (!string.IsNullOrWhiteSpace(direccion))
+                        cmd.Parameters.Add("@Direccion", SqlDbType.NVarChar).Value = direccion;
+                    else
+                        cmd.Parameters.AddWithValue("@Direccion", DBNull.Value);
+
+                    conn.Open();
+                    SqlDataReader lector = cmd.ExecuteReader();
+
+                    DataTable sucursales = new DataTable();
+
+                    sucursales.Load(lector);
+
+                    lector.Close();
+
+                    return sucursales;
+                }
+            }
+            catch (SqlException)
+            {
+                throw;
+            }
         }
     }
 }
