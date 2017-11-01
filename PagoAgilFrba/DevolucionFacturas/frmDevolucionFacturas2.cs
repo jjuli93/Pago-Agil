@@ -16,5 +16,10 @@ namespace PagoAgilFrba.DevolucionFacturas
         {
             InitializeComponent();
         }
+
+        private void label3_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
