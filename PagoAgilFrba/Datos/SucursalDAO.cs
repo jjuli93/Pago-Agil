@@ -19,7 +19,7 @@ namespace PagoAgilFrba.Datos
         public void crear_sucursal(Sucursal sucursal)
         {
             if (sucursal == null)
-                throw new Exception("Empresa nula en crear_sucursal", new NullReferenceException());
+                throw new Exception("Sucursal nula en crear_sucursal", new NullReferenceException());
 
             try
             {
@@ -47,7 +47,7 @@ namespace PagoAgilFrba.Datos
         public void modificar_sucursal(Sucursal sucursal)
         {
             if (sucursal == null)
-                throw new Exception("Empresa nula en modificar_sucursal", new NullReferenceException());
+                throw new Exception("Sucursal nula en modificar_sucursal", new NullReferenceException());
 
             try
             {

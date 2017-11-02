@@ -19,7 +19,7 @@ namespace PagoAgilFrba.Datos
         public void crear_factura(Factura factura)
         {
             if (factura == null)
-                throw new Exception("Empresa nula en crear_factura", new NullReferenceException());
+                throw new Exception("Factura nula en crear_factura", new NullReferenceException());
 
             try
             {
@@ -74,7 +74,7 @@ namespace PagoAgilFrba.Datos
         public void modificar_factura(Factura factura)
         {
             if (factura == null)
-                throw new Exception("Empresa nula en crear_factura", new NullReferenceException());
+                throw new Exception("Factura nula en modificar_factura", new NullReferenceException());
 
             try
             {
