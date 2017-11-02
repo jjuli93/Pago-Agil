@@ -467,6 +467,7 @@
             this.habilitadoChk.TabIndex = 16;
             this.habilitadoChk.Text = "Habilitado";
             this.habilitadoChk.UseVisualStyleBackColor = true;
+            this.habilitadoChk.CheckedChanged += new System.EventHandler(this.habilitadoChk_CheckedChanged);
             // 
             // obligatorio2
             // 

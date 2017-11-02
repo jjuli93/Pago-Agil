@@ -63,8 +63,8 @@ namespace PagoAgilFrba.Datos
                     cmd.Parameters.Add("@CUIT", SqlDbType.NVarChar).Value = empresa.cuit;
                     cmd.Parameters.Add("@Direccion", SqlDbType.NVarChar).Value = empresa.direccion;
                     cmd.Parameters.Add("@IdRubro", SqlDbType.NVarChar).Value = empresa.rubro.id_item;
-                    //cmd.Parameters.Add("@Habilitada", SqlDbType.Char).Value = empresa.habilitado;
-                    cmd.Parameters.Add("@Habilitada", SqlDbType.Char).Value = "Y";
+                    cmd.Parameters.Add("@Habilitada", SqlDbType.Bit).Value = empresa.habilitado;
+                    //cmd.Parameters.Add("@Habilitada", SqlDbType.Char).Value = "Y";
 
                     conn.Open();
                     cmd.ExecuteNonQuery();
