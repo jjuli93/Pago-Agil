@@ -278,7 +278,7 @@ namespace PagoAgilFrba.AbmCliente
             
             this.id_cliente = Convert.ToInt32(fila.Cells["ID"].Value);
 
-            if (fila.Cells["Habilitado"].Value.ToString() == "1")
+            if ((bool)fila.Cells["Habilitado"].Value == true)
                 this.cliente_habilitado = this.habilitadoChk.Checked = true;
             else
                 this.cliente_habilitado = this.habilitadoChk.Checked = false;
@@ -306,6 +306,7 @@ namespace PagoAgilFrba.AbmCliente
 
         private void buscarBtn_Click(object sender, EventArgs e)
         {
+            clientesDt.DataSource = null;
             try
             {
                 var dt = clienteDAO.buscar_clientes(fltNombre.Text.Trim(), fltApellido.Text.Trim(), fltDNI.Text.Trim(), "");
@@ -356,6 +357,11 @@ namespace PagoAgilFrba.AbmCliente
         private void dniTb_KeyPress(object sender, KeyPressEventArgs e)
         {
             helper.onlyIntNumbers_event(sender, e);
+        }
+
+        private void habilitadoChk_CheckedChanged(object sender, EventArgs e)
+        {
+            cliente_habilitado = !cliente_habilitado;
         }
     }
 }

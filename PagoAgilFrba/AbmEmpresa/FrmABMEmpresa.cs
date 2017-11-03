@@ -88,6 +88,7 @@ namespace PagoAgilFrba.AbmEmpresa
                 emp.direccion = direccionTb.Text.Trim();
                 emp.cuit = cuitTb.Text.Trim();
                 emp.rubro = (ItemControlHelper.itemComboBox) rubroCb.SelectedItem;
+                emp.habilitado = habilitadoChk.Checked;
 
                 return emp;
             }
@@ -223,6 +224,7 @@ namespace PagoAgilFrba.AbmEmpresa
                         do_search();
                         break;
                 }
+                restablecer_controles();
             }
         }
 
@@ -295,6 +297,7 @@ namespace PagoAgilFrba.AbmEmpresa
 
         private void do_search()
         {
+            empresasDt.DataSource = null;
             try
             {
                 string nombreFlt = nombreTb.Text.Trim();
@@ -334,6 +337,11 @@ namespace PagoAgilFrba.AbmEmpresa
             {
                 msgHelper.mostrar_error(ex.Message, "Error en ABM Empresa");
             }
+        }
+
+        private void habilitadoChk_CheckedChanged(object sender, EventArgs e)
+        {
+            
         }
     }
 }

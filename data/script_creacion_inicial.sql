@@ -319,6 +319,10 @@ IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[SistemaCaid
 DROP PROCEDURE [SistemaCaido].[RealizarDevolucion]
 GO
 
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[SistemaCaido].[GetMediosDePago]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [SistemaCaido].[GetMediosDePago]
+GO
+
 
 --*************************************** Tipos *************************************************************--   
 
@@ -503,172 +507,6 @@ CREATE TABLE [SistemaCaido].[DevolucionesXFacturas](
 	[IdFactura] [int] NOT NULL references SistemaCaido.Facturas)
 GO
 
---=============================================================================================================--
---=============================================================================================================--
---*************************************** Triggers ************************************************************--                                 
---=============================================================================================================--
---=============================================================================================================--
-
-create trigger [SistemaCaido].[tr_nuevoCliente] on [SistemaCaido].[Clientes] instead of insert
-as begin
-	set nocount on
-	 
-	if (not exists( select cli.Mail from Clientes cli, inserted ins 
-				   where cli.Mail = ins.Mail))
-		insert into Clientes
-		select Nombre, Apellido, DNI, Mail, Telefono, Direccion, CodigoPostal, FechaNacimiento, 1 from inserted
-
-	else
-		-- Se lanza un error
-		raiserror('No se puede dar de alta el cliente (Email existente)..', 1,1)
-
-	end
-
-GO
-
-
-create trigger [SistemaCaido].[tr_nuevaEmpresa] on [SistemaCaido].[Empresas] instead of insert
-as begin
-	set nocount on
-	 
-	if (not exists( select emp.CUIT from Empresas emp, inserted ins 
-				   where emp.CUIT = ins.CUIT))
-		insert into Empresas
-		select Nombre, CUIT, Direccion, IdRubro, 1 from inserted
-
-	else
-		-- Se lanza un error
-		raiserror('No se puede dar de alta la empresa (CUIT existente)..', 1,1)
-	end
-
-GO
-
-
-create trigger [SistemaCaido].[tr_nuevaFactura] on [SistemaCaido].[Facturas] instead of insert
-as begin
-	set nocount on
-
-	declare @FechaVenc datetime
-	declare @Empresa int
-	declare @ImporteFactura numeric(18,2)
-	declare @Habilitada bit
-	declare @NumeroFactura int
-	declare @IdFactura int
-
-	select	@ImporteFactura = ins.Importe,
-			@FechaVenc = ins.FechaVencimiento,
-			@Empresa = ins.IdEmpresa,
-			@Habilitada = emp.Habilitada
-	from inserted ins
-	join Empresas emp
-	on emp.IdEmpresa = ins.IdEmpresa
-
-	if(@ImporteFactura < 0)
-		begin
-			raiserror('El importe de la factura es menor de 0..', 1,1)
-			rollback transaction
-		end
-
-	if(@ImporteFactura = 0)
-		begin
-			raiserror('El importe de la factura es igual a 0..', 1,1)	
-			rollback transaction
-		end
-		
-	if(@FechaVenc > sysdatetime())
-		begin	
-			raiserror('La fecha de vencimiento supera la fecha actual..', 1,1)	
-			rollback transaction
-		end
-
-	if(@Habilitada = 0)
-		begin	
-			raiserror('La empresa seleccionada esta inactiva..', 1,1)
-			rollback transaction
-		end
-
-	-- Si paso todo, inserto
-	INSERT INTO Facturas (IdCliente, IdEmpresa, NumeroFactura, FechaAlta, FechaVencimiento, Importe)
-	SELECT ins.IdCliente, ins.IdEmpresa, ins.NumeroFactura, ins.FechaAlta, ins.FechaVencimiento, ins.Importe 
-	FROM inserted ins
-
-end
-
-GO
-
-
-create trigger [SistemaCaido].[tr_tratarFactura] on [SistemaCaido].[Facturas] instead of update,delete
-as begin
-	declare @Operacion char
-	declare @IdFactura int
-
-	set @Operacion = 'N'
-
-	if exists (select * from inserted) and exists (select * from deleted)
-		begin
-			set @Operacion = 'U'	--Update
-
-			select top 1 @IdFactura = pxf.IdFactura 
-			from PagosXFacturas pxf, inserted ins where pxf.IdFactura = ins.IdFactura
-			if(@IdFactura != 0)
-				raiserror('La factura a ingresar se encuentra paga..', 1,1)
-
-			select top 1 @IdFactura = rxf.IdFactura 
-			from RendicionesXFacturas rxf, inserted ins where rxf.IdFactura = ins.IdFactura
-			if(@IdFactura != 0)
-				raiserror('La factura a ingresar se encuentra rendida..', 1,1)	
-
-		end
-
-	if not exists (select * from inserted) and exists (select * from deleted)
-		begin
-			set @Operacion = 'D'	--Delete
-
-			select top 1 @IdFactura = pxf.IdFactura 
-			from PagosXFacturas pxf, deleted del where pxf.IdFactura = del.IdFactura
-			if(@IdFactura != 0)
-				raiserror('La factura a ingresar se encuentra paga..', 1,1)
-
-			select top 1 @IdFactura = rxf.IdFactura 
-			from RendicionesXFacturas rxf, deleted del where rxf.IdFactura = del.IdFactura
-			if(@IdFactura != 0)
-				raiserror('La factura a ingresar se encuentra rendida..', 1,1)	
-
-		end
-end
-
-GO
-
-
-create trigger [SistemaCaido].[tr_nuevaSucursal] on [SistemaCaido].[Sucursales] instead of insert
-as begin
-	set nocount on
-	 
-	if (not exists( select suc.CodigoPostal from Sucursales suc, inserted ins 
-				   where suc.CodigoPostal = ins.CodigoPostal))
-		insert into Sucursales
-		select Nombre, Direccion, CodigoPostal, 1 from inserted
-
-	else
-		-- Se lanza un error
-		raiserror('No se puede dar de alta la sucursal (CP existente)..', 1,1)
-	end
-	 
-GO
-
-create trigger [SistemaCaido].tr_baja_rol on [SistemaCaido].Roles for update
-as
-begin
-if UPDATE(habilitado)
-	begin
-		delete from [SistemaCaido].UsuariosXRoles
-		where IdRol in (select i.IdRol
-						from inserted i
-						 where i.Habilitado = 0)
-	end
-end
-GO
-
 
 --=============================================================================================================--
 --=============================================================================================================--
@@ -824,6 +662,162 @@ GO
 
 --=============================================================================================================--
 --=============================================================================================================--
+--*************************************** Triggers ************************************************************--                                 
+--=============================================================================================================--
+--=============================================================================================================--
+
+create trigger [SistemaCaido].[tr_nuevoCliente] on [SistemaCaido].[Clientes] instead of insert
+as begin
+	set nocount on
+	 
+	if (not exists( select cli.Mail from Clientes cli, inserted ins 
+				   where cli.Mail = ins.Mail))
+		insert into Clientes
+		select Nombre, Apellido, DNI, Mail, Telefono, Direccion, CodigoPostal, FechaNacimiento, 1 from inserted
+
+	else
+		-- Se lanza un error
+		raiserror('No se puede dar de alta el cliente (Email existente)..', 1,1)
+
+	end
+
+GO
+
+
+create trigger [SistemaCaido].[tr_nuevaEmpresa] on [SistemaCaido].[Empresas] instead of insert
+as begin
+	set nocount on
+	 
+	if (not exists( select emp.CUIT from Empresas emp, inserted ins 
+				   where emp.CUIT = ins.CUIT))
+		insert into Empresas
+		select Nombre, CUIT, Direccion, IdRubro, 1 from inserted
+
+	else
+		-- Se lanza un error
+		THROW 51000, 'No se puede dar de alta la empresa (CUIT existente)', 1;
+	end
+
+GO
+
+
+create trigger [SistemaCaido].[tr_nuevaFactura] on [SistemaCaido].[Facturas] instead of insert
+as begin
+	set nocount on
+
+	declare @FechaVenc datetime
+	declare @Empresa int
+	declare @ImporteFactura numeric(18,2)
+	declare @Habilitada bit
+	declare @NumeroFactura int
+	declare @IdFactura int
+
+	select	@ImporteFactura = ins.Importe,
+			@FechaVenc = ins.FechaVencimiento,
+			@Empresa = ins.IdEmpresa,
+			@Habilitada = emp.Habilitada
+	from inserted ins
+	join Empresas emp
+	on emp.IdEmpresa = ins.IdEmpresa
+
+	if(@ImporteFactura < 0)
+		THROW 51000, 'El importe de la factura es menor de 0', 1;
+
+	if(@ImporteFactura = 0)
+		THROW 51000, 'El importe de la factura es igual a 0', 1;
+		
+	if(@FechaVenc < sysdatetime())	
+		THROW 51000, 'La fecha de vencimiento es menor a la fecha actual', 1;
+
+	if(@Habilitada = 0)
+		THROW 51000, 'La empresa seleccionada esta inactiva..', 1;
+
+	-- Si paso todo, inserto	
+	INSERT INTO Facturas (IdCliente, IdEmpresa, NumeroFactura, FechaAlta, FechaVencimiento, Importe)
+	SELECT ins.IdCliente, ins.IdEmpresa, ins.NumeroFactura, ins.FechaAlta, ins.FechaVencimiento, ins.Importe 
+	FROM inserted ins
+
+end
+
+GO
+
+
+create trigger [SistemaCaido].[tr_tratarFactura] on [SistemaCaido].[Facturas] instead of update,delete
+as begin
+	declare @Operacion char
+	declare @IdFactura int
+
+	set @Operacion = 'N'
+
+	if exists (select * from inserted) and exists (select * from deleted)
+		begin
+			set @Operacion = 'U'	--Update
+
+			select top 1 @IdFactura = pxf.IdFactura 
+			from PagosXFacturas pxf, inserted ins where pxf.IdFactura = ins.IdFactura
+			if(@IdFactura != 0)
+				THROW 51000, 'La factura a ingresar se encuentra paga..', 1;
+
+			select top 1 @IdFactura = rxf.IdFactura 
+			from RendicionesXFacturas rxf, inserted ins where rxf.IdFactura = ins.IdFactura
+			if(@IdFactura != 0)
+				THROW 51000, 'La factura a ingresar se encuentra rendida..', 1;
+
+		end
+
+	if not exists (select * from inserted) and exists (select * from deleted)
+		begin
+			set @Operacion = 'D'	--Delete
+
+			select top 1 @IdFactura = pxf.IdFactura 
+			from PagosXFacturas pxf, deleted del where pxf.IdFactura = del.IdFactura
+			if(@IdFactura != 0)
+				THROW 51000, 'La factura a ingresar se encuentra paga..', 1;
+
+			select top 1 @IdFactura = rxf.IdFactura 
+			from RendicionesXFacturas rxf, deleted del where rxf.IdFactura = del.IdFactura
+			if(@IdFactura != 0)
+				THROW 51000, 'La factura a ingresar se encuentra rendida..', 1;
+
+		end
+end
+
+GO
+
+
+create trigger [SistemaCaido].[tr_nuevaSucursal] on [SistemaCaido].[Sucursales] instead of insert
+as begin
+	set nocount on
+	 
+	if (not exists( select suc.CodigoPostal from Sucursales suc, inserted ins 
+				   where suc.CodigoPostal = ins.CodigoPostal))
+		insert into Sucursales
+		select Nombre, Direccion, CodigoPostal, 1 from inserted
+
+	else
+		-- Se lanza un error
+		THROW 51000, 'No se puede dar de alta la sucursal (CP existente)', 1;
+	end
+	 
+GO
+
+create trigger [SistemaCaido].tr_baja_rol on [SistemaCaido].Roles for update
+as
+begin
+if UPDATE(habilitado)
+	begin
+		delete from [SistemaCaido].UsuariosXRoles
+		where IdRol in (select i.IdRol
+						from inserted i
+						 where i.Habilitado = 0)
+	end
+end
+GO
+
+
+
+--=============================================================================================================--
+--=============================================================================================================--
 --*************************************** Funciones ***********************************************************--                                 
 --=============================================================================================================--
 --=============================================================================================================--
@@ -942,15 +936,12 @@ as begin transaction
 
 	declare @cantidadFacturas int
 
-	select @cantidadFacturas = count(*) from SistemaCaido.RendicionesXFacturas rxf
-	join SistemaCaido.Rendiciones ren on rxf.IdRendicion = ren.IdRendicion
-	where ren.IdEmpresa = @IdEmpresa
+	select @cantidadFacturas = count(*) from SistemaCaido.Facturas f
+										where f.IdEmpresa = @IdEmpresa
+										and f.IdFactura not in (select IdFactura from SistemaCaido.RendicionesXFacturas)
 	
 	if @cantidadFacturas != 0
-		begin
-			raiserror('No se pudo dar de baja la empresa (Facturas sin rendir)..', 1,1)
-			rollback transaction
-		end		
+			THROW 51000, 'No se pudo dar de baja la empresa (Facturas sin rendir)', 1;	
 
 	-- Eliminacion logica
 	update Empresas set Habilitada = 0 where IdEmpresa = @IdEmpresa
@@ -967,6 +958,9 @@ GO
 
 create procedure [SistemaCaido].[ModificacionEmpresa](@IdEmpresa int, @Nombre nvarchar(255), @CUIT nvarchar(50), @Direccion nvarchar(255), @IdRubro int, @Habilitada bit)
 as begin transaction
+
+	if((select count(*) from SistemaCaido.Empresas where CUIT = @CUIT AND IdEmpresa != @IdEmpresa) > 0) THROW 51000, 'No se pudo modificar la empresa (CUIT existente)', 1;
+
 	update SistemaCaido.Empresas
 	set Nombre = @Nombre,
 		CUIT = @CUIT,
@@ -986,7 +980,7 @@ GO
 
 create procedure SistemaCaido.BuscarEmpresas (@Nombre nvarchar(255), @CUIT nvarchar(50),  @IdRubro int)
 as begin
-	Select e.IdEmpresa, e.Nombre 'empresa', e.CUIT, e.Direccion, e.Habilitada, r.Nombre 'rubro'
+	Select e.IdEmpresa, e.Nombre 'Nombre', e.CUIT, e.Direccion, e.Habilitada, r.Nombre 'Rubro'
 	From SistemaCaido.Empresas e
 	Join SistemaCaido.Rubros r on e.IdRubro = r.IdRubro
 	where (@nombre is null or (e.nombre like CONCAT('%',@nombre,'%')))
@@ -1036,6 +1030,9 @@ GO
 create procedure [SistemaCaido].[ModificacionSucursal]
 (@IdSucursal int, @Nombre nvarchar(255), @Direccion nvarchar(255), @CodigoPostal varchar(4), @Habilitada bit) 
 as begin transaction
+
+	if((select count(*) from SistemaCaido.Sucursales where CodigoPostal = @CodigoPostal AND IdSucursal != @IdSucursal) > 0) THROW 51000, 'No se puede dar de alta la sucursal (CP existente)', 1;
+
 	update SistemaCaido.Sucursales
 	set Nombre = @Nombre,
 		Direccion = @Direccion,
@@ -1167,11 +1164,12 @@ as begin transaction
 GO
 
 
-create procedure SistemaCaido.BuscarFacturas (@numeroFactura int)
+create procedure SistemaCaido.BuscarFacturas (@numeroFactura int, @idCliente int)
 as begin
 	Select *
 	From SistemaCaido.Facturas f
 	where (@numeroFactura is null or (f.NumeroFactura = @numeroFactura))
+	and (@idCliente is null or (@idCliente = f.IdCliente))
 
 end
 GO
@@ -1212,7 +1210,7 @@ end
 GO
 
 
-create procedure [SistemaCaido].[sp_update_cliente] (@nombre varchar(250),  @apellido varchar(250), @DNI numeric(18), @fechaNacimiento date, @direccion varchar(250), @codPostal numeric, @telefono numeric(18,0), @habilitado numeric(1,0), @idcliente numeric(10,0), @email nvarchar(255)) as
+create procedure [SistemaCaido].[sp_update_cliente] (@nombre varchar(250),  @apellido varchar(250), @DNI numeric(18), @fechaNacimiento date, @direccion varchar(250), @codPostal numeric, @telefono numeric(18,0), @habilitado bit, @idcliente numeric(10,0), @email nvarchar(255)) as
 begin
 
 set xact_abort on
@@ -1242,12 +1240,13 @@ GO
 create procedure [SistemaCaido].[sp_get_clientes](@nombre varchar(250), @apellido varchar(250), @dni numeric(18,0), @habilitado bit) as
 begin
 
-select IdCliente as ID, Nombre as Nombre ,Apellido as Apellido ,CodigoPostal as Codigo_Postal,Direccion as Direccion ,DNI as DNI,FechaNacimiento as Fecha_Nacimiento ,ISNULL(Telefono, '') as Telefono,Habilitado as Habilitado, Mail as Mail
+select  IdCliente ID,Nombre as Nombre ,Apellido as Apellido ,CodigoPostal as Codigo_Postal,Direccion as Direccion ,DNI as DNI,FechaNacimiento as Fecha_Nacimiento ,ISNULL(Telefono, '') as Telefono,Habilitado as Habilitado, Mail as Mail
 from SistemaCaido.Clientes
 where (@apellido is null or (Apellido like CONCAT('%',@apellido,'%')))
 and   (@nombre is null or   (Nombre like CONCAT('%',@nombre,'%')))
 and	  (@dni is null or (DNI = @dni))
 and   (@habilitado is null or (Habilitado = @habilitado))
+order by Nombre, Apellido
 
 OPTION (RECOMPILE)
 end
@@ -1272,8 +1271,14 @@ as begin transaction
 
 	select @NumeroPago = SistemaCaido.GetSiguienteNumeroDePago()
 
-	if(@ImporteTotal != 0)
-		raiserror('No se pudo registrar el pago, el importe total es 0', 1,1)
+	if(@ImporteTotal = 0)
+		THROW 51000, 'No se pudo registrar el pago, el importe total es 0', 1;
+	
+	if((select count(*) from SistemaCaido.Facturas f
+					   Inner join @IdsFacturas i on f.IdFactura = i.id
+					   Inner join Empresas e on e.IdEmpresa = f.IdEmpresa
+					   where e.Habilitada = 0) > 0)
+		THROW 51000, 'No se pudo registrar el pago, hay facturas de empresas no habilitadas', 1;
 	
 	insert into SistemaCaido.Pagos (NumeroPago, FechaCobro, IdCliente, Importe, IdSucursal, IdMedioPago)
 	values (@NumeroPago, sysdatetime(), @Cliente, @ImporteTotal, @Sucursal, @MedioPago)
@@ -1455,6 +1460,10 @@ begin
 update SistemaCaido.Roles 
 set Habilitado = 0
 where idRol = @id
+
+delete SistemaCaido.UsuariosXRoles
+where IdRol = @id
+
 
 end
 

@@ -318,6 +318,8 @@
             // 
             // rubroCb
             // 
+            this.rubroCb.AllowDrop = true;
+            this.rubroCb.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.rubroCb.FormattingEnabled = true;
             this.rubroCb.Location = new System.Drawing.Point(340, 78);
             this.rubroCb.Name = "rubroCb";
@@ -333,6 +335,7 @@
             this.habilitadoChk.TabIndex = 8;
             this.habilitadoChk.Text = "Habilitado";
             this.habilitadoChk.UseVisualStyleBackColor = true;
+            this.habilitadoChk.CheckedChanged += new System.EventHandler(this.habilitadoChk_CheckedChanged);
             // 
             // cuitTb
             // 

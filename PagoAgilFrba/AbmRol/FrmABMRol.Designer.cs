@@ -115,6 +115,7 @@
             this.volverBtn.TabIndex = 4;
             this.volverBtn.Text = "Volver";
             this.volverBtn.UseVisualStyleBackColor = true;
+            this.volverBtn.Click += new System.EventHandler(this.volverBtn_Click);
             // 
             // confirmPnl
             // 

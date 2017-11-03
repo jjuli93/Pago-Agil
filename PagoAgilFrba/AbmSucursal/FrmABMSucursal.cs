@@ -200,6 +200,7 @@ namespace PagoAgilFrba.AbmSucursal
                         do_search();
                         break;
                 }
+                restablecer_controles();
             }
         }
 
@@ -275,6 +276,7 @@ namespace PagoAgilFrba.AbmSucursal
 
         private void do_search()
         {
+            sucursalesDt.DataSource = null;
             try
             {
                 DataTable dt = sucursalDao.buscar_sucursales(nombreTb.Text.Trim(), direccionTb.Text.Trim(), cpTb.Text.Trim());
