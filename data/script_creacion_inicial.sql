@@ -1164,11 +1164,12 @@ as begin transaction
 GO
 
 
-create procedure SistemaCaido.BuscarFacturas (@numeroFactura int)
+create procedure SistemaCaido.BuscarFacturas (@numeroFactura int, @idCliente int)
 as begin
 	Select *
 	From SistemaCaido.Facturas f
 	where (@numeroFactura is null or (f.NumeroFactura = @numeroFactura))
+	and (@idCliente is null or (@idCliente = f.IdCliente))
 
 end
 GO
