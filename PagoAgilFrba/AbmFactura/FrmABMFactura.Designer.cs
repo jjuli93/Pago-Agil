@@ -28,8 +28,14 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmABMFactura));
             this.panel1 = new System.Windows.Forms.Panel();
+            this.abmPnl = new System.Windows.Forms.Panel();
+            this.volverBtn = new System.Windows.Forms.Button();
+            this.crearBtn = new System.Windows.Forms.Button();
+            this.eliminarBtn = new System.Windows.Forms.Button();
+            this.modificarBtn = new System.Windows.Forms.Button();
             this.label4 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.cerrarSesionHl = new System.Windows.Forms.LinkLabel();
@@ -38,30 +44,119 @@
             this.cancelarBtn = new System.Windows.Forms.Button();
             this.aceptarBtn = new System.Windows.Forms.Button();
             this.exitBtn = new System.Windows.Forms.LinkLabel();
-            this.abmPnl = new System.Windows.Forms.Panel();
-            this.volverBtn = new System.Windows.Forms.Button();
-            this.crearBtn = new System.Windows.Forms.Button();
-            this.eliminarBtn = new System.Windows.Forms.Button();
-            this.modificarBtn = new System.Windows.Forms.Button();
+            this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
+            this.facturaTab = new System.Windows.Forms.TabControl();
+            this.datosTabPage = new System.Windows.Forms.TabPage();
+            this.label3 = new System.Windows.Forms.Label();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.itemsDgv = new System.Windows.Forms.DataGridView();
+            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.clearAllToolBtn = new System.Windows.Forms.ToolStripButton();
+            this.deleteToolBtn = new System.Windows.Forms.ToolStripButton();
+            this.editToolBtn = new System.Windows.Forms.ToolStripButton();
+            this.addToolBtn = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.fnticClientesBtn = new System.Windows.Forms.Button();
+            this.clienteTb = new System.Windows.Forms.TextBox();
+            this.vencimientoDtp = new System.Windows.Forms.DateTimePicker();
+            this.obligatorio5 = new System.Windows.Forms.Label();
+            this.vencimientoLb = new System.Windows.Forms.Label();
+            this.obligatorio4 = new System.Windows.Forms.Label();
+            this.clienteLb = new System.Windows.Forms.Label();
+            this.empresaCb = new System.Windows.Forms.ComboBox();
+            this.obligatorio3 = new System.Windows.Forms.Label();
+            this.obligatoriosLbl = new System.Windows.Forms.Label();
+            this.empresaLb = new System.Windows.Forms.Label();
+            this.buscadorTabPage = new System.Windows.Forms.TabPage();
+            this.facturasDgv = new System.Windows.Forms.DataGridView();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.clienteFlt = new System.Windows.Forms.TextBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.nroFactFlt = new System.Windows.Forms.TextBox();
+            this.DescItemCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CantCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.montoCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.subtotalCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.panel1.SuspendLayout();
+            this.abmPnl.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.confirmPnl.SuspendLayout();
-            this.abmPnl.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).BeginInit();
+            this.facturaTab.SuspendLayout();
+            this.datosTabPage.SuspendLayout();
+            this.panel2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.itemsDgv)).BeginInit();
+            this.toolStrip1.SuspendLayout();
+            this.buscadorTabPage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.facturasDgv)).BeginInit();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.panel1.Controls.Add(this.abmPnl);
             this.panel1.Controls.Add(this.label4);
             this.panel1.Controls.Add(this.pictureBox1);
             this.panel1.Controls.Add(this.cerrarSesionHl);
             this.panel1.Controls.Add(this.confirmPnl);
             this.panel1.Controls.Add(this.exitBtn);
-            this.panel1.Controls.Add(this.abmPnl);
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(543, 63);
             this.panel1.TabIndex = 9;
+            // 
+            // abmPnl
+            // 
+            this.abmPnl.Controls.Add(this.volverBtn);
+            this.abmPnl.Controls.Add(this.crearBtn);
+            this.abmPnl.Controls.Add(this.eliminarBtn);
+            this.abmPnl.Controls.Add(this.modificarBtn);
+            this.abmPnl.Location = new System.Drawing.Point(73, 31);
+            this.abmPnl.Name = "abmPnl";
+            this.abmPnl.Size = new System.Drawing.Size(353, 29);
+            this.abmPnl.TabIndex = 3;
+            // 
+            // volverBtn
+            // 
+            this.volverBtn.Location = new System.Drawing.Point(273, 3);
+            this.volverBtn.Name = "volverBtn";
+            this.volverBtn.Size = new System.Drawing.Size(75, 23);
+            this.volverBtn.TabIndex = 4;
+            this.volverBtn.Text = "Volver";
+            this.volverBtn.UseVisualStyleBackColor = true;
+            this.volverBtn.Click += new System.EventHandler(this.volverBtn_Click);
+            // 
+            // crearBtn
+            // 
+            this.crearBtn.Location = new System.Drawing.Point(3, 3);
+            this.crearBtn.Name = "crearBtn";
+            this.crearBtn.Size = new System.Drawing.Size(75, 23);
+            this.crearBtn.TabIndex = 0;
+            this.crearBtn.Text = "Crear nuevo";
+            this.crearBtn.UseVisualStyleBackColor = true;
+            // 
+            // eliminarBtn
+            // 
+            this.eliminarBtn.Location = new System.Drawing.Point(165, 3);
+            this.eliminarBtn.Name = "eliminarBtn";
+            this.eliminarBtn.Size = new System.Drawing.Size(75, 23);
+            this.eliminarBtn.TabIndex = 2;
+            this.eliminarBtn.Text = "Eliminar";
+            this.eliminarBtn.UseVisualStyleBackColor = true;
+            // 
+            // modificarBtn
+            // 
+            this.modificarBtn.Location = new System.Drawing.Point(84, 3);
+            this.modificarBtn.Name = "modificarBtn";
+            this.modificarBtn.Size = new System.Drawing.Size(75, 23);
+            this.modificarBtn.TabIndex = 1;
+            this.modificarBtn.Text = "Modificar";
+            this.modificarBtn.UseVisualStyleBackColor = true;
             // 
             // label4
             // 
@@ -93,6 +188,7 @@
             this.cerrarSesionHl.TabIndex = 6;
             this.cerrarSesionHl.TabStop = true;
             this.cerrarSesionHl.Text = "cerrar sesión";
+            this.cerrarSesionHl.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.cerrarSesionHl_LinkClicked);
             // 
             // confirmPnl
             // 
@@ -112,9 +208,8 @@
             this.descripcionLbl.ForeColor = System.Drawing.SystemColors.ButtonFace;
             this.descripcionLbl.Location = new System.Drawing.Point(4, 8);
             this.descripcionLbl.Name = "descripcionLbl";
-            this.descripcionLbl.Size = new System.Drawing.Size(29, 14);
+            this.descripcionLbl.Size = new System.Drawing.Size(0, 14);
             this.descripcionLbl.TabIndex = 2;
-            this.descripcionLbl.Text = "null";
             // 
             // cancelarBtn
             // 
@@ -146,69 +241,418 @@
             this.exitBtn.TabIndex = 5;
             this.exitBtn.TabStop = true;
             this.exitBtn.Text = "X";
+            this.exitBtn.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.exitBtn_LinkClicked);
             // 
-            // abmPnl
+            // errorProvider
             // 
-            this.abmPnl.Controls.Add(this.volverBtn);
-            this.abmPnl.Controls.Add(this.crearBtn);
-            this.abmPnl.Controls.Add(this.eliminarBtn);
-            this.abmPnl.Controls.Add(this.modificarBtn);
-            this.abmPnl.Location = new System.Drawing.Point(73, 31);
-            this.abmPnl.Name = "abmPnl";
-            this.abmPnl.Size = new System.Drawing.Size(353, 29);
-            this.abmPnl.TabIndex = 3;
+            this.errorProvider.ContainerControl = this;
             // 
-            // volverBtn
+            // facturaTab
             // 
-            this.volverBtn.Location = new System.Drawing.Point(273, 3);
-            this.volverBtn.Name = "volverBtn";
-            this.volverBtn.Size = new System.Drawing.Size(75, 23);
-            this.volverBtn.TabIndex = 4;
-            this.volverBtn.Text = "Volver";
-            this.volverBtn.UseVisualStyleBackColor = true;
+            this.facturaTab.Controls.Add(this.datosTabPage);
+            this.facturaTab.Controls.Add(this.buscadorTabPage);
+            this.facturaTab.Location = new System.Drawing.Point(4, 63);
+            this.facturaTab.Name = "facturaTab";
+            this.facturaTab.SelectedIndex = 0;
+            this.facturaTab.Size = new System.Drawing.Size(537, 374);
+            this.facturaTab.TabIndex = 10;
             // 
-            // crearBtn
+            // datosTabPage
             // 
-            this.crearBtn.Location = new System.Drawing.Point(3, 3);
-            this.crearBtn.Name = "crearBtn";
-            this.crearBtn.Size = new System.Drawing.Size(75, 23);
-            this.crearBtn.TabIndex = 0;
-            this.crearBtn.Text = "Crear nuevo";
-            this.crearBtn.UseVisualStyleBackColor = true;
+            this.datosTabPage.BackColor = System.Drawing.SystemColors.Control;
+            this.datosTabPage.Controls.Add(this.label3);
+            this.datosTabPage.Controls.Add(this.panel2);
+            this.datosTabPage.Controls.Add(this.fnticClientesBtn);
+            this.datosTabPage.Controls.Add(this.clienteTb);
+            this.datosTabPage.Controls.Add(this.vencimientoDtp);
+            this.datosTabPage.Controls.Add(this.obligatorio5);
+            this.datosTabPage.Controls.Add(this.vencimientoLb);
+            this.datosTabPage.Controls.Add(this.obligatorio4);
+            this.datosTabPage.Controls.Add(this.clienteLb);
+            this.datosTabPage.Controls.Add(this.empresaCb);
+            this.datosTabPage.Controls.Add(this.obligatorio3);
+            this.datosTabPage.Controls.Add(this.obligatoriosLbl);
+            this.datosTabPage.Controls.Add(this.empresaLb);
+            this.datosTabPage.Location = new System.Drawing.Point(4, 22);
+            this.datosTabPage.Name = "datosTabPage";
+            this.datosTabPage.Padding = new System.Windows.Forms.Padding(3);
+            this.datosTabPage.Size = new System.Drawing.Size(529, 348);
+            this.datosTabPage.TabIndex = 0;
+            this.datosTabPage.Text = "Datos de la factura";
             // 
-            // eliminarBtn
+            // label3
             // 
-            this.eliminarBtn.Location = new System.Drawing.Point(165, 3);
-            this.eliminarBtn.Name = "eliminarBtn";
-            this.eliminarBtn.Size = new System.Drawing.Size(75, 23);
-            this.eliminarBtn.TabIndex = 2;
-            this.eliminarBtn.Text = "Eliminar";
-            this.eliminarBtn.UseVisualStyleBackColor = true;
+            this.label3.AutoSize = true;
+            this.label3.BackColor = System.Drawing.Color.Transparent;
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.ForeColor = System.Drawing.Color.DarkRed;
+            this.label3.Location = new System.Drawing.Point(313, 60);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(20, 25);
+            this.label3.TabIndex = 40;
+            this.label3.Text = "*";
             // 
-            // modificarBtn
+            // panel2
             // 
-            this.modificarBtn.Location = new System.Drawing.Point(84, 3);
-            this.modificarBtn.Name = "modificarBtn";
-            this.modificarBtn.Size = new System.Drawing.Size(75, 23);
-            this.modificarBtn.TabIndex = 1;
-            this.modificarBtn.Text = "Modificar";
-            this.modificarBtn.UseVisualStyleBackColor = true;
+            this.panel2.Controls.Add(this.label2);
+            this.panel2.Controls.Add(this.label1);
+            this.panel2.Controls.Add(this.textBox2);
+            this.panel2.Controls.Add(this.itemsDgv);
+            this.panel2.Controls.Add(this.toolStrip1);
+            this.panel2.Location = new System.Drawing.Point(41, 105);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(445, 205);
+            this.panel2.TabIndex = 39;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.BackColor = System.Drawing.SystemColors.Control;
+            this.label2.Font = new System.Drawing.Font("Arial", 9.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(10, 7);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(46, 16);
+            this.label2.TabIndex = 8;
+            this.label2.Text = "Items:";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Arial", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(301, 185);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(36, 14);
+            this.label1.TabIndex = 7;
+            this.label1.Text = "Total:";
+            // 
+            // textBox2
+            // 
+            this.textBox2.Location = new System.Drawing.Point(343, 182);
+            this.textBox2.Name = "textBox2";
+            this.textBox2.ReadOnly = true;
+            this.textBox2.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.textBox2.Size = new System.Drawing.Size(100, 20);
+            this.textBox2.TabIndex = 6;
+            this.textBox2.Text = "0";
+            // 
+            // itemsDgv
+            // 
+            this.itemsDgv.AllowUserToAddRows = false;
+            this.itemsDgv.AllowUserToDeleteRows = false;
+            this.itemsDgv.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.itemsDgv.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.DescItemCol,
+            this.CantCol,
+            this.montoCol,
+            this.subtotalCol});
+            this.itemsDgv.Location = new System.Drawing.Point(0, 26);
+            this.itemsDgv.MultiSelect = false;
+            this.itemsDgv.Name = "itemsDgv";
+            this.itemsDgv.ReadOnly = true;
+            this.itemsDgv.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.itemsDgv.ShowCellToolTips = false;
+            this.itemsDgv.ShowEditingIcon = false;
+            this.itemsDgv.Size = new System.Drawing.Size(444, 150);
+            this.itemsDgv.TabIndex = 5;
+            // 
+            // toolStrip1
+            // 
+            this.toolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
+            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.clearAllToolBtn,
+            this.deleteToolBtn,
+            this.editToolBtn,
+            this.addToolBtn,
+            this.toolStripSeparator1});
+            this.toolStrip1.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
+            this.toolStrip1.Location = new System.Drawing.Point(0, 0);
+            this.toolStrip1.Name = "toolStrip1";
+            this.toolStrip1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.toolStrip1.Size = new System.Drawing.Size(445, 25);
+            this.toolStrip1.TabIndex = 4;
+            this.toolStrip1.Text = "toolStrip1";
+            // 
+            // clearAllToolBtn
+            // 
+            this.clearAllToolBtn.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.clearAllToolBtn.Image = ((System.Drawing.Image)(resources.GetObject("clearAllToolBtn.Image")));
+            this.clearAllToolBtn.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.clearAllToolBtn.Name = "clearAllToolBtn";
+            this.clearAllToolBtn.Size = new System.Drawing.Size(23, 22);
+            this.clearAllToolBtn.Text = "toolStripButton1";
+            this.clearAllToolBtn.Click += new System.EventHandler(this.clearAllToolBtn_Click);
+            // 
+            // deleteToolBtn
+            // 
+            this.deleteToolBtn.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.deleteToolBtn.Image = ((System.Drawing.Image)(resources.GetObject("deleteToolBtn.Image")));
+            this.deleteToolBtn.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.deleteToolBtn.Name = "deleteToolBtn";
+            this.deleteToolBtn.Size = new System.Drawing.Size(23, 22);
+            this.deleteToolBtn.Text = "toolStripButton2";
+            this.deleteToolBtn.Click += new System.EventHandler(this.deleteToolBtn_Click);
+            // 
+            // editToolBtn
+            // 
+            this.editToolBtn.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.editToolBtn.Image = ((System.Drawing.Image)(resources.GetObject("editToolBtn.Image")));
+            this.editToolBtn.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.editToolBtn.Name = "editToolBtn";
+            this.editToolBtn.Size = new System.Drawing.Size(23, 22);
+            this.editToolBtn.Text = "toolStripButton3";
+            this.editToolBtn.Click += new System.EventHandler(this.editToolBtn_Click);
+            // 
+            // addToolBtn
+            // 
+            this.addToolBtn.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.addToolBtn.Image = ((System.Drawing.Image)(resources.GetObject("addToolBtn.Image")));
+            this.addToolBtn.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.addToolBtn.Name = "addToolBtn";
+            this.addToolBtn.Size = new System.Drawing.Size(23, 22);
+            this.addToolBtn.Text = "toolStripButton4";
+            this.addToolBtn.Click += new System.EventHandler(this.addToolBtn_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
+            // 
+            // fnticClientesBtn
+            // 
+            this.fnticClientesBtn.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.fnticClientesBtn.Location = new System.Drawing.Point(211, 22);
+            this.fnticClientesBtn.Name = "fnticClientesBtn";
+            this.fnticClientesBtn.Size = new System.Drawing.Size(26, 23);
+            this.fnticClientesBtn.TabIndex = 38;
+            this.fnticClientesBtn.Text = "...";
+            this.fnticClientesBtn.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.fnticClientesBtn.UseVisualStyleBackColor = true;
+            // 
+            // clienteTb
+            // 
+            this.clienteTb.Location = new System.Drawing.Point(82, 23);
+            this.clienteTb.Name = "clienteTb";
+            this.clienteTb.Size = new System.Drawing.Size(121, 20);
+            this.clienteTb.TabIndex = 37;
+            // 
+            // vencimientoDtp
+            // 
+            this.vencimientoDtp.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.vencimientoDtp.Location = new System.Drawing.Point(340, 23);
+            this.vencimientoDtp.Name = "vencimientoDtp";
+            this.vencimientoDtp.Size = new System.Drawing.Size(145, 20);
+            this.vencimientoDtp.TabIndex = 36;
+            // 
+            // obligatorio5
+            // 
+            this.obligatorio5.AutoSize = true;
+            this.obligatorio5.BackColor = System.Drawing.Color.Transparent;
+            this.obligatorio5.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.obligatorio5.ForeColor = System.Drawing.Color.DarkRed;
+            this.obligatorio5.Location = new System.Drawing.Point(491, 23);
+            this.obligatorio5.Name = "obligatorio5";
+            this.obligatorio5.Size = new System.Drawing.Size(20, 25);
+            this.obligatorio5.TabIndex = 35;
+            this.obligatorio5.Text = "*";
+            // 
+            // vencimientoLb
+            // 
+            this.vencimientoLb.AutoSize = true;
+            this.vencimientoLb.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.vencimientoLb.Location = new System.Drawing.Point(265, 26);
+            this.vencimientoLb.Name = "vencimientoLb";
+            this.vencimientoLb.Size = new System.Drawing.Size(68, 13);
+            this.vencimientoLb.TabIndex = 34;
+            this.vencimientoLb.Text = "Vencimiento:";
+            // 
+            // obligatorio4
+            // 
+            this.obligatorio4.AutoSize = true;
+            this.obligatorio4.BackColor = System.Drawing.Color.Transparent;
+            this.obligatorio4.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.obligatorio4.ForeColor = System.Drawing.Color.DarkRed;
+            this.obligatorio4.Location = new System.Drawing.Point(243, 23);
+            this.obligatorio4.Name = "obligatorio4";
+            this.obligatorio4.Size = new System.Drawing.Size(20, 25);
+            this.obligatorio4.TabIndex = 33;
+            this.obligatorio4.Text = "*";
+            // 
+            // clienteLb
+            // 
+            this.clienteLb.AutoSize = true;
+            this.clienteLb.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.clienteLb.Location = new System.Drawing.Point(22, 26);
+            this.clienteLb.Name = "clienteLb";
+            this.clienteLb.Size = new System.Drawing.Size(42, 13);
+            this.clienteLb.TabIndex = 31;
+            this.clienteLb.Text = "Cliente:";
+            // 
+            // empresaCb
+            // 
+            this.empresaCb.FormattingEnabled = true;
+            this.empresaCb.Location = new System.Drawing.Point(82, 60);
+            this.empresaCb.Name = "empresaCb";
+            this.empresaCb.Size = new System.Drawing.Size(155, 21);
+            this.empresaCb.TabIndex = 30;
+            // 
+            // obligatorio3
+            // 
+            this.obligatorio3.AutoSize = true;
+            this.obligatorio3.BackColor = System.Drawing.Color.Transparent;
+            this.obligatorio3.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.obligatorio3.ForeColor = System.Drawing.Color.DarkRed;
+            this.obligatorio3.Location = new System.Drawing.Point(243, 60);
+            this.obligatorio3.Name = "obligatorio3";
+            this.obligatorio3.Size = new System.Drawing.Size(20, 25);
+            this.obligatorio3.TabIndex = 29;
+            this.obligatorio3.Text = "*";
+            // 
+            // obligatoriosLbl
+            // 
+            this.obligatoriosLbl.AutoSize = true;
+            this.obligatoriosLbl.ForeColor = System.Drawing.Color.DarkRed;
+            this.obligatoriosLbl.Location = new System.Drawing.Point(387, 63);
+            this.obligatoriosLbl.Name = "obligatoriosLbl";
+            this.obligatoriosLbl.Size = new System.Drawing.Size(98, 13);
+            this.obligatoriosLbl.TabIndex = 28;
+            this.obligatoriosLbl.Text = "* Campo obligatorio";
+            // 
+            // empresaLb
+            // 
+            this.empresaLb.AutoSize = true;
+            this.empresaLb.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.empresaLb.Location = new System.Drawing.Point(22, 63);
+            this.empresaLb.Name = "empresaLb";
+            this.empresaLb.Size = new System.Drawing.Size(51, 13);
+            this.empresaLb.TabIndex = 27;
+            this.empresaLb.Text = "Empresa:";
+            // 
+            // buscadorTabPage
+            // 
+            this.buscadorTabPage.BackColor = System.Drawing.SystemColors.Control;
+            this.buscadorTabPage.Controls.Add(this.facturasDgv);
+            this.buscadorTabPage.Controls.Add(this.groupBox1);
+            this.buscadorTabPage.Location = new System.Drawing.Point(4, 22);
+            this.buscadorTabPage.Name = "buscadorTabPage";
+            this.buscadorTabPage.Padding = new System.Windows.Forms.Padding(3);
+            this.buscadorTabPage.Size = new System.Drawing.Size(529, 348);
+            this.buscadorTabPage.TabIndex = 1;
+            this.buscadorTabPage.Text = "Buscador";
+            // 
+            // facturasDgv
+            // 
+            this.facturasDgv.AllowUserToAddRows = false;
+            this.facturasDgv.AllowUserToDeleteRows = false;
+            this.facturasDgv.AllowUserToResizeColumns = false;
+            this.facturasDgv.AllowUserToResizeRows = false;
+            this.facturasDgv.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.facturasDgv.Location = new System.Drawing.Point(33, 126);
+            this.facturasDgv.Name = "facturasDgv";
+            this.facturasDgv.ReadOnly = true;
+            this.facturasDgv.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.facturasDgv.Size = new System.Drawing.Size(463, 195);
+            this.facturasDgv.TabIndex = 5;
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.label5);
+            this.groupBox1.Controls.Add(this.clienteFlt);
+            this.groupBox1.Controls.Add(this.label6);
+            this.groupBox1.Controls.Add(this.nroFactFlt);
+            this.groupBox1.Location = new System.Drawing.Point(30, 16);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(466, 87);
+            this.groupBox1.TabIndex = 4;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Filtros de búsqueda:";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(23, 44);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(69, 13);
+            this.label5.TabIndex = 0;
+            this.label5.Text = "Nro. Factura:";
+            // 
+            // clienteFlt
+            // 
+            this.clienteFlt.Location = new System.Drawing.Point(313, 41);
+            this.clienteFlt.Name = "clienteFlt";
+            this.clienteFlt.Size = new System.Drawing.Size(126, 20);
+            this.clienteFlt.TabIndex = 3;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(258, 44);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(42, 13);
+            this.label6.TabIndex = 1;
+            this.label6.Text = "Cliente:";
+            // 
+            // nroFactFlt
+            // 
+            this.nroFactFlt.Location = new System.Drawing.Point(103, 41);
+            this.nroFactFlt.Name = "nroFactFlt";
+            this.nroFactFlt.Size = new System.Drawing.Size(126, 20);
+            this.nroFactFlt.TabIndex = 2;
+            // 
+            // DescItemCol
+            // 
+            this.DescItemCol.HeaderText = "Descripción";
+            this.DescItemCol.Name = "DescItemCol";
+            this.DescItemCol.ReadOnly = true;
+            // 
+            // CantCol
+            // 
+            this.CantCol.HeaderText = "Cantidad";
+            this.CantCol.Name = "CantCol";
+            this.CantCol.ReadOnly = true;
+            // 
+            // montoCol
+            // 
+            this.montoCol.HeaderText = "Monto";
+            this.montoCol.Name = "montoCol";
+            this.montoCol.ReadOnly = true;
+            // 
+            // subtotalCol
+            // 
+            this.subtotalCol.HeaderText = "Subtotal";
+            this.subtotalCol.Name = "subtotalCol";
+            this.subtotalCol.ReadOnly = true;
             // 
             // FrmABMFactura
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(543, 405);
+            this.ClientSize = new System.Drawing.Size(543, 439);
+            this.Controls.Add(this.facturaTab);
             this.Controls.Add(this.panel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FrmABMFactura";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "FrmABMFactura";
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            this.abmPnl.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.confirmPnl.ResumeLayout(false);
             this.confirmPnl.PerformLayout();
-            this.abmPnl.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).EndInit();
+            this.facturaTab.ResumeLayout(false);
+            this.datosTabPage.ResumeLayout(false);
+            this.datosTabPage.PerformLayout();
+            this.panel2.ResumeLayout(false);
+            this.panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.itemsDgv)).EndInit();
+            this.toolStrip1.ResumeLayout(false);
+            this.toolStrip1.PerformLayout();
+            this.buscadorTabPage.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.facturasDgv)).EndInit();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -229,5 +673,42 @@
         private System.Windows.Forms.Button crearBtn;
         private System.Windows.Forms.Button eliminarBtn;
         private System.Windows.Forms.Button modificarBtn;
+        private System.Windows.Forms.ErrorProvider errorProvider;
+        private System.Windows.Forms.TabControl facturaTab;
+        private System.Windows.Forms.TabPage datosTabPage;
+        private System.Windows.Forms.TabPage buscadorTabPage;
+        private System.Windows.Forms.Button fnticClientesBtn;
+        private System.Windows.Forms.TextBox clienteTb;
+        private System.Windows.Forms.DateTimePicker vencimientoDtp;
+        private System.Windows.Forms.Label obligatorio5;
+        private System.Windows.Forms.Label vencimientoLb;
+        private System.Windows.Forms.Label obligatorio4;
+        private System.Windows.Forms.Label clienteLb;
+        private System.Windows.Forms.ComboBox empresaCb;
+        private System.Windows.Forms.Label obligatorio3;
+        private System.Windows.Forms.Label obligatoriosLbl;
+        private System.Windows.Forms.Label empresaLb;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox textBox2;
+        public System.Windows.Forms.DataGridView itemsDgv;
+        private System.Windows.Forms.ToolStrip toolStrip1;
+        private System.Windows.Forms.ToolStripButton clearAllToolBtn;
+        private System.Windows.Forms.ToolStripButton deleteToolBtn;
+        private System.Windows.Forms.ToolStripButton editToolBtn;
+        private System.Windows.Forms.ToolStripButton addToolBtn;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.TextBox clienteFlt;
+        private System.Windows.Forms.TextBox nroFactFlt;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.DataGridView facturasDgv;
+        private System.Windows.Forms.DataGridViewTextBoxColumn DescItemCol;
+        private System.Windows.Forms.DataGridViewTextBoxColumn CantCol;
+        private System.Windows.Forms.DataGridViewTextBoxColumn montoCol;
+        private System.Windows.Forms.DataGridViewTextBoxColumn subtotalCol;
     }
 }
