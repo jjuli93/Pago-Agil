@@ -15,17 +15,23 @@ namespace PagoAgilFrba.AbmFactura
     {
         MessageHelper msgHelper = Singleton<MessageHelper>.Instance;
         FrmABMFactura abmFactura = null;
+        bool itsUpdate = false;
 
         public FrmItemFactura(bool modAction)
         {
             InitializeComponent();
-            abmFactura = (FrmABMFactura)this.Owner;
+            abmFactura = this.Owner as FrmABMFactura; /////VUEVA TODO A LA MIERDAAAAAAAA
 
-            if (modAction)
+            if (itsUpdate = modAction)
             {
                 continueBtn.Visible = false;
                 crearBtn.Text = "Guardar";
                 groupBox.Text = "Modificar item";
+
+                var item = abmFactura.itemsDgv.SelectedRows[0];
+                descTb.Text = item.Cells[abmFactura.DescItemCol.Name].Value.ToString();
+                qttyNud.Value = Convert.ToInt32(item.Cells[abmFactura.CantCol.Name].Value);
+                montoNud.Value = Convert.ToInt32(item.Cells[abmFactura.montoCol.Name].Value);
             }
         }
 
@@ -42,7 +48,7 @@ namespace PagoAgilFrba.AbmFactura
                 var monto = montoNud.Value;
                 var subtotal = qtty * monto;
 
-                abmFactura.itemsDgv.Rows.Add(new DataGridViewCheckBoxCell(), descTb.Text, qtty.ToString(), monto.ToString(), subtotal.ToString());
+                abmFactura.itemsDgv.Rows.Add(descTb.Text, qtty.ToString(), monto.ToString(), subtotal.ToString());
                 limpiar_controles();
             }
         }
@@ -55,7 +61,17 @@ namespace PagoAgilFrba.AbmFactura
                 var monto = montoNud.Value;
                 var subtotal = qtty * monto;
 
-                abmFactura.itemsDgv.Rows.Add(new DataGridViewCheckBoxCell(), descTb.Text, qtty.ToString(), monto.ToString(), subtotal.ToString());
+                if (itsUpdate)
+                {
+                    var row = abmFactura.itemsDgv.SelectedRows[0];
+                    row.Cells[abmFactura.DescItemCol.Name].Value = descTb.Text;
+                    row.Cells[abmFactura.CantCol.Name].Value = qtty.ToString();
+                    row.Cells[abmFactura.montoCol.Name].Value = monto.ToString();
+                    row.Cells[abmFactura.subtotalCol.Name].Value = subtotal.ToString();
+                }
+                else
+                    abmFactura.itemsDgv.Rows.Add(descTb.Text, qtty.ToString(), monto.ToString(), subtotal.ToString());
+
                 this.Close();
             }
         }
@@ -75,13 +91,13 @@ namespace PagoAgilFrba.AbmFactura
                 return false;
             }
 
-            if (qttyNud.Value > 0)
+            if (qttyNud.Value <= 0)
             {
                 msgHelper.mostrar_error("Ingrese una cantidad por favor.", "Item Factura");
                 return false;
             }
 
-            if (montoNud.Value > 0)
+            if (montoNud.Value <= 0)
             {
                 msgHelper.mostrar_error("Ingrese un monto por favor.", "Item Factura");
                 return false;

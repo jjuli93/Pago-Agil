@@ -706,9 +706,9 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.DataGridView facturasDgv;
-        private System.Windows.Forms.DataGridViewTextBoxColumn DescItemCol;
-        private System.Windows.Forms.DataGridViewTextBoxColumn CantCol;
-        private System.Windows.Forms.DataGridViewTextBoxColumn montoCol;
-        private System.Windows.Forms.DataGridViewTextBoxColumn subtotalCol;
+        public System.Windows.Forms.DataGridViewTextBoxColumn DescItemCol;
+        public System.Windows.Forms.DataGridViewTextBoxColumn CantCol;
+        public System.Windows.Forms.DataGridViewTextBoxColumn montoCol;
+        public System.Windows.Forms.DataGridViewTextBoxColumn subtotalCol;
     }
 }

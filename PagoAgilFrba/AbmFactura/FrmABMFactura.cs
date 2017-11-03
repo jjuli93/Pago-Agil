@@ -20,6 +20,8 @@ namespace PagoAgilFrba.AbmFactura
         MessageHelper msgHelper = Singleton<MessageHelper>.Instance;
         int total = 0;
         string default_description = string.Empty;
+        int filaItem_seleccionada = -1;
+        int filaFactura_seleccionada = -1;
 
         public FrmABMFactura()
         {
@@ -58,26 +60,35 @@ namespace PagoAgilFrba.AbmFactura
         #region "ToolStrip Buttons"
         private void addToolBtn_Click(object sender, EventArgs e)
         {
-            var frmItem = new FrmItemFactura(false);
+            Form frmItem = new FrmItemFactura(false);
             frmItem.ShowDialog(this);
         }
 
         private void editToolBtn_Click(object sender, EventArgs e)
         {
-            
-
-            var frmItem = new FrmItemFactura(false);
-            frmItem.ShowDialog(this);
+            if (filaItem_seleccionada >= 0)
+            {
+                Form frmItem = new FrmItemFactura(true);
+                frmItem.ShowDialog(this);
+            }
+            else
+                msgHelper.mostrar_FilaNoSeleccionada();
         }
 
         private void deleteToolBtn_Click(object sender, EventArgs e)
         {
-
+            if (filaItem_seleccionada >= 0)
+            {
+                itemsDgv.Rows.RemoveAt(filaItem_seleccionada);
+                filaItem_seleccionada = -1;
+            }
+            else
+                msgHelper.mostrar_FilaNoSeleccionada();
         }
 
         private void clearAllToolBtn_Click(object sender, EventArgs e)
         {
-
+            itemsDgv.DataSource = null;
         }
         #endregion
 
