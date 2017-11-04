@@ -68,7 +68,7 @@ namespace PagoAgilFrba.Datos
                     return rendicion;
                 }
             }
-            catch (SqlException e)
+            catch (SqlException)
             {
                 throw;
             }
@@ -93,7 +93,7 @@ namespace PagoAgilFrba.Datos
                     cmd.ExecuteNonQuery();                    
                 }
             }
-            catch (SqlException e)
+            catch (SqlException)
             {
                 throw;
             }

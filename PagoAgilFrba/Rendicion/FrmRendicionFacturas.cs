@@ -19,6 +19,7 @@ namespace PagoAgilFrba.Rendicion
         private List<Control> campos_obligatorios;
         private List<Label> campo_labels;
         ControlHelper helper = Singleton<ControlHelper>.Instance;
+        MessageHelper msgHelper = Singleton<MessageHelper>.Instance;
         ClienteDAO clienteDAO = Singleton<ClienteDAO>.Instance;
         int id_empresa = -1;
 
@@ -29,16 +30,21 @@ namespace PagoAgilFrba.Rendicion
             campos_obligatorios = new List<Control>() { fechaRendicionDtp, empresaCb };
             campo_labels = new List<Label>() { fechaRendLb, empresaLb};
             helper.visualizar_controles(label_obligatorios, false);
-        
 
-            EmpresaDAO eda = new EmpresaDAO();
-            List<ItemControlHelper.itemComboBox> itemsCB = eda.getEmpresasHabilitadasCB();
-            foreach (var item in itemsCB)
+            fillEmpresaCb();
+        }
+
+        private void fillEmpresaCb()
+        {
+            try
             {
-                empresaCb.Items.Add(item);
+                var dao = new EmpresaDAO();
+                dao.setEmpresasHabilitadasCB(empresaCb);
             }
-
-
+            catch (Exception ex)
+            {
+                msgHelper.mostrar_error(ex.Message, "Error en Rendición de Facturas");
+            }
         }
 
         #region Botones

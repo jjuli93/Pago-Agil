@@ -646,6 +646,7 @@
             this.fltDNI.Name = "fltDNI";
             this.fltDNI.Size = new System.Drawing.Size(198, 20);
             this.fltDNI.TabIndex = 10;
+            this.fltDNI.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.fltDNI_KeyPress);
             // 
             // label12
             // 

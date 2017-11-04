@@ -17,10 +17,10 @@ namespace PagoAgilFrba.AbmFactura
         FrmABMFactura abmFactura = null;
         bool itsUpdate = false;
 
-        public FrmItemFactura(bool modAction)
+        public FrmItemFactura(FrmABMFactura parentFrm , bool modAction)
         {
             InitializeComponent();
-            abmFactura = this.Owner as FrmABMFactura; /////VUEVA TODO A LA MIERDAAAAAAAA
+            abmFactura = parentFrm;
 
             if (itsUpdate = modAction)
             {

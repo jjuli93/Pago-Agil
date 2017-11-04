@@ -51,8 +51,12 @@
             this.panel2 = new System.Windows.Forms.Panel();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.totalTb = new System.Windows.Forms.TextBox();
             this.itemsDgv = new System.Windows.Forms.DataGridView();
+            this.DescItemCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CantCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.montoCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.subtotalCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.clearAllToolBtn = new System.Windows.Forms.ToolStripButton();
             this.deleteToolBtn = new System.Windows.Forms.ToolStripButton();
@@ -77,10 +81,6 @@
             this.clienteFlt = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
             this.nroFactFlt = new System.Windows.Forms.TextBox();
-            this.DescItemCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.CantCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.montoCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.subtotalCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.panel1.SuspendLayout();
             this.abmPnl.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -286,7 +286,7 @@
             this.label3.BackColor = System.Drawing.Color.Transparent;
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.ForeColor = System.Drawing.Color.DarkRed;
-            this.label3.Location = new System.Drawing.Point(313, 60);
+            this.label3.Location = new System.Drawing.Point(15, 112);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(20, 25);
             this.label3.TabIndex = 40;
@@ -296,7 +296,7 @@
             // 
             this.panel2.Controls.Add(this.label2);
             this.panel2.Controls.Add(this.label1);
-            this.panel2.Controls.Add(this.textBox2);
+            this.panel2.Controls.Add(this.totalTb);
             this.panel2.Controls.Add(this.itemsDgv);
             this.panel2.Controls.Add(this.toolStrip1);
             this.panel2.Location = new System.Drawing.Point(41, 105);
@@ -325,15 +325,15 @@
             this.label1.TabIndex = 7;
             this.label1.Text = "Total:";
             // 
-            // textBox2
+            // totalTb
             // 
-            this.textBox2.Location = new System.Drawing.Point(343, 182);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.ReadOnly = true;
-            this.textBox2.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.textBox2.Size = new System.Drawing.Size(100, 20);
-            this.textBox2.TabIndex = 6;
-            this.textBox2.Text = "0";
+            this.totalTb.Location = new System.Drawing.Point(343, 182);
+            this.totalTb.Name = "totalTb";
+            this.totalTb.ReadOnly = true;
+            this.totalTb.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.totalTb.Size = new System.Drawing.Size(100, 20);
+            this.totalTb.TabIndex = 6;
+            this.totalTb.Text = "0";
             // 
             // itemsDgv
             // 
@@ -354,6 +354,32 @@
             this.itemsDgv.ShowEditingIcon = false;
             this.itemsDgv.Size = new System.Drawing.Size(444, 150);
             this.itemsDgv.TabIndex = 5;
+            this.itemsDgv.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.itemsDgv_CellClick);
+            this.itemsDgv.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.itemsDgv_RowsAdded);
+            // 
+            // DescItemCol
+            // 
+            this.DescItemCol.HeaderText = "Descripción";
+            this.DescItemCol.Name = "DescItemCol";
+            this.DescItemCol.ReadOnly = true;
+            // 
+            // CantCol
+            // 
+            this.CantCol.HeaderText = "Cantidad";
+            this.CantCol.Name = "CantCol";
+            this.CantCol.ReadOnly = true;
+            // 
+            // montoCol
+            // 
+            this.montoCol.HeaderText = "Monto";
+            this.montoCol.Name = "montoCol";
+            this.montoCol.ReadOnly = true;
+            // 
+            // subtotalCol
+            // 
+            this.subtotalCol.HeaderText = "Subtotal";
+            this.subtotalCol.Name = "subtotalCol";
+            this.subtotalCol.ReadOnly = true;
             // 
             // toolStrip1
             // 
@@ -379,7 +405,7 @@
             this.clearAllToolBtn.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.clearAllToolBtn.Name = "clearAllToolBtn";
             this.clearAllToolBtn.Size = new System.Drawing.Size(23, 22);
-            this.clearAllToolBtn.Text = "toolStripButton1";
+            this.clearAllToolBtn.Text = "Limpiar Todos";
             this.clearAllToolBtn.Click += new System.EventHandler(this.clearAllToolBtn_Click);
             // 
             // deleteToolBtn
@@ -389,7 +415,7 @@
             this.deleteToolBtn.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.deleteToolBtn.Name = "deleteToolBtn";
             this.deleteToolBtn.Size = new System.Drawing.Size(23, 22);
-            this.deleteToolBtn.Text = "toolStripButton2";
+            this.deleteToolBtn.Text = "Eliminar Item";
             this.deleteToolBtn.Click += new System.EventHandler(this.deleteToolBtn_Click);
             // 
             // editToolBtn
@@ -399,7 +425,7 @@
             this.editToolBtn.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.editToolBtn.Name = "editToolBtn";
             this.editToolBtn.Size = new System.Drawing.Size(23, 22);
-            this.editToolBtn.Text = "toolStripButton3";
+            this.editToolBtn.Text = "Editar Item";
             this.editToolBtn.Click += new System.EventHandler(this.editToolBtn_Click);
             // 
             // addToolBtn
@@ -409,7 +435,7 @@
             this.addToolBtn.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.addToolBtn.Name = "addToolBtn";
             this.addToolBtn.Size = new System.Drawing.Size(23, 22);
-            this.addToolBtn.Text = "toolStripButton4";
+            this.addToolBtn.Text = "Agregar Item";
             this.addToolBtn.Click += new System.EventHandler(this.addToolBtn_Click);
             // 
             // toolStripSeparator1
@@ -427,6 +453,7 @@
             this.fnticClientesBtn.Text = "...";
             this.fnticClientesBtn.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             this.fnticClientesBtn.UseVisualStyleBackColor = true;
+            this.fnticClientesBtn.Click += new System.EventHandler(this.fnticClientesBtn_Click);
             // 
             // clienteTb
             // 
@@ -598,30 +625,6 @@
             this.nroFactFlt.Size = new System.Drawing.Size(126, 20);
             this.nroFactFlt.TabIndex = 2;
             // 
-            // DescItemCol
-            // 
-            this.DescItemCol.HeaderText = "Descripción";
-            this.DescItemCol.Name = "DescItemCol";
-            this.DescItemCol.ReadOnly = true;
-            // 
-            // CantCol
-            // 
-            this.CantCol.HeaderText = "Cantidad";
-            this.CantCol.Name = "CantCol";
-            this.CantCol.ReadOnly = true;
-            // 
-            // montoCol
-            // 
-            this.montoCol.HeaderText = "Monto";
-            this.montoCol.Name = "montoCol";
-            this.montoCol.ReadOnly = true;
-            // 
-            // subtotalCol
-            // 
-            this.subtotalCol.HeaderText = "Subtotal";
-            this.subtotalCol.Name = "subtotalCol";
-            this.subtotalCol.ReadOnly = true;
-            // 
             // FrmABMFactura
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -690,7 +693,7 @@
         private System.Windows.Forms.Label empresaLb;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.TextBox totalTb;
         public System.Windows.Forms.DataGridView itemsDgv;
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ToolStripButton clearAllToolBtn;

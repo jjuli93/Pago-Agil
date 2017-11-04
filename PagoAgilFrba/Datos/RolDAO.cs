@@ -76,7 +76,7 @@ namespace PagoAgilFrba.Datos
                     cmd.ExecuteNonQuery();
                 }
             }
-            catch (SqlException e)
+            catch (SqlException)
             {
                 throw;
             }

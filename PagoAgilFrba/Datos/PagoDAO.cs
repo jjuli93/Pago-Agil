@@ -51,7 +51,7 @@ namespace PagoAgilFrba.Datos
                     return facturas;
                 }
             }
-            catch (SqlException e)
+            catch (SqlException)
             {
                 throw;
             }
@@ -85,7 +85,7 @@ namespace PagoAgilFrba.Datos
                     return mediosDePago;
                 }
             }
-            catch (SqlException e)
+            catch (SqlException)
             {
                 throw;
             }

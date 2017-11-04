@@ -92,7 +92,7 @@ namespace PagoAgilFrba.AbmEmpresa
 
                 return emp;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
             }
@@ -124,7 +124,7 @@ namespace PagoAgilFrba.AbmEmpresa
                 if (found)
                     rubroCb.SelectedIndex = i; 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
             }

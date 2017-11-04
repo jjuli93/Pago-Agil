@@ -363,5 +363,11 @@ namespace PagoAgilFrba.AbmCliente
         {
             cliente_habilitado = !cliente_habilitado;
         }
+
+        private void fltDNI_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            helper.onlyIntNumbers_event(sender, e);
+        }
+
     }
 }

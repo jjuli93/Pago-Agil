@@ -92,7 +92,7 @@ namespace PagoAgilFrba.Datos
                     cmd.ExecuteNonQuery();
                 }
             }
-            catch (SqlException e)
+            catch (SqlException)
             {
                 throw;
             }
@@ -170,7 +170,7 @@ namespace PagoAgilFrba.Datos
             }
         }
 
-        public List<ItemControlHelper.itemComboBox> getEmpresasHabilitadasCB()
+        public void setEmpresasHabilitadasCB(ComboBox combo)
         {
             try
             {
@@ -181,7 +181,6 @@ namespace PagoAgilFrba.Datos
                     conn.Open();
                     SqlDataReader reader = cmd.ExecuteReader();
 
-                    List<ItemControlHelper.itemComboBox> listaItemsCB = new List<ItemControlHelper.itemComboBox>();
                     while (reader.Read())
                     {
                         int fieldId = reader.GetOrdinal("IdEmpresa");
@@ -190,11 +189,9 @@ namespace PagoAgilFrba.Datos
                         string nombre = reader.GetString(fieldNombre);
                         int id = reader.GetInt32(fieldId);
                         ItemControlHelper.itemComboBox item = new ItemControlHelper.itemComboBox(nombre, id);
-                        
-                        listaItemsCB.Add(item);
-                    }
 
-                    return listaItemsCB;
+                        combo.Items.Add(item);
+                    }
                 }
             }
             catch (SqlException)

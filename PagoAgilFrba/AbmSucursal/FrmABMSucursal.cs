@@ -101,7 +101,7 @@ namespace PagoAgilFrba.AbmSucursal
                 cpTb.Text = row.Cells["CodigoPostal"].Value.ToString();
                 habilitadoChk.Checked = Convert.ToBoolean(Convert.ToInt32(row.Cells["Habilitada"].Value));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
             }

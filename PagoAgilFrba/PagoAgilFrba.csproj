@@ -51,6 +51,12 @@
     <Compile Include="AbmCliente\FrmABMCliente.Designer.cs">
       <DependentUpon>FrmABMCliente.cs</DependentUpon>
     </Compile>
+    <Compile Include="AbmCliente\FrmBuscadorClientesLite.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AbmCliente\FrmBuscadorClientesLite.Designer.cs">
+      <DependentUpon>FrmBuscadorClientesLite.cs</DependentUpon>
+    </Compile>
     <Compile Include="AbmEmpresa\FrmABMEmpresa.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -164,6 +170,9 @@
     </Compile>
     <EmbeddedResource Include="AbmCliente\FrmABMCliente.resx">
       <DependentUpon>FrmABMCliente.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AbmCliente\FrmBuscadorClientesLite.resx">
+      <DependentUpon>FrmBuscadorClientesLite.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="AbmEmpresa\FrmABMEmpresa.resx">
       <DependentUpon>FrmABMEmpresa.cs</DependentUpon>

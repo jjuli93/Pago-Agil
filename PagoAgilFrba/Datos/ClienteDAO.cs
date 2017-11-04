@@ -80,7 +80,7 @@ namespace PagoAgilFrba.Datos
                     cmd.ExecuteNonQuery();
                 }
             }
-            catch (SqlException e)
+            catch (SqlException)
             {
                 throw;
             }
@@ -116,11 +116,24 @@ namespace PagoAgilFrba.Datos
         public Cliente obtener_cliente_from_row(System.Windows.Forms.DataGridViewRow row)
         {
             Cliente cliente = new Cliente();
-            cliente.id = Convert.ToInt32(row.Cells["ID"].Value);
+            if (!string.IsNullOrWhiteSpace(row.Cells["ID"].Value.ToString()))
+                cliente.id = Convert.ToInt32(row.Cells["ID"].Value);
+            else
+                cliente.id = -1;
+
             cliente.nombre = row.Cells["Nombre"].Value.ToString();
             cliente.apellido = row.Cells["Apellido"].Value.ToString();
-            cliente.fecha_nacimiento = Convert.ToDateTime(row.Cells["Fecha_Nacimiento"].Value);
-            cliente.dni = Convert.ToUInt32(row.Cells["DNI"].Value);
+
+            if (!string.IsNullOrWhiteSpace(row.Cells["Fecha_Nacimiento"].Value.ToString()))
+                cliente.fecha_nacimiento = Convert.ToDateTime(row.Cells["Fecha_Nacimiento"].Value);
+            else
+                cliente.fecha_nacimiento = new DateTime(1900, 01, 01);
+
+            if (!string.IsNullOrWhiteSpace(row.Cells["DNI"].Value.ToString()))
+                cliente.dni = Convert.ToUInt32(row.Cells["DNI"].Value);
+            else
+                cliente.dni = 0;
+
             cliente.direccion = row.Cells["Direccion"].Value.ToString();
 
             var cod_post = row.Cells["Codigo_Postal"].Value.ToString();
@@ -130,9 +143,20 @@ namespace PagoAgilFrba.Datos
             else
                 cliente.codigoPostal = Convert.ToInt32(cod_post);
 
-            cliente.telefono = Convert.ToUInt32(row.Cells["Telefono"].Value);
-            cliente.mail = row.Cells["Email"].Value.ToString();
-            cliente.habilitado = Convert.ToBoolean(row.Cells["Habilitado"].Value);
+            if (!string.IsNullOrWhiteSpace(row.Cells["Telefono"].Value.ToString()))
+                cliente.telefono = Convert.ToUInt32(row.Cells["Telefono"].Value);
+            else
+                cliente.telefono = 0;
+
+            cliente.mail = row.Cells["Mail"].Value.ToString();
+
+            if (!string.IsNullOrWhiteSpace(row.Cells["Habilitado"].Value.ToString()))
+                if (row.Cells["Habilitado"].Value.ToString() == "1")
+                    cliente.habilitado = true;
+                else
+                    cliente.habilitado = false;
+            else
+                cliente.habilitado = false;
 
             return cliente;
         }
