@@ -35,11 +35,11 @@ GO
 
 --*************************************** Listados estadisticos *************************************************************--   
 
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[SistemaCaido].[EmpresasConMayorPorcentajeFacturasCobradas]') AND type in (N'P', N'PC'))
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[SistemaCaido].[EmpresasConMayorMontoRendido]') AND type in (N'P', N'PC'))
 DROP procedure [SistemaCaido].[EmpresasConMayorMontoRendido]
 GO
 
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[SistemaCaido].[EmpresasConMayorPorcentajeFacturasCobradas]') AND type in (N'P', N'PC'))
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[SistemaCaido].[ClientesConMasPagos]') AND type in (N'P', N'PC'))
 DROP procedure [SistemaCaido].[ClientesConMasPagos]
 GO
 
