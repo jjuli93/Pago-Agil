@@ -128,7 +128,7 @@ namespace PagoAgilFrba.Datos
             }
         }
 
-        public DataTable buscar_facturas(int nro_fact)
+        public DataTable buscar_facturas(string nro_fact, string cliente)
         {
             try
             {
@@ -136,12 +136,18 @@ namespace PagoAgilFrba.Datos
                 using (SqlCommand cmd = new SqlCommand("SistemaCaido.BuscarFacturas", conn))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
-                    //SistemaCaido.BuscarFacturas (@numeroFactura int)
+                    //SistemaCaido.BuscarFacturas (@numeroFactura int, @idCliente int)
 
-                    if (nro_fact > 0)
-                        cmd.Parameters.Add("@numeroFactura", SqlDbType.Int).Value = nro_fact;
-                    else
+                    if (string.IsNullOrWhiteSpace(nro_fact))
                         cmd.Parameters.AddWithValue("@numeroFactura", DBNull.Value);
+                    else
+                        cmd.Parameters.Add("@numeroFactura", SqlDbType.Int).Value = Convert.ToInt32(nro_fact);
+
+                    if (string.IsNullOrWhiteSpace(cliente))
+                        cmd.Parameters.AddWithValue("@idCliente", DBNull.Value);
+                    else
+                        cmd.Parameters.Add("@idCliente", SqlDbType.Int).Value = Convert.ToInt32(cliente);
+                        
 
                     conn.Open();
                     SqlDataReader lector = cmd.ExecuteReader();

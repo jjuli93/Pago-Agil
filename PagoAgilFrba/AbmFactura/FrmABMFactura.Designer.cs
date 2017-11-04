@@ -48,7 +48,7 @@
             this.facturaTab = new System.Windows.Forms.TabControl();
             this.datosTabPage = new System.Windows.Forms.TabPage();
             this.label3 = new System.Windows.Forms.Label();
-            this.panel2 = new System.Windows.Forms.Panel();
+            this.itemsPnl = new System.Windows.Forms.Panel();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.totalTb = new System.Windows.Forms.TextBox();
@@ -66,12 +66,12 @@
             this.fnticClientesBtn = new System.Windows.Forms.Button();
             this.clienteTb = new System.Windows.Forms.TextBox();
             this.vencimientoDtp = new System.Windows.Forms.DateTimePicker();
-            this.obligatorio5 = new System.Windows.Forms.Label();
+            this.obligatorio3 = new System.Windows.Forms.Label();
             this.vencimientoLb = new System.Windows.Forms.Label();
-            this.obligatorio4 = new System.Windows.Forms.Label();
+            this.obligatorio1 = new System.Windows.Forms.Label();
             this.clienteLb = new System.Windows.Forms.Label();
             this.empresaCb = new System.Windows.Forms.ComboBox();
-            this.obligatorio3 = new System.Windows.Forms.Label();
+            this.obligatorio2 = new System.Windows.Forms.Label();
             this.obligatoriosLbl = new System.Windows.Forms.Label();
             this.empresaLb = new System.Windows.Forms.Label();
             this.buscadorTabPage = new System.Windows.Forms.TabPage();
@@ -81,6 +81,9 @@
             this.clienteFlt = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
             this.nroFactFlt = new System.Windows.Forms.TextBox();
+            this.habilitadaChk = new System.Windows.Forms.CheckBox();
+            this.buscarBtn = new System.Windows.Forms.Button();
+            this.limpiarBtn = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.abmPnl.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -88,7 +91,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).BeginInit();
             this.facturaTab.SuspendLayout();
             this.datosTabPage.SuspendLayout();
-            this.panel2.SuspendLayout();
+            this.itemsPnl.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.itemsDgv)).BeginInit();
             this.toolStrip1.SuspendLayout();
             this.buscadorTabPage.SuspendLayout();
@@ -139,6 +142,7 @@
             this.crearBtn.TabIndex = 0;
             this.crearBtn.Text = "Crear nuevo";
             this.crearBtn.UseVisualStyleBackColor = true;
+            this.crearBtn.Click += new System.EventHandler(this.crearBtn_Click);
             // 
             // eliminarBtn
             // 
@@ -148,6 +152,7 @@
             this.eliminarBtn.TabIndex = 2;
             this.eliminarBtn.Text = "Eliminar";
             this.eliminarBtn.UseVisualStyleBackColor = true;
+            this.eliminarBtn.Click += new System.EventHandler(this.eliminarBtn_Click);
             // 
             // modificarBtn
             // 
@@ -157,6 +162,7 @@
             this.modificarBtn.TabIndex = 1;
             this.modificarBtn.Text = "Modificar";
             this.modificarBtn.UseVisualStyleBackColor = true;
+            this.modificarBtn.Click += new System.EventHandler(this.modificarBtn_Click);
             // 
             // label4
             // 
@@ -219,6 +225,7 @@
             this.cancelarBtn.TabIndex = 1;
             this.cancelarBtn.Text = "Cancelar";
             this.cancelarBtn.UseVisualStyleBackColor = true;
+            this.cancelarBtn.Click += new System.EventHandler(this.cancelarBtn_Click);
             // 
             // aceptarBtn
             // 
@@ -228,6 +235,7 @@
             this.aceptarBtn.TabIndex = 0;
             this.aceptarBtn.Text = "Aceptar";
             this.aceptarBtn.UseVisualStyleBackColor = true;
+            this.aceptarBtn.Click += new System.EventHandler(this.aceptarBtn_Click);
             // 
             // exitBtn
             // 
@@ -260,17 +268,18 @@
             // datosTabPage
             // 
             this.datosTabPage.BackColor = System.Drawing.SystemColors.Control;
+            this.datosTabPage.Controls.Add(this.habilitadaChk);
             this.datosTabPage.Controls.Add(this.label3);
-            this.datosTabPage.Controls.Add(this.panel2);
+            this.datosTabPage.Controls.Add(this.itemsPnl);
             this.datosTabPage.Controls.Add(this.fnticClientesBtn);
             this.datosTabPage.Controls.Add(this.clienteTb);
             this.datosTabPage.Controls.Add(this.vencimientoDtp);
-            this.datosTabPage.Controls.Add(this.obligatorio5);
+            this.datosTabPage.Controls.Add(this.obligatorio3);
             this.datosTabPage.Controls.Add(this.vencimientoLb);
-            this.datosTabPage.Controls.Add(this.obligatorio4);
+            this.datosTabPage.Controls.Add(this.obligatorio1);
             this.datosTabPage.Controls.Add(this.clienteLb);
             this.datosTabPage.Controls.Add(this.empresaCb);
-            this.datosTabPage.Controls.Add(this.obligatorio3);
+            this.datosTabPage.Controls.Add(this.obligatorio2);
             this.datosTabPage.Controls.Add(this.obligatoriosLbl);
             this.datosTabPage.Controls.Add(this.empresaLb);
             this.datosTabPage.Location = new System.Drawing.Point(4, 22);
@@ -292,17 +301,17 @@
             this.label3.TabIndex = 40;
             this.label3.Text = "*";
             // 
-            // panel2
+            // itemsPnl
             // 
-            this.panel2.Controls.Add(this.label2);
-            this.panel2.Controls.Add(this.label1);
-            this.panel2.Controls.Add(this.totalTb);
-            this.panel2.Controls.Add(this.itemsDgv);
-            this.panel2.Controls.Add(this.toolStrip1);
-            this.panel2.Location = new System.Drawing.Point(41, 105);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(445, 205);
-            this.panel2.TabIndex = 39;
+            this.itemsPnl.Controls.Add(this.label2);
+            this.itemsPnl.Controls.Add(this.label1);
+            this.itemsPnl.Controls.Add(this.totalTb);
+            this.itemsPnl.Controls.Add(this.itemsDgv);
+            this.itemsPnl.Controls.Add(this.toolStrip1);
+            this.itemsPnl.Location = new System.Drawing.Point(41, 105);
+            this.itemsPnl.Name = "itemsPnl";
+            this.itemsPnl.Size = new System.Drawing.Size(445, 205);
+            this.itemsPnl.TabIndex = 39;
             // 
             // label2
             // 
@@ -470,17 +479,17 @@
             this.vencimientoDtp.Size = new System.Drawing.Size(145, 20);
             this.vencimientoDtp.TabIndex = 36;
             // 
-            // obligatorio5
+            // obligatorio3
             // 
-            this.obligatorio5.AutoSize = true;
-            this.obligatorio5.BackColor = System.Drawing.Color.Transparent;
-            this.obligatorio5.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.obligatorio5.ForeColor = System.Drawing.Color.DarkRed;
-            this.obligatorio5.Location = new System.Drawing.Point(491, 23);
-            this.obligatorio5.Name = "obligatorio5";
-            this.obligatorio5.Size = new System.Drawing.Size(20, 25);
-            this.obligatorio5.TabIndex = 35;
-            this.obligatorio5.Text = "*";
+            this.obligatorio3.AutoSize = true;
+            this.obligatorio3.BackColor = System.Drawing.Color.Transparent;
+            this.obligatorio3.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.obligatorio3.ForeColor = System.Drawing.Color.DarkRed;
+            this.obligatorio3.Location = new System.Drawing.Point(491, 23);
+            this.obligatorio3.Name = "obligatorio3";
+            this.obligatorio3.Size = new System.Drawing.Size(20, 25);
+            this.obligatorio3.TabIndex = 35;
+            this.obligatorio3.Text = "*";
             // 
             // vencimientoLb
             // 
@@ -492,17 +501,17 @@
             this.vencimientoLb.TabIndex = 34;
             this.vencimientoLb.Text = "Vencimiento:";
             // 
-            // obligatorio4
+            // obligatorio1
             // 
-            this.obligatorio4.AutoSize = true;
-            this.obligatorio4.BackColor = System.Drawing.Color.Transparent;
-            this.obligatorio4.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.obligatorio4.ForeColor = System.Drawing.Color.DarkRed;
-            this.obligatorio4.Location = new System.Drawing.Point(243, 23);
-            this.obligatorio4.Name = "obligatorio4";
-            this.obligatorio4.Size = new System.Drawing.Size(20, 25);
-            this.obligatorio4.TabIndex = 33;
-            this.obligatorio4.Text = "*";
+            this.obligatorio1.AutoSize = true;
+            this.obligatorio1.BackColor = System.Drawing.Color.Transparent;
+            this.obligatorio1.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.obligatorio1.ForeColor = System.Drawing.Color.DarkRed;
+            this.obligatorio1.Location = new System.Drawing.Point(243, 23);
+            this.obligatorio1.Name = "obligatorio1";
+            this.obligatorio1.Size = new System.Drawing.Size(20, 25);
+            this.obligatorio1.TabIndex = 33;
+            this.obligatorio1.Text = "*";
             // 
             // clienteLb
             // 
@@ -522,17 +531,17 @@
             this.empresaCb.Size = new System.Drawing.Size(155, 21);
             this.empresaCb.TabIndex = 30;
             // 
-            // obligatorio3
+            // obligatorio2
             // 
-            this.obligatorio3.AutoSize = true;
-            this.obligatorio3.BackColor = System.Drawing.Color.Transparent;
-            this.obligatorio3.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.obligatorio3.ForeColor = System.Drawing.Color.DarkRed;
-            this.obligatorio3.Location = new System.Drawing.Point(243, 60);
-            this.obligatorio3.Name = "obligatorio3";
-            this.obligatorio3.Size = new System.Drawing.Size(20, 25);
-            this.obligatorio3.TabIndex = 29;
-            this.obligatorio3.Text = "*";
+            this.obligatorio2.AutoSize = true;
+            this.obligatorio2.BackColor = System.Drawing.Color.Transparent;
+            this.obligatorio2.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.obligatorio2.ForeColor = System.Drawing.Color.DarkRed;
+            this.obligatorio2.Location = new System.Drawing.Point(243, 60);
+            this.obligatorio2.Name = "obligatorio2";
+            this.obligatorio2.Size = new System.Drawing.Size(20, 25);
+            this.obligatorio2.TabIndex = 29;
+            this.obligatorio2.Text = "*";
             // 
             // obligatoriosLbl
             // 
@@ -577,18 +586,20 @@
             this.facturasDgv.Name = "facturasDgv";
             this.facturasDgv.ReadOnly = true;
             this.facturasDgv.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.facturasDgv.Size = new System.Drawing.Size(463, 195);
+            this.facturasDgv.Size = new System.Drawing.Size(463, 202);
             this.facturasDgv.TabIndex = 5;
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.limpiarBtn);
+            this.groupBox1.Controls.Add(this.buscarBtn);
             this.groupBox1.Controls.Add(this.label5);
             this.groupBox1.Controls.Add(this.clienteFlt);
             this.groupBox1.Controls.Add(this.label6);
             this.groupBox1.Controls.Add(this.nroFactFlt);
             this.groupBox1.Location = new System.Drawing.Point(30, 16);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(466, 87);
+            this.groupBox1.Size = new System.Drawing.Size(466, 92);
             this.groupBox1.TabIndex = 4;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Filtros de búsqueda:";
@@ -596,7 +607,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(23, 44);
+            this.label5.Location = new System.Drawing.Point(55, 28);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(69, 13);
             this.label5.TabIndex = 0;
@@ -604,15 +615,16 @@
             // 
             // clienteFlt
             // 
-            this.clienteFlt.Location = new System.Drawing.Point(313, 41);
+            this.clienteFlt.Location = new System.Drawing.Point(135, 60);
             this.clienteFlt.Name = "clienteFlt";
-            this.clienteFlt.Size = new System.Drawing.Size(126, 20);
+            this.clienteFlt.Size = new System.Drawing.Size(157, 20);
             this.clienteFlt.TabIndex = 3;
+            this.clienteFlt.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.clienteFlt_KeyPress);
             // 
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(258, 44);
+            this.label6.Location = new System.Drawing.Point(55, 63);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(42, 13);
             this.label6.TabIndex = 1;
@@ -620,10 +632,41 @@
             // 
             // nroFactFlt
             // 
-            this.nroFactFlt.Location = new System.Drawing.Point(103, 41);
+            this.nroFactFlt.Location = new System.Drawing.Point(135, 25);
             this.nroFactFlt.Name = "nroFactFlt";
-            this.nroFactFlt.Size = new System.Drawing.Size(126, 20);
+            this.nroFactFlt.Size = new System.Drawing.Size(157, 20);
             this.nroFactFlt.TabIndex = 2;
+            this.nroFactFlt.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.nroFactFlt_KeyPress);
+            // 
+            // habilitadaChk
+            // 
+            this.habilitadaChk.AutoSize = true;
+            this.habilitadaChk.Location = new System.Drawing.Point(268, 62);
+            this.habilitadaChk.Name = "habilitadaChk";
+            this.habilitadaChk.Size = new System.Drawing.Size(73, 17);
+            this.habilitadaChk.TabIndex = 41;
+            this.habilitadaChk.Text = "Habilitada";
+            this.habilitadaChk.UseVisualStyleBackColor = true;
+            // 
+            // buscarBtn
+            // 
+            this.buscarBtn.Location = new System.Drawing.Point(337, 20);
+            this.buscarBtn.Name = "buscarBtn";
+            this.buscarBtn.Size = new System.Drawing.Size(75, 23);
+            this.buscarBtn.TabIndex = 4;
+            this.buscarBtn.Text = "Buscar";
+            this.buscarBtn.UseVisualStyleBackColor = true;
+            this.buscarBtn.Click += new System.EventHandler(this.buscarBtn_Click);
+            // 
+            // limpiarBtn
+            // 
+            this.limpiarBtn.Location = new System.Drawing.Point(337, 56);
+            this.limpiarBtn.Name = "limpiarBtn";
+            this.limpiarBtn.Size = new System.Drawing.Size(75, 23);
+            this.limpiarBtn.TabIndex = 5;
+            this.limpiarBtn.Text = "Limpiar";
+            this.limpiarBtn.UseVisualStyleBackColor = true;
+            this.limpiarBtn.Click += new System.EventHandler(this.limpiarBtn_Click);
             // 
             // FrmABMFactura
             // 
@@ -647,8 +690,8 @@
             this.facturaTab.ResumeLayout(false);
             this.datosTabPage.ResumeLayout(false);
             this.datosTabPage.PerformLayout();
-            this.panel2.ResumeLayout(false);
-            this.panel2.PerformLayout();
+            this.itemsPnl.ResumeLayout(false);
+            this.itemsPnl.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.itemsDgv)).EndInit();
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
@@ -683,15 +726,15 @@
         private System.Windows.Forms.Button fnticClientesBtn;
         private System.Windows.Forms.TextBox clienteTb;
         private System.Windows.Forms.DateTimePicker vencimientoDtp;
-        private System.Windows.Forms.Label obligatorio5;
+        private System.Windows.Forms.Label obligatorio3;
         private System.Windows.Forms.Label vencimientoLb;
-        private System.Windows.Forms.Label obligatorio4;
+        private System.Windows.Forms.Label obligatorio1;
         private System.Windows.Forms.Label clienteLb;
         private System.Windows.Forms.ComboBox empresaCb;
-        private System.Windows.Forms.Label obligatorio3;
+        private System.Windows.Forms.Label obligatorio2;
         private System.Windows.Forms.Label obligatoriosLbl;
         private System.Windows.Forms.Label empresaLb;
-        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Panel itemsPnl;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox totalTb;
         public System.Windows.Forms.DataGridView itemsDgv;
@@ -713,5 +756,8 @@
         public System.Windows.Forms.DataGridViewTextBoxColumn CantCol;
         public System.Windows.Forms.DataGridViewTextBoxColumn montoCol;
         public System.Windows.Forms.DataGridViewTextBoxColumn subtotalCol;
+        private System.Windows.Forms.CheckBox habilitadaChk;
+        private System.Windows.Forms.Button limpiarBtn;
+        private System.Windows.Forms.Button buscarBtn;
     }
 }
