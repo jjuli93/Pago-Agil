@@ -218,35 +218,44 @@ namespace PagoAgilFrba.AbmFactura
 
         private void do_update()
         {
-            if (ctrlHelper.cumple_campos_obligatorios(obligatorios, errorProvider))
+            try
             {
-                try
+                if (!facturaDao.verificar_factura(Convert.ToInt32(facturasDgv.CurrentRow.Cells["IdFactura"].Value)))
                 {
-                    if (!facturaDao.verificar_factura(Convert.ToInt32(facturasDgv.CurrentRow.Cells["IdFactura"].Value)))
-                    {
-                        msgHelper.mostrar_error("No se puede modificar una factura que esta pagada y/o rendida.", "Error en ABM Facturas");
-                        return;
-                    }
+                    msgHelper.mostrar_error("No se puede modificar una factura que esta pagada y/o rendida.", "Error en ABM Facturas");
+                    return;
+                }
 
+                //ACTUALIZO LOS ITEMS POR SI FUERON MODIFICADOS
+                factura_seleccionada.items = obtener_items_desde_form();
+
+                if (ctrlHelper.cumple_campos_obligatorios(obligatorios, errorProvider))
+                {
+                    facturaDao.modificar_factura(factura_seleccionada);
                     msgHelper.mostrar_aviso("Factura modificada", "ABM Facturas");
                     limpiar_controles();
                     restablecer_controles();
                 }
-                catch (Exception ex)
-                {
-                    msgHelper.mostrar_error(ex.Message, "Error en ABM Facturas");
-                }
-
-                this.restablecer_controles();
+                else
+                    msgHelper.mostrar_CamposIncompletos();
             }
-            else
-                msgHelper.mostrar_CamposIncompletos();
+            catch (Exception ex)
+            {
+                msgHelper.mostrar_error(ex.Message, "Error en ABM Facturas");
+            }
         }
 
         private void do_delete()
         {
             try
             {
+                if (!facturaDao.verificar_factura(Convert.ToInt32(facturasDgv.CurrentRow.Cells["IdFactura"].Value)))
+                {
+                    msgHelper.mostrar_error("No se puede eliminar una factura que esta pagada y/o rendida.", "Error en ABM Facturas");
+                    return;
+                }
+
+                facturaDao.eliminar_factura(factura_seleccionada.id);
                 msgHelper.mostrar_aviso("Factura eliminada", "ABM Facturas");
                 limpiar_controles();
                 restablecer_controles();   
@@ -335,7 +344,8 @@ namespace PagoAgilFrba.AbmFactura
                 fecha_vencimiento = this.vencimientoDtp.Value,
                 fecha_alta = DateTime.Now,
                 habilitada = this.habilitadaChk.Checked,
-                items = obtener_items_desde_form()
+                items = obtener_items_desde_form(),
+                importe = Convert.ToDouble(totalTb.Text)
             };
 
             return factura;

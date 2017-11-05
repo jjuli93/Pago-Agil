@@ -150,13 +150,14 @@ namespace PagoAgilFrba.Datos
 
             cliente.mail = row.Cells["Mail"].Value.ToString();
 
-            if (!string.IsNullOrWhiteSpace(row.Cells["Habilitado"].Value.ToString()))
-                if (row.Cells["Habilitado"].Value.ToString() == "1")
-                    cliente.habilitado = true;
-                else
-                    cliente.habilitado = false;
-            else
-                cliente.habilitado = false;
+            //if (!string.IsNullOrWhiteSpace(row.Cells["Habilitado"].Value.ToString()))
+            //    if (row.Cells["Habilitado"].Value.ToString() == "1")
+            //        cliente.habilitado = true;
+            //    else
+            //        cliente.habilitado = false;
+            //else
+            //    cliente.habilitado = false;
+            cliente.habilitado = (bool)row.Cells["Habilitado"].Value;
 
             return cliente;
         }

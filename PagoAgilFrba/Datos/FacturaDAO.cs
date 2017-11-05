@@ -39,15 +39,14 @@ namespace PagoAgilFrba.Datos
                     p_nro_fact.Value = (decimal)factura.numero_factura;
                     cmd.Parameters.Add("@FechaVencimiento", SqlDbType.DateTime).Value = factura.fecha_vencimiento;
 
-                    //setear los items
-                    //    CREATE TYPE [SistemaCaido].[Items] AS TABLE(
-                    //    [Producto] [int] NULL,
-                    //    [Monto] [numeric](18, 2) NULL,
-                    //    [Cantidad] [numeric](18, 0) NULL
-                    //)
+//                   CREATE TYPE [SistemaCaido].[Items] AS TABLE(
+//    [Descripcion] varchar(250) NULL,
+//    [Monto] [numeric](18, 2) NULL,
+//    [Cantidad] [numeric](18, 0) NULL
+//)
                     var table = new DataTable();
 
-                    table.Columns.Add("Producto", typeof(int));
+                    table.Columns.Add("Descripcion", typeof(string));
                     table.Columns.Add("Monto", typeof(decimal));
                     table.Columns.Add("Cantidad", typeof(decimal));
 
@@ -83,7 +82,8 @@ namespace PagoAgilFrba.Datos
                 using (SqlCommand cmd = new SqlCommand("SistemaCaido.ModificacionFactura", conn))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
-
+//                    create procedure [SistemaCaido].[ModificacionFactura]
+//(@IdFactura int, @IdCliente int, @IdEmpresa int, @NumeroFactura int, @FechaAlta datetime, @FechaVencimiento datetime, @Items SistemaCaido.Items readonly)
 
                     cmd.Parameters.Add("@IdFactura", SqlDbType.Int).Value = factura.id;
                     cmd.Parameters.Add("@IdCliente", SqlDbType.Int).Value = factura.id_cliente;
@@ -95,7 +95,24 @@ namespace PagoAgilFrba.Datos
                     p_nro_fact.Precision = 18;
                     p_nro_fact.Scale = 0;
                     p_nro_fact.Value = (decimal)factura.numero_factura;
-                    
+
+                    var table = new DataTable();
+
+                    table.Columns.Add("Descripcion", typeof(string));
+                    table.Columns.Add("Monto", typeof(decimal));
+                    table.Columns.Add("Cantidad", typeof(decimal));
+
+                    foreach (ItemFactura item in factura.items)
+                    {
+                        table.Rows.Add(item.descripcion, item.monto, item.cantidad);
+                    }
+
+                    var plist = new SqlParameter("@Items", SqlDbType.Structured);
+                    plist.TypeName = "SistemaCaido.Items";
+                    plist.Value = table;
+
+                    cmd.Parameters.Add(plist);
+
                     conn.Open();
                     cmd.ExecuteNonQuery();
                 }
