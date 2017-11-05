@@ -179,6 +179,13 @@ namespace PagoAgilFrba.AbmSucursal
         private void aceptarBtn_Click(object sender, EventArgs e)
         {
             string operacion = descripcionLbl.Text;
+
+            if (operacion == "Buscador")
+            {
+                do_search();
+                return;
+            }
+
             string msg = string.Format("¿Confirmar <{0}>?", operacion);
 
             helper.limpiar_errorProvider(campos_obligatorios, errorProvider);
@@ -195,9 +202,6 @@ namespace PagoAgilFrba.AbmSucursal
                         break;
                     case "Eliminar Sucursal":
                         do_delete();
-                        break;
-                    case "Buscador":
-                        do_search();
                         break;
                 }
                 restablecer_controles();

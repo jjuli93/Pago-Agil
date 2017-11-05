@@ -31,8 +31,8 @@ namespace PagoAgilFrba.Datos
                     //[SistemaCaido].[AltaSucursal](@Nombre nvarchar(255), @Direccion nvarchar(255), @CodigoPostal varchar(4))
 
                     cmd.Parameters.Add("@Nombre", SqlDbType.VarChar).Value = sucursal.nombre;
-                    cmd.Parameters.Add("@Direccion", SqlDbType.VarChar).Value = sucursal.nombre;
-                    cmd.Parameters.Add("@CodigoPostal", SqlDbType.VarChar).Value = sucursal.nombre;
+                    cmd.Parameters.Add("@Direccion", SqlDbType.VarChar).Value = sucursal.direccion;
+                    cmd.Parameters.Add("@CodigoPostal", SqlDbType.VarChar).Value = sucursal.codPostal;
 
                     conn.Open();
                     cmd.ExecuteNonQuery();
@@ -59,7 +59,7 @@ namespace PagoAgilFrba.Datos
 
                     cmd.Parameters.Add("@IdSucursal", SqlDbType.Int).Value = sucursal.id;
                     cmd.Parameters.Add("@Nombre", SqlDbType.VarChar).Value = sucursal.nombre;
-                    cmd.Parameters.Add("@Direccion", SqlDbType.VarChar).Value = sucursal.nombre;
+                    cmd.Parameters.Add("@Direccion", SqlDbType.VarChar).Value = sucursal.direccion;
                     cmd.Parameters.Add("@CodigoPostal", SqlDbType.VarChar).Value = sucursal.codPostal;
 
                     if (sucursal.habilitado)
