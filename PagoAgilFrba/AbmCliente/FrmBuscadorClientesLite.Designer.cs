@@ -44,6 +44,7 @@
             this.label4 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.exitBtn = new System.Windows.Forms.LinkLabel();
+            this.cancelarBtn = new System.Windows.Forms.Button();
             this.filtrosGB.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.clientesDt)).BeginInit();
             this.panel1.SuspendLayout();
@@ -158,6 +159,7 @@
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.panel1.Controls.Add(this.cancelarBtn);
             this.panel1.Controls.Add(this.seleccionarBtn);
             this.panel1.Controls.Add(this.label4);
             this.panel1.Controls.Add(this.pictureBox1);
@@ -212,6 +214,16 @@
             this.exitBtn.Text = "X";
             this.exitBtn.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.exitBtn_LinkClicked);
             // 
+            // cancelarBtn
+            // 
+            this.cancelarBtn.Location = new System.Drawing.Point(161, 32);
+            this.cancelarBtn.Name = "cancelarBtn";
+            this.cancelarBtn.Size = new System.Drawing.Size(75, 23);
+            this.cancelarBtn.TabIndex = 11;
+            this.cancelarBtn.Text = "Cancelar";
+            this.cancelarBtn.UseVisualStyleBackColor = true;
+            this.cancelarBtn.Click += new System.EventHandler(this.cancelarBtn_Click);
+            // 
             // FrmBuscadorClientesLite
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -252,5 +264,6 @@
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.LinkLabel exitBtn;
         private System.Windows.Forms.Button seleccionarBtn;
+        private System.Windows.Forms.Button cancelarBtn;
     }
 }

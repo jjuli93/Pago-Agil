@@ -91,5 +91,11 @@ namespace PagoAgilFrba.AbmCliente
         {
             fila_seleccionada = e.RowIndex;
         }
+
+        private void cancelarBtn_Click(object sender, EventArgs e)
+        {
+            this.Owner.Show();
+            this.Close();
+        }
     }
 }
