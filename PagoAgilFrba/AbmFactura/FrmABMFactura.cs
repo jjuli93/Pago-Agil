@@ -20,9 +20,8 @@ namespace PagoAgilFrba.AbmFactura
         ControlHelper ctrlHelper = Singleton<ControlHelper>.Instance;
         MessageHelper msgHelper = Singleton<MessageHelper>.Instance;
         FacturaDAO facturaDao = new FacturaDAO();
-        public double total = 0;
         string default_description = string.Empty;
-        int filaItem_seleccionada = -1;
+        int filaItem_seleccionado = -1;
         int filaFactura_seleccionada = -1;
         int id_cliente = -1;
         Factura factura_seleccionada = null;
@@ -68,11 +67,10 @@ namespace PagoAgilFrba.AbmFactura
 
         private void editToolBtn_Click(object sender, EventArgs e)
         {
-            if (filaItem_seleccionada >= 0)
+            if (filaItem_seleccionado >= 0)
             {
                 Form frmItem = new FrmItemFactura(this, true);
                 frmItem.ShowDialog(this);
-                //TODO: ACTUALIZAR EL TOTAL
             }
             else
                 msgHelper.mostrar_FilaNoSeleccionada();
@@ -80,12 +78,13 @@ namespace PagoAgilFrba.AbmFactura
 
         private void deleteToolBtn_Click(object sender, EventArgs e)
         {
-            if (filaItem_seleccionada >= 0)
+            if (filaItem_seleccionado >= 0)
             {
-                total -= Convert.ToDouble(itemsDgv.Rows[filaItem_seleccionada].Cells[subtotalCol.Name].Value);
+                var total = Convert.ToDouble(totalTb.Text);
+                total -= Convert.ToDouble(itemsDgv.Rows[filaItem_seleccionado].Cells[subtotalCol.Name].Value);
                 totalTb.Text = total.ToString("F");
-                itemsDgv.Rows.RemoveAt(filaItem_seleccionada);
-                filaItem_seleccionada = -1;
+                itemsDgv.Rows.RemoveAt(filaItem_seleccionado);
+                filaItem_seleccionado = -1;
             }
             else
                 msgHelper.mostrar_FilaNoSeleccionada();
@@ -95,11 +94,12 @@ namespace PagoAgilFrba.AbmFactura
         {
             itemsDgv.Rows.Clear();
             itemsDgv.DataSource = null;
+            totalTb.Text = "0";
         }
 
         private void itemsDgv_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            filaItem_seleccionada = e.RowIndex;
+            filaItem_seleccionado = e.RowIndex;
         }
 
         public void set_cliente_seleccionado(Cliente cliente)
@@ -116,8 +116,21 @@ namespace PagoAgilFrba.AbmFactura
             }
         }
 
+        private void itemsDgv_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            double total = 0;
+
+            foreach (DataGridViewRow row in itemsDgv.Rows)
+            {
+                total += Convert.ToDouble(row.Cells[subtotalCol.Name].Value);
+            }
+
+            totalTb.Text = total.ToString("F");
+        }
+
         private void itemsDgv_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
         {
+            var total = Convert.ToDouble(totalTb.Text);
             total += Convert.ToDouble(itemsDgv.Rows[e.RowIndex].Cells[subtotalCol.Name].Value);
             totalTb.Text = total.ToString("F");
         }
@@ -198,6 +211,12 @@ namespace PagoAgilFrba.AbmFactura
         {
             if (ctrlHelper.cumple_campos_obligatorios(obligatorios, errorProvider))
             {
+                if (itemsDgv.Rows.Count == 0)
+                {
+                    msgHelper.mostrar_error("Debe ingresar por lo menos un item a la factura.", "Error en ABM Facturas");
+                    return;
+                }
+                
                 try
                 {
                     Factura factura = obtener_factura_desde_form();
@@ -231,6 +250,12 @@ namespace PagoAgilFrba.AbmFactura
 
                 if (ctrlHelper.cumple_campos_obligatorios(obligatorios, errorProvider))
                 {
+                    if (factura_seleccionada.items.Count == 0)
+                    {
+                        msgHelper.mostrar_error("La factura debe contener por lo menos un item.", "Error en ABM Facturas");
+                        return;
+                    }
+
                     facturaDao.modificar_factura(factura_seleccionada);
                     msgHelper.mostrar_aviso("Factura modificada", "ABM Facturas");
                     limpiar_controles();
@@ -290,8 +315,7 @@ namespace PagoAgilFrba.AbmFactura
             itemsDgv.Rows.Clear();
             itemsDgv.DataSource = null;
             filaFactura_seleccionada = -1;
-            filaItem_seleccionada = -1;
-            total = 0;
+            filaItem_seleccionado = -1;
             totalTb.Text = "0";
         }
 
@@ -403,7 +427,7 @@ namespace PagoAgilFrba.AbmFactura
                 {
                     items.Add(new ItemFactura()
                     {
-                        descripcion = row["Descripcion"].ToString(),
+                        descripcion = row[0].ToString(),
                         cantidad = Convert.ToInt32(row["Cantidad"].ToString()),
                         monto = Convert.ToDouble(row["Precio"].ToString()),
                     });
@@ -430,6 +454,15 @@ namespace PagoAgilFrba.AbmFactura
             clienteTb.Text = factura.id.ToString();
             vencimientoDtp.Value = factura.fecha_vencimiento;
             habilitadaChk.Checked = factura.habilitada;
+
+            foreach (ItemControlHelper.itemComboBox item in empresaCb.Items)
+            {
+                if (factura.id_empresa == item.id_item)
+                {
+                    empresaCb.SelectedItem = item;
+                    break;
+                }
+            }
 
             foreach (ItemFactura item in factura.items)
             {
@@ -495,5 +528,9 @@ namespace PagoAgilFrba.AbmFactura
             }
         }
         #endregion
+
+        
+
+        
     }
 }

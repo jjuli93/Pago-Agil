@@ -54,10 +54,6 @@
             this.label1 = new System.Windows.Forms.Label();
             this.totalTb = new System.Windows.Forms.TextBox();
             this.itemsDgv = new System.Windows.Forms.DataGridView();
-            this.DescItemCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.CantCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.montoCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.subtotalCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.clearAllToolBtn = new System.Windows.Forms.ToolStripButton();
             this.deleteToolBtn = new System.Windows.Forms.ToolStripButton();
@@ -84,6 +80,10 @@
             this.clienteFlt = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
             this.nroFactFlt = new System.Windows.Forms.TextBox();
+            this.DescItemCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CantCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.montoCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.subtotalCol = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.panel1.SuspendLayout();
             this.abmPnl.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -374,31 +374,8 @@
             this.itemsDgv.Size = new System.Drawing.Size(444, 150);
             this.itemsDgv.TabIndex = 5;
             this.itemsDgv.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.itemsDgv_CellClick);
+            this.itemsDgv.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.itemsDgv_CellValueChanged);
             this.itemsDgv.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.itemsDgv_RowsAdded);
-            // 
-            // DescItemCol
-            // 
-            this.DescItemCol.HeaderText = "Descripción";
-            this.DescItemCol.Name = "DescItemCol";
-            this.DescItemCol.ReadOnly = true;
-            // 
-            // CantCol
-            // 
-            this.CantCol.HeaderText = "Cantidad";
-            this.CantCol.Name = "CantCol";
-            this.CantCol.ReadOnly = true;
-            // 
-            // montoCol
-            // 
-            this.montoCol.HeaderText = "Monto";
-            this.montoCol.Name = "montoCol";
-            this.montoCol.ReadOnly = true;
-            // 
-            // subtotalCol
-            // 
-            this.subtotalCol.HeaderText = "Subtotal";
-            this.subtotalCol.Name = "subtotalCol";
-            this.subtotalCol.ReadOnly = true;
             // 
             // toolStrip1
             // 
@@ -669,6 +646,30 @@
             this.nroFactFlt.TabIndex = 2;
             this.nroFactFlt.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.nroFactFlt_KeyPress);
             // 
+            // DescItemCol
+            // 
+            this.DescItemCol.HeaderText = "Descripcion";
+            this.DescItemCol.Name = "DescItemCol";
+            this.DescItemCol.ReadOnly = true;
+            // 
+            // CantCol
+            // 
+            this.CantCol.HeaderText = "Cantidad";
+            this.CantCol.Name = "CantCol";
+            this.CantCol.ReadOnly = true;
+            // 
+            // montoCol
+            // 
+            this.montoCol.HeaderText = "Monto";
+            this.montoCol.Name = "montoCol";
+            this.montoCol.ReadOnly = true;
+            // 
+            // subtotalCol
+            // 
+            this.subtotalCol.HeaderText = "Subtotal";
+            this.subtotalCol.Name = "subtotalCol";
+            this.subtotalCol.ReadOnly = true;
+            // 
             // FrmABMFactura
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -753,12 +754,12 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.DataGridView facturasDgv;
+        private System.Windows.Forms.CheckBox habilitadaChk;
+        private System.Windows.Forms.Button limpiarBtn;
+        private System.Windows.Forms.Button buscarBtn;
         public System.Windows.Forms.DataGridViewTextBoxColumn DescItemCol;
         public System.Windows.Forms.DataGridViewTextBoxColumn CantCol;
         public System.Windows.Forms.DataGridViewTextBoxColumn montoCol;
         public System.Windows.Forms.DataGridViewTextBoxColumn subtotalCol;
-        private System.Windows.Forms.CheckBox habilitadaChk;
-        private System.Windows.Forms.Button limpiarBtn;
-        private System.Windows.Forms.Button buscarBtn;
     }
 }
