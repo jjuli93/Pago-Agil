@@ -1358,7 +1358,7 @@ GO
 
 Create procedure SistemaCaido.GetFacturasClienteParaPago(@IdCliente INT)
 as begin
-	Select *
+	Select f.*
 	From SistemaCaido.Facturas f
 	where f.IdCliente = @IdCliente
 	and f.IdFactura not in (select f2.IdFactura
@@ -1456,7 +1456,7 @@ GO
 
 Create Procedure SistemaCaido.GetFacturasParaDevolucionCliente(@IdCliente INT)
 as begin
-	Select *
+	Select f.*
 	From SistemaCaido.Facturas f
 	Inner join SistemaCaido.PagosXFacturas pf on pf.IdFactura = f.IdFactura
 	Inner join SistemaCaido.Pagos p on p.IdPago = pf.IdPago
