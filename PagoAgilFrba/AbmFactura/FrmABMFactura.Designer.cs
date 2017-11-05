@@ -47,6 +47,7 @@
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.facturaTab = new System.Windows.Forms.TabControl();
             this.datosTabPage = new System.Windows.Forms.TabPage();
+            this.habilitadaChk = new System.Windows.Forms.CheckBox();
             this.label3 = new System.Windows.Forms.Label();
             this.itemsPnl = new System.Windows.Forms.Panel();
             this.label2 = new System.Windows.Forms.Label();
@@ -77,13 +78,12 @@
             this.buscadorTabPage = new System.Windows.Forms.TabPage();
             this.facturasDgv = new System.Windows.Forms.DataGridView();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.limpiarBtn = new System.Windows.Forms.Button();
+            this.buscarBtn = new System.Windows.Forms.Button();
             this.label5 = new System.Windows.Forms.Label();
             this.clienteFlt = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
             this.nroFactFlt = new System.Windows.Forms.TextBox();
-            this.habilitadaChk = new System.Windows.Forms.CheckBox();
-            this.buscarBtn = new System.Windows.Forms.Button();
-            this.limpiarBtn = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.abmPnl.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -288,6 +288,16 @@
             this.datosTabPage.Size = new System.Drawing.Size(529, 348);
             this.datosTabPage.TabIndex = 0;
             this.datosTabPage.Text = "Datos de la factura";
+            // 
+            // habilitadaChk
+            // 
+            this.habilitadaChk.AutoSize = true;
+            this.habilitadaChk.Location = new System.Drawing.Point(268, 62);
+            this.habilitadaChk.Name = "habilitadaChk";
+            this.habilitadaChk.Size = new System.Drawing.Size(73, 17);
+            this.habilitadaChk.TabIndex = 41;
+            this.habilitadaChk.Text = "Habilitada";
+            this.habilitadaChk.UseVisualStyleBackColor = true;
             // 
             // label3
             // 
@@ -588,6 +598,7 @@
             this.facturasDgv.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.facturasDgv.Size = new System.Drawing.Size(463, 202);
             this.facturasDgv.TabIndex = 5;
+            this.facturasDgv.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.facturasDgv_CellClick);
             // 
             // groupBox1
             // 
@@ -603,6 +614,26 @@
             this.groupBox1.TabIndex = 4;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Filtros de búsqueda:";
+            // 
+            // limpiarBtn
+            // 
+            this.limpiarBtn.Location = new System.Drawing.Point(337, 56);
+            this.limpiarBtn.Name = "limpiarBtn";
+            this.limpiarBtn.Size = new System.Drawing.Size(75, 23);
+            this.limpiarBtn.TabIndex = 5;
+            this.limpiarBtn.Text = "Limpiar";
+            this.limpiarBtn.UseVisualStyleBackColor = true;
+            this.limpiarBtn.Click += new System.EventHandler(this.limpiarBtn_Click);
+            // 
+            // buscarBtn
+            // 
+            this.buscarBtn.Location = new System.Drawing.Point(337, 20);
+            this.buscarBtn.Name = "buscarBtn";
+            this.buscarBtn.Size = new System.Drawing.Size(75, 23);
+            this.buscarBtn.TabIndex = 4;
+            this.buscarBtn.Text = "Buscar";
+            this.buscarBtn.UseVisualStyleBackColor = true;
+            this.buscarBtn.Click += new System.EventHandler(this.buscarBtn_Click);
             // 
             // label5
             // 
@@ -637,36 +668,6 @@
             this.nroFactFlt.Size = new System.Drawing.Size(157, 20);
             this.nroFactFlt.TabIndex = 2;
             this.nroFactFlt.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.nroFactFlt_KeyPress);
-            // 
-            // habilitadaChk
-            // 
-            this.habilitadaChk.AutoSize = true;
-            this.habilitadaChk.Location = new System.Drawing.Point(268, 62);
-            this.habilitadaChk.Name = "habilitadaChk";
-            this.habilitadaChk.Size = new System.Drawing.Size(73, 17);
-            this.habilitadaChk.TabIndex = 41;
-            this.habilitadaChk.Text = "Habilitada";
-            this.habilitadaChk.UseVisualStyleBackColor = true;
-            // 
-            // buscarBtn
-            // 
-            this.buscarBtn.Location = new System.Drawing.Point(337, 20);
-            this.buscarBtn.Name = "buscarBtn";
-            this.buscarBtn.Size = new System.Drawing.Size(75, 23);
-            this.buscarBtn.TabIndex = 4;
-            this.buscarBtn.Text = "Buscar";
-            this.buscarBtn.UseVisualStyleBackColor = true;
-            this.buscarBtn.Click += new System.EventHandler(this.buscarBtn_Click);
-            // 
-            // limpiarBtn
-            // 
-            this.limpiarBtn.Location = new System.Drawing.Point(337, 56);
-            this.limpiarBtn.Name = "limpiarBtn";
-            this.limpiarBtn.Size = new System.Drawing.Size(75, 23);
-            this.limpiarBtn.TabIndex = 5;
-            this.limpiarBtn.Text = "Limpiar";
-            this.limpiarBtn.UseVisualStyleBackColor = true;
-            this.limpiarBtn.Click += new System.EventHandler(this.limpiarBtn_Click);
             // 
             // FrmABMFactura
             // 

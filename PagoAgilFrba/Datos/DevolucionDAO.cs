@@ -51,7 +51,7 @@ namespace PagoAgilFrba.Datos
             try
             {
                 using (SqlConnection conn = new SqlConnection(connString))
-                using (SqlCommand cmd = new SqlCommand("SistemaCaido.BuscarFacturas", conn))
+                using (SqlCommand cmd = new SqlCommand("SistemaCaido.RealizarDevolucion", conn))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
                     //SistemaCaido.RealizarDevolucion 

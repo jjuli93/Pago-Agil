@@ -27,8 +27,9 @@ namespace PagoAgilFrba.Datos
                 using (SqlCommand cmd = new SqlCommand("SistemaCaido.AltaFactura", conn))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;                  
+                    //[SistemaCaido].AltaFactura
                     //(@IdCliente int, @IdEmpresa int, @NumeroFactura numeric(18,0), @FechaVencimiento datetime, 
-                    // @Items [SistemaCaido].Items readonly)
+                    //@Items [SistemaCaido].Items readonly)
 
                     cmd.Parameters.Add("@IdCliente", SqlDbType.Int).Value = factura.id_cliente;
                     cmd.Parameters.Add("@IdEmpresa", SqlDbType.Int).Value = factura.id_empresa;
@@ -82,8 +83,7 @@ namespace PagoAgilFrba.Datos
                 using (SqlCommand cmd = new SqlCommand("SistemaCaido.ModificacionFactura", conn))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
-                    //                    [SistemaCaido].[ModificacionFactura]
-                    //(@IdFactura int, @IdCliente int, @IdEmpresa int, @NumeroFactura int, @FechaAlta datetime, @FechaVencimiento datetime, @Importe numeric(18,2))
+
 
                     cmd.Parameters.Add("@IdFactura", SqlDbType.Int).Value = factura.id;
                     cmd.Parameters.Add("@IdCliente", SqlDbType.Int).Value = factura.id_cliente;
@@ -159,6 +159,73 @@ namespace PagoAgilFrba.Datos
                     lector.Close();
 
                     return facturas;
+                }
+            }
+            catch (SqlException)
+            {
+                throw;
+            }
+        }
+
+        public bool verificar_factura(int id)
+        {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connString))
+                using (SqlCommand cmd = new SqlCommand("SistemaCaido.FacturaPuedeSerModificada", conn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    //SistemaCaido.FacturaPuedeSerModificada(@IdFactura int)
+
+                    cmd.Parameters.Add("@IdFactura", SqlDbType.Int).Value = id;
+
+                    conn.Open();
+                    SqlDataReader lector = cmd.ExecuteReader();
+                    var valueLector = 0;
+
+                    if (lector.HasRows)
+                    {
+                        lector.Read();
+
+                        valueLector = Convert.ToInt32(lector[0]);
+                    }
+
+                    lector.Close();
+
+                    if (valueLector == 1)
+                        return true;
+                    else
+                        return false;
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public DataTable obtener_items_factura(int id_factura)
+        {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connString))
+                using (SqlCommand cmd = new SqlCommand("SistemaCaido.GetItemsFactura", conn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    //SistemaCaido.GetItemsFactura(@IdFactura int)
+
+                    cmd.Parameters.Add("@IdFactura", SqlDbType.Int).Value = id_factura;
+
+                    conn.Open();
+                    SqlDataReader lector = cmd.ExecuteReader();
+
+                    DataTable items = new DataTable();
+
+                    items.Load(lector);
+
+                    lector.Close();
+
+                    return items;
                 }
             }
             catch (SqlException)

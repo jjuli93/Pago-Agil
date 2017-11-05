@@ -22,6 +22,8 @@ namespace PagoAgilFrba.Negocio
         /// Pagada o Rendida
         /// </summary>
         public bool procesada { get; set; }
+        public bool habilitada { get; set; }
+        public double importe { get; set; }
     }
 
     public class FacturaSimpleViewModel
