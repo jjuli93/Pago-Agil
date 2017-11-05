@@ -1084,6 +1084,7 @@ as begin transaction
 	set @Importe = (select SUM(i.Cantidad * i.Monto)
 				   from @Items i)
 
+	set @NumeroFactura = SistemaCaido.GetSiguienteNumeroDeFactura()
 	-- Agregar la factura con importe 0
 	insert into SistemaCaido.Facturas (IdCliente, IdEmpresa, NumeroFactura, FechaAlta, FechaVencimiento, Importe)
 	values (@IdCliente, @IdEmpresa, @NumeroFactura, sysdatetime(), @FechaVencimiento, @Importe)	
