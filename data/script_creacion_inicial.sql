@@ -1155,11 +1155,9 @@ GO
 
 Create procedure SistemaCaido.FacturaPuedeSerModificada(@IdFactura int)
 as begin
-	Select case when ( f.IdFactura is not null and  rd.IdRendicionXFactura is null) then 1 else 0 end
+	Select case when ( f2.IdFactura is not null and  rd.IdRendicionXFactura is null) then 1 else 0 end
 	from SistemaCaido.Facturas f
-	left join SistemaCaido.RendicionesXFacturas rd on rd.IdFactura = f.IdFactura
-	where f.IdFactura = @IdFactura
-	and f.IdFactura not in (select f2.IdFactura
+	left join SistemaCaido.Facturas f2 on f2.IdFactura = f.IdFactura and f2.IdFactura not in (select f2.IdFactura
 							from SistemaCaido.Facturas f2
 							Inner join SistemaCaido.PagosXFacturas pf on pf.IdFactura = f2.IdFactura and (select max(IdPagoXFactura) from SistemaCaido.PagosXFacturas pf2 where f2.IdFactura = pf2.IdFactura) = pf.IdPagoXFactura
 							Inner join SistemaCaido.Pagos p on pf.IdPago = p.IdPago
@@ -1167,6 +1165,9 @@ as begin
 							left join SistemaCaido.Devoluciones d on d.IdDevolucion = df.IdDevolucion
 							where (d.IdDevolucion is null
 							or d.Fecha < p.FechaCobro) )
+	left join SistemaCaido.RendicionesXFacturas rd on rd.IdFactura = f.IdFactura
+	where f.IdFactura = @IdFactura
+	
 END
 GO
 
@@ -1400,6 +1401,12 @@ as begin
 	where f.IdEmpresa = @IdEmpresa
 	and YEAR(p.FechaCobro) = YEAR(@fecha)
 	and MONTH(p.FechaCobro) = MONTH(@fecha)
+	and (p.FechaCobro > (select top 1 ISNULL(d.Fecha, 0)
+						   from SistemaCaido.Facturas f2
+						   left join SistemaCaido.DevolucionesXFacturas df on df.IdFactura = f2.IdFactura
+						   left join SistemaCaido.Devoluciones d on d.IdDevolucion = df.IdDevolucion
+						   where f2.IdFactura = f.IdFactura
+						   order by d.Fecha desc))  --No haya sido devuelta
 	order by f.NumeroFactura
 
 	Select ISNULL(SUM(f.Importe),0) 'Importe_Total', ISNULL(SUM(f.Importe) * ((Select top 1 p.Porcentaje from SistemaCaido.Porcentajes p order by p.IdPorcentaje desc)),0)	'Importe_Empresa'		
@@ -1431,6 +1438,12 @@ as begin
 		where f.IdEmpresa = @IdEmpresa
 		and YEAR(p.FechaCobro) = YEAR(@fecha)
 		and MONTH(p.FechaCobro) = MONTH(@fecha)
+		and (p.FechaCobro > (select top 1 ISNULL(d.Fecha, 0)
+						   from SistemaCaido.Facturas f2
+						   left join SistemaCaido.DevolucionesXFacturas df on df.IdFactura = f2.IdFactura
+						   left join SistemaCaido.Devoluciones d on d.IdDevolucion = df.IdDevolucion
+						   where f2.IdFactura = f.IdFactura
+						   order by d.Fecha desc))  --No haya sido devuelta
 		END
 
 		Declare @IDRendicion INT
@@ -1444,6 +1457,12 @@ as begin
 		where f.IdEmpresa = @IdEmpresa
 		and YEAR(p.FechaCobro) = YEAR(@fecha)
 		and MONTH(p.FechaCobro) = MONTH(@fecha)
+		and (p.FechaCobro > (select top 1 ISNULL(d.Fecha, 0)
+						   from SistemaCaido.Facturas f2
+						   left join SistemaCaido.DevolucionesXFacturas df on df.IdFactura = f2.IdFactura
+						   left join SistemaCaido.Devoluciones d on d.IdDevolucion = df.IdDevolucion
+						   where f2.IdFactura = f.IdFactura
+						   order by d.Fecha desc))  --No haya sido devuelta
 END
 GO
 
