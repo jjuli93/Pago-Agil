@@ -213,6 +213,8 @@ namespace PagoAgilFrba.AbmEmpresa
 
             string msg = string.Format("¿Confirmar <{0}>?", operacion);
 
+            helper.limpiar_errorProvider(campos_obligatorios, errorProvider);
+
             if (MessageBox.Show(msg, "PagoAgil FRBA App", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
                 helper.limpiar_errorProvider(campos_obligatorios, errorProvider);
