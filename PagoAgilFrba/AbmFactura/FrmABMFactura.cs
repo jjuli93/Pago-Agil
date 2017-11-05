@@ -82,7 +82,7 @@ namespace PagoAgilFrba.AbmFactura
         {
             if (filaItem_seleccionada >= 0)
             {
-                total += Convert.ToDouble(itemsDgv.Rows[filaItem_seleccionada].Cells[subtotalCol.Name].Value);
+                total -= Convert.ToDouble(itemsDgv.Rows[filaItem_seleccionada].Cells[subtotalCol.Name].Value);
                 totalTb.Text = total.ToString("F");
                 itemsDgv.Rows.RemoveAt(filaItem_seleccionada);
                 filaItem_seleccionada = -1;

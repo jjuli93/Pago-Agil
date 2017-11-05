@@ -67,11 +67,10 @@
             this.facturasDgv.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.facturasDgv.Location = new System.Drawing.Point(16, 140);
             this.facturasDgv.Name = "facturasDgv";
-            this.facturasDgv.ReadOnly = true;
-            this.facturasDgv.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.facturasDgv.Size = new System.Drawing.Size(473, 245);
             this.facturasDgv.TabIndex = 1;
-            this.facturasDgv.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.facturasDgv_CellClick);
+            this.facturasDgv.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.facturasDgv_CellValueChanged);
+            this.facturasDgv.CurrentCellDirtyStateChanged += new System.EventHandler(this.facturasDgv_CurrentCellDirtyStateChanged);
             // 
             // label2
             // 
@@ -222,6 +221,7 @@
             this.Name = "frmDevolucionFacturas2";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Devolucion de Facturas2";
+            this.Load += new System.EventHandler(this.frmDevolucionFacturas2_Load);
             ((System.ComponentModel.ISupportInitialize)(this.facturasDgv)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();

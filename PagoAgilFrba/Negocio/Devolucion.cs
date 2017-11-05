@@ -12,6 +12,6 @@ namespace PagoAgilFrba.Negocio
         public int Id_Cliente { get; set; }
         public DateTime Fecha_Devolucion { get; set; }
         public string Motivo { get; set; }
-        public List<Factura> Facturas { get; set; }
+        public List<int> Facturas { get; set; }
     }
 }

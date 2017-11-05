@@ -134,7 +134,7 @@ namespace PagoAgilFrba.Datos
 
         public void setMediosPagoCB(ComboBox combo)
         {
-            List<ItemControlHelper.itemComboBox> items = new List<ItemControlHelper.itemComboBox>();
+            List<ItemControlHelper.itemComboBox> items = null;
 
             items = GetMediosDePago();
 

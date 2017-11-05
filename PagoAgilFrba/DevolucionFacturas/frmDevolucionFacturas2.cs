@@ -20,6 +20,7 @@ namespace PagoAgilFrba.DevolucionFacturas
         ControlHelper ctrlHelper = Singleton<ControlHelper>.Instance;
         MessageHelper msgHelper = Singleton<MessageHelper>.Instance;
         DevolucionDAO devolucionDao = new DevolucionDAO();
+        List<int> IdsFacturasSeleccionadas = new List<int>();
 
         public frmDevolucionFacturas2(FrmDevolucionFacturas _frmParent, Cliente _cliente)
         {
@@ -27,6 +28,10 @@ namespace PagoAgilFrba.DevolucionFacturas
             cliente = _cliente;
             frmParent = _frmParent;
             clienteLb.Text += cliente.nombre + " " + cliente.apellido;
+        }
+
+        private void frmDevolucionFacturas2_Load(object sender, EventArgs e)
+        {
             fill_facturas_dt();
         }
 
@@ -52,15 +57,15 @@ namespace PagoAgilFrba.DevolucionFacturas
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(motivoTb.Text))
+                if (IdsFacturasSeleccionadas.Count == 0)
                 {
-                    msgHelper.mostrar_error("Debe escribir un motivo de devolución previamente.", "Error en Devolución de Facturas");
+                    msgHelper.mostrar_error("Debe seleccionar por lo menos una factura para poder realizar la devolución.", "Error en Devolución de Facturas");
                     return;
                 }
 
-                if (facturasDgv.SelectedRows.Count == 0)
+                if (string.IsNullOrWhiteSpace(motivoTb.Text))
                 {
-                    msgHelper.mostrar_error("Debe seleccionar por lo menos una factura para poder realizar la devolución.", "Error en Devolución de Facturas");
+                    msgHelper.mostrar_error("Debe escribir un motivo de devolución previamente.", "Error en Devolución de Facturas");
                     return;
                 }
 
@@ -68,32 +73,36 @@ namespace PagoAgilFrba.DevolucionFacturas
                 devolucion.Id_Cliente = cliente.id;
                 devolucion.Fecha_Devolucion = DateTime.Now;
                 devolucion.Motivo = motivoTb.Text;
-                devolucion.Facturas = obtener_facturas_seleccionadas();
+                devolucion.Facturas = IdsFacturasSeleccionadas;
 
                 devolucionDao.realizar_devolucion(devolucion);
-
+                msgHelper.mostrar_aviso("Devolucion exitosa", "RegistroPago de Pago");
+                ctrlHelper.limpiar_tabla(facturasDgv);
+                fill_facturas_dt();
+                motivoTb.Text = string.Empty;
+                totalTb.Text = "0";
             }
             catch (Exception ex)
             {
                 msgHelper.mostrar_error(ex.Message, "Error en Devolución de Facturas");
             }
-        }
-
-        private void facturasDgv_CellClick(object sender, DataGridViewCellEventArgs e)
-        {
-            //calcular el total
         }
 
         private void fill_facturas_dt()
         {
             try
             {
-                DataTable dt = devolucionDao.obtener_facturas_devolucion(cliente.id);
+                List<FacturaSimpleSeleccionable> facturasCliente = devolucionDao.obtener_facturas_devolucion(cliente.id);
 
-                if (dt.Rows.Count == 0)
+                if (facturasCliente.Count == 0) {
                     MessageBox.Show("No se han encontrado facturas para el cliente seleccionado", "Error en Devolución de Facturas");
+                }
                 else
-                    facturasDgv.DataSource = dt;
+                {
+                    var source = new BindingSource();
+                    source.DataSource = facturasCliente;
+                    facturasDgv.DataSource = source;
+                }
             }
             catch (Exception ex)
             {
@@ -101,23 +110,34 @@ namespace PagoAgilFrba.DevolucionFacturas
             }
         }
 
-        private List<Factura> obtener_facturas_seleccionadas()
+        private void facturasDgv_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-            var lista = new List<Factura>();
+            decimal total = 0;
+            IdsFacturasSeleccionadas.Clear();
 
-            for (int i = 0; i < facturasDgv.SelectedRows.Count; i++)
+            foreach (DataGridViewRow row in facturasDgv.Rows)
             {
-                var row = facturasDgv.SelectedRows[i];
-
-                Factura fact = new Factura()
+                if (row.Cells[0].Value != null && row.Cells[0].Value.Equals(true))
                 {
-                    id = Convert.ToInt32(row.Cells["IdFactura"].Value),
-                };
-
-                lista.Add(fact);
+                    row.Selected = true;
+                    row.DefaultCellStyle.SelectionBackColor = Color.LightSlateGray;
+                    total += Convert.ToDecimal(row.Cells[5].Value);
+                    IdsFacturasSeleccionadas.Add(Convert.ToInt32(row.Cells[1].Value));
+                }
+                else
+                    row.Selected = false;
             }
 
-            return lista;
+            totalTb.Text = total.ToString();
         }
+
+        private void facturasDgv_CurrentCellDirtyStateChanged(object sender, EventArgs e)
+        {
+            if (facturasDgv.IsCurrentCellDirty)
+            {
+                facturasDgv.CommitEdit(DataGridViewDataErrorContexts.Commit);
+            }
+        }
+
     }
 }

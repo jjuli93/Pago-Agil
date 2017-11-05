@@ -22,7 +22,7 @@ namespace PagoAgilFrba.RegistroPago
         List<int> IdsFacturasSeleccionadas = new List<int>();
         int IdMedioPagoSeleccionado = -1;
         List<FacturaSimpleSeleccionable> facturasCliente = new List<FacturaSimpleSeleccionable>();
-
+        PagoDAO pagoDAO = new PagoDAO();
 
         public FrmEjecucionPagoFactura(DevolucionFacturas.FrmDevolucionFacturas _frmParent, Cliente _cliente)
         {
@@ -30,20 +30,43 @@ namespace PagoAgilFrba.RegistroPago
             cliente = _cliente;
             frmParent = _frmParent;
             clienteLb.Text += cliente.nombre + " " + cliente.apellido;
-
-            PagoDAO pagoDAO = new PagoDAO();
-            pagoDAO.setMediosPagoCB(MediosPagoCB);
-            facturasCliente = pagoDAO.GetFacturasClienteParaPago(_cliente.id);
+            llenarMediosPago();
             llenarTabla();
         }
 
+        private void llenarMediosPago()
+        {
+            try
+            {
+                pagoDAO.setMediosPagoCB(MediosPagoCB);
+            }
+            catch (Exception ex)
+            {
+                msgHelper.mostrar_error(ex.Message, "Error en Pago de Facturas");
+            }
+        }
 
         private void llenarTabla()
         {
-            var source = new BindingSource();
-            source.DataSource = facturasCliente;
-            dataGridView1.DataSource = source;
+            try
+            {
+                List<FacturaSimpleSeleccionable> facturasCliente = pagoDAO.GetFacturasClienteParaPago(cliente.id);
+
+                if (facturasCliente.Count == 0)
+                    MessageBox.Show("No se han encontrado facturas para el cliente seleccionado", "Error en Devolución de Facturas");
+                else
+                {
+                    var source = new BindingSource();
+                    source.DataSource = facturasCliente;
+                    dataGridView1.DataSource = source;
+                }
+            }
+            catch (Exception ex)
+            {
+                msgHelper.mostrar_error(ex.Message, "Error en Pago de Facturas");
+            }
         }
+
         private void devolverBtn_Click(object sender, EventArgs e)
         {
             PagoDAO pagoDAO = new PagoDAO();
@@ -60,12 +83,19 @@ namespace PagoAgilFrba.RegistroPago
                 error = true;            
             }
 
-            if (!error)
+            try
             {
-                pagoDAO.RealizarPago(IdsFacturasSeleccionadas, cliente.id, 1, IdMedioPagoSeleccionado);
-                msgHelper.mostrar_aviso("Pago registrado", "RegistroPago de Pago");
-                frmParent.Show();
-                this.Close();
+                if (!error)
+                {
+                    pagoDAO.RealizarPago(IdsFacturasSeleccionadas, cliente.id, 1, IdMedioPagoSeleccionado);
+                    msgHelper.mostrar_aviso("Pago registrado", "RegistroPago de Pago");
+                    frmParent.Show();
+                    this.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                msgHelper.mostrar_error(ex.Message, "Error en Pago de Facturas");
             }
         }
 
