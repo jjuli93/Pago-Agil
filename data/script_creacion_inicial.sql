@@ -1155,14 +1155,18 @@ GO
 
 Create procedure SistemaCaido.FacturaPuedeSerModificada(@IdFactura int)
 as begin
-	Select case when (p.IdPago is null and rd.IdRendicionXFactura is null) then 1 else 0 end
+	Select case when ( f.IdFactura is not null and  rd.IdRendicionXFactura is null) then 1 else 0 end
 	from SistemaCaido.Facturas f
-	left join SistemaCaido.DevolucionesXFacturas df on df.IdFactura = f.IdFactura
-	left join SistemaCaido.Devoluciones d on d.IdDevolucion = df.IdDevolucion
-	left join SistemaCaido.PagosXFacturas pf on pf.IdFactura = f.IdFactura
-	left join SistemaCaido.Pagos p on p.IdPago = pf.IdPago And (d.IdDevolucion is null or d.Fecha < p.FechaCobro)
 	left join SistemaCaido.RendicionesXFacturas rd on rd.IdFactura = f.IdFactura
 	where f.IdFactura = @IdFactura
+	and f.IdFactura not in (select f2.IdFactura
+							from SistemaCaido.Facturas f2
+							Inner join SistemaCaido.PagosXFacturas pf on pf.IdFactura = f2.IdFactura and (select max(IdPagoXFactura) from SistemaCaido.PagosXFacturas pf2 where f2.IdFactura = pf2.IdFactura) = pf.IdPagoXFactura
+							Inner join SistemaCaido.Pagos p on pf.IdPago = p.IdPago
+							left join SistemaCaido.DevolucionesXFacturas df on df.IdFactura = f2.IdFactura and (select max(IdDevolucionesXFacturas) from SistemaCaido.DevolucionesXFacturas df2 where df2.IdFactura = df.IdFactura) = df.IdDevolucionesXFacturas
+							left join SistemaCaido.Devoluciones d on d.IdDevolucion = df.IdDevolucion
+							where (d.IdDevolucion is null
+							or d.Fecha < p.FechaCobro) )
 END
 GO
 
