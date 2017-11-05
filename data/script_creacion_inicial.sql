@@ -1081,7 +1081,8 @@ as begin transaction
 	declare @IdFactura int
 	declare @IdProducto int
 
-	set @Importe = 1
+	set @Importe = (select SUM(i.Cantidad * i.Monto)
+				   from @Items i)
 
 	-- Agregar la factura con importe 0
 	insert into SistemaCaido.Facturas (IdCliente, IdEmpresa, NumeroFactura, FechaAlta, FechaVencimiento, Importe)
@@ -1095,7 +1096,6 @@ as begin transaction
 	else
 		begin
 			-- Obtener el Id del ultimo insert
-			set @Importe = 0
 			set @IdFactura = @@IDENTITY
 			 
 			declare items_cursor cursor for
@@ -1114,15 +1114,11 @@ as begin transaction
 				Insert into SistemaCaido.ProductosXFacturas (Cantidad, IdProducto, IdFactura)
 				values(@Cantidad, @IdProducto, @IdFactura)
 
-				set @Importe = @Importe + (@Monto * @Cantidad)
 
 				FETCH NEXT FROM items_cursor
 				INTO @Descripcion, @Monto, @Cantidad
 				
 			end
-
-			-- Actualizo el importe de la factura recientemente ingresada
-			update SistemaCaido.Facturas set Importe = @Importe where IdFactura = @IdFactura
 			
 		end
 	commit transaction
@@ -1186,7 +1182,9 @@ as begin transaction
 	Declare @IdProducto int
 	Declare @Cantidad int
 	Declare @Importe int
-	Set @Importe = 1
+	
+	set @Importe = (select SUM(i.Cantidad * i.Monto)
+				   from @Items i)
 
 	update SistemaCaido.Facturas
 	set IdCliente = @IdCliente,
@@ -1215,7 +1213,6 @@ as begin transaction
 	declare items_cursor cursor for
 	select Descripcion, Monto, Cantidad from @Items
 
-	set @Importe = 0
 	open items_cursor
 	fetch next from items_cursor into  @Descripcion, @Monto, @Cantidad
 
@@ -1229,14 +1226,11 @@ as begin transaction
 		Insert into SistemaCaido.ProductosXFacturas (Cantidad, IdProducto, IdFactura)
 		values(@Cantidad, @IdProducto, @IdFactura)
 
-		set @Importe = @Importe + (@Monto * @Cantidad)
-
 		FETCH NEXT FROM items_cursor
 		INTO @Descripcion, @Monto, @Cantidad
 				
 	end
 
-	update SistemaCaido.Facturas set Importe = @Importe where IdFactura = @IdFactura
 
 	commit transaction
 
