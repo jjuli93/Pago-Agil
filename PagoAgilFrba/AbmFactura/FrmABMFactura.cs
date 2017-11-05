@@ -25,6 +25,7 @@ namespace PagoAgilFrba.AbmFactura
         int filaItem_seleccionada = -1;
         int filaFactura_seleccionada = -1;
         int id_cliente = -1;
+        Factura factura_seleccionada = null;
 
         public FrmABMFactura()
         {
@@ -117,7 +118,7 @@ namespace PagoAgilFrba.AbmFactura
 
         private void itemsDgv_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
         {
-            total += Convert.ToDouble(itemsDgv.Rows[e.RowIndex].Cells["Subtotal"].Value);
+            total += Convert.ToDouble(itemsDgv.Rows[e.RowIndex].Cells[subtotalCol.Name].Value);
             totalTb.Text = total.ToString("F");
         }
         #endregion
@@ -199,6 +200,10 @@ namespace PagoAgilFrba.AbmFactura
             {
                 try
                 {
+                    Factura factura = obtener_factura_desde_form();
+
+                    facturaDao.crear_factura(factura);
+
                     msgHelper.mostrar_aviso("Factura creada", "ABM Facturas");
                     limpiar_controles();
                 }
@@ -217,6 +222,12 @@ namespace PagoAgilFrba.AbmFactura
             {
                 try
                 {
+                    if (!facturaDao.verificar_factura(Convert.ToInt32(facturasDgv.CurrentRow.Cells["IdFactura"].Value)))
+                    {
+                        msgHelper.mostrar_error("No se puede modificar una factura que esta pagada y/o rendida.", "Error en ABM Facturas");
+                        return;
+                    }
+
                     msgHelper.mostrar_aviso("Factura modificada", "ABM Facturas");
                     limpiar_controles();
                     restablecer_controles();
@@ -271,6 +282,8 @@ namespace PagoAgilFrba.AbmFactura
             itemsDgv.DataSource = null;
             filaFactura_seleccionada = -1;
             filaItem_seleccionada = -1;
+            total = 0;
+            totalTb.Text = "0";
         }
 
         private void habilitar_campos(bool valor)
@@ -308,6 +321,109 @@ namespace PagoAgilFrba.AbmFactura
             catch (Exception ex)
             {
                 msgHelper.mostrar_error(ex.Message, "Error en ABM Factura");
+            }
+        }
+
+        private Factura obtener_factura_desde_form()
+        {
+            Factura factura = new Factura()
+            {
+                id_cliente = this.id_cliente,
+                nombre_cliente = this.clienteTb.Text,
+                id_empresa = (this.empresaCb.SelectedItem as ItemControlHelper.itemComboBox).id_item,
+                nombre_empresa = (this.empresaCb.SelectedItem as ItemControlHelper.itemComboBox).nombre_item,
+                fecha_vencimiento = this.vencimientoDtp.Value,
+                fecha_alta = DateTime.Now,
+                habilitada = this.habilitadaChk.Checked,
+                items = obtener_items_desde_form()
+            };
+
+            return factura;
+        }
+
+        private List<ItemFactura> obtener_items_desde_form()
+        {
+            List<ItemFactura> items = new List<ItemFactura>();
+
+            foreach (DataGridViewRow item in itemsDgv.Rows)
+            {
+                items.Add(new ItemFactura()
+                {
+                    descripcion = item.Cells[DescItemCol.Name].Value.ToString(),
+                    cantidad = Convert.ToInt32(item.Cells[CantCol.Name].Value.ToString()),
+                    monto = Convert.ToDouble(item.Cells[montoCol.Name].Value.ToString())
+                });
+            }
+
+            return items;
+        }
+
+        private Factura obtener_factura_desde_row()
+        {
+            if (filaFactura_seleccionada < 0)
+                return null;
+
+            DataGridViewRow row = facturasDgv.CurrentRow;
+
+            Factura factura = new Factura()
+            {
+                id = Convert.ToInt32(row.Cells["IdFactura"].Value),
+                id_cliente = Convert.ToInt32(row.Cells["IdCliente"].Value),
+                id_empresa = Convert.ToInt32(row.Cells["IdEmpresa"].Value),
+                numero_factura = Convert.ToUInt32(row.Cells["NumeroFactura"].Value),
+                fecha_alta = Convert.ToDateTime(row.Cells["FechaAlta"].Value),
+                fecha_vencimiento = Convert.ToDateTime(row.Cells["FechaVencimiento"].Value),
+                importe = Convert.ToDouble(row.Cells["Importe"].Value),
+                habilitada = (bool)row.Cells["Habilitada"].Value,
+                items = obtener_items_desde_row()
+            };
+
+            return factura;
+        }
+
+        private List<ItemFactura> obtener_items_desde_row()
+        {
+            List<ItemFactura> items = new List<ItemFactura>();
+
+            try
+            {
+                DataTable dt = facturaDao.obtener_items_factura(Convert.ToInt32(facturasDgv.CurrentRow.Cells["IdFactura"].Value));
+
+                foreach (DataRow row in dt.Rows)
+                {
+                    items.Add(new ItemFactura()
+                    {
+                        descripcion = row["Descripcion"].ToString(),
+                        cantidad = Convert.ToInt32(row["Cantidad"].ToString()),
+                        monto = Convert.ToDouble(row["Precio"].ToString()),
+                    });
+                }
+
+            }
+            catch (Exception ex)
+            {
+                msgHelper.mostrar_error(ex.Message, "Error en ABM Factura");
+            }
+
+            return items;
+        }
+
+        private void mostrar_factura_en_form(Factura factura)
+        {
+            if (factura_seleccionada == null)
+            {
+                msgHelper.mostrar_error("Ha ocurrido un error y no se ha podido mostrar los datos de la factura.", "Error en ABM Factura");
+                return;
+            }
+                
+
+            clienteTb.Text = factura.id.ToString();
+            vencimientoDtp.Value = factura.fecha_vencimiento;
+            habilitadaChk.Checked = factura.habilitada;
+
+            foreach (ItemFactura item in factura.items)
+            {
+                itemsDgv.Rows.Add(item.descripcion, item.cantidad, item.monto, item.cantidad * item.monto);
             }
         }
         #endregion
@@ -349,7 +465,25 @@ namespace PagoAgilFrba.AbmFactura
         {
             ctrlHelper.onlyIntNumbers_event(sender, e);
         }
-        #endregion
+        
+        private void facturasDgv_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0)
+                return;
 
+            try
+            {
+                limpiar_controles();
+                filaFactura_seleccionada = e.RowIndex;
+                factura_seleccionada = obtener_factura_desde_row();
+                mostrar_factura_en_form(factura_seleccionada);
+                restablecer_controles();
+            }
+            catch (Exception ex)
+            {
+                msgHelper.mostrar_error(ex.Message, "Error en Buscador de Facturas");
+            }
+        }
+        #endregion
     }
 }

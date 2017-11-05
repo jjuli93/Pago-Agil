@@ -126,25 +126,5 @@ namespace PagoAgilFrba.DevolucionFacturas
             ctrlHelper.onlyIntNumbers_event(sender, e);
         }
 
-        private void fill_facturas_dt()
-        {
-            try
-            {
-                DataTable dt = null;
-
-                if (dt.Rows.Count == 0)
-                    MessageBox.Show("No se han encontrado facturas para el cliente seleccionado", "Error en Devolución de Facturas");
-                else
-                    clientesDt.DataSource = dt;
-            }
-            catch (Exception ex)
-            {
-                msgHelper.mostrar_error(ex.Message, "Error en Devolución de Facturas");
-            }
-        }
-
-        private void calcular_total()
-        {
-        }
     }
 }

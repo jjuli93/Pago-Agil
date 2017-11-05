@@ -88,6 +88,7 @@
       <DependentUpon>FrmABMSucursal.cs</DependentUpon>
     </Compile>
     <Compile Include="Datos\ClienteDAO.cs" />
+    <Compile Include="Datos\DevolucionDAO.cs" />
     <Compile Include="Datos\EmpresaDAO.cs" />
     <Compile Include="Datos\FacturaDAO.cs" />
     <Compile Include="Datos\LoginDAO.cs" />
@@ -139,6 +140,7 @@
       <DependentUpon>FrmSeleccionRol.cs</DependentUpon>
     </Compile>
     <Compile Include="Negocio\Cliente.cs" />
+    <Compile Include="Negocio\Devolucion.cs" />
     <Compile Include="Negocio\Empresa.cs" />
     <Compile Include="Negocio\Factura.cs" />
     <Compile Include="Negocio\Funcionalidad.cs" />
