@@ -578,8 +578,8 @@ INSERT INTO SistemaCaido.UsuariosXSucursales (IdSucursal, IdUsuario)
 values(1,1)
 
 /* Facturas */
-INSERT INTO SistemaCaido.Facturas (IdCliente, IdEmpresa, NumeroFactura, FechaAlta, FechaVencimiento, Importe, Habilitada)
-SELECT DISTINCT IdCliente, IdEmpresa, Nro_Factura, Factura_Fecha, Factura_Fecha_Vencimiento, Factura_Total, 1 
+INSERT INTO SistemaCaido.Facturas (IdCliente, IdEmpresa, NumeroFactura, FechaAlta, FechaVencimiento, Importe)
+SELECT DISTINCT IdCliente, IdEmpresa, Nro_Factura, Factura_Fecha, Factura_Fecha_Vencimiento, Factura_Total
 FROM gd_esquema.Maestra 
 JOIN SistemaCaido.Clientes c on [Cliente-Dni] = c.DNI 
 JOIN SistemaCaido.Empresas on Empresa_Nombre = SistemaCaido.Empresas.Nombre
