@@ -1200,13 +1200,15 @@ as begin transaction
 			rollback transaction
 		end
 
+
+
+	delete from SistemaCaido.ProductosXFacturas
+	where IdFactura = @IdFactura
+
 	delete p
 	from SistemaCaido.Productos p
 	Inner join SistemaCaido.ProductosXFacturas pf on pf.IdProducto = p.IdProducto
 	where pf.IdFactura = @IdFactura
-
-	delete from SistemaCaido.ProductosXFacturas
-	where IdFactura = @IdFactura
 
 	declare items_cursor cursor for
 	select Descripcion, Monto, Cantidad from @Items
