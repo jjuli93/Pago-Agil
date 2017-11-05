@@ -33,4 +33,10 @@ namespace PagoAgilFrba.Negocio
         public DateTime fechaVencimiento { get; set; }
         public double importe { get; set; }
     }
+
+    public class FacturaSimpleSeleccionable : FacturaSimpleViewModel
+    {
+        public bool seleccionada { get; set; }
+        public int Id { get; set; }
+    }
 }
