@@ -1132,7 +1132,10 @@ GO
 
 create procedure [SistemaCaido].[BajaFactura](@IdFactura int)
 as begin transaction
-	--Se borra la factura?
+	
+	delete from SistemaCaido.ProductosXFacturas
+	where IdFactura = @IdFactura
+
 	delete from SistemaCaido.Facturas where IdFactura = @IdFactura
 	if (@@ERROR != 0)
 		begin
