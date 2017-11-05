@@ -1115,6 +1115,9 @@ as begin transaction
 				values(@Cantidad, @IdProducto, @IdFactura)
 
 				set @Importe = @Importe + (@Monto * @Cantidad)
+
+				FETCH NEXT FROM items_cursor
+				INTO @Descripcion, @Monto, @Cantidad
 				
 			end
 
@@ -1221,6 +1224,9 @@ as begin transaction
 		values(@Cantidad, @IdProducto, @IdFactura)
 
 		set @Importe = @Importe + (@Monto * @Cantidad)
+
+		FETCH NEXT FROM items_cursor
+		INTO @Descripcion, @Monto, @Cantidad
 				
 	end
 
