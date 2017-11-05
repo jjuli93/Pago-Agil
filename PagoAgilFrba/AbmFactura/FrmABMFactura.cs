@@ -408,7 +408,6 @@ namespace PagoAgilFrba.AbmFactura
                 fecha_alta = Convert.ToDateTime(row.Cells["FechaAlta"].Value),
                 fecha_vencimiento = Convert.ToDateTime(row.Cells["FechaVencimiento"].Value),
                 importe = Convert.ToDouble(row.Cells["Importe"].Value),
-                habilitada = (bool)row.Cells["Habilitada"].Value,
                 items = obtener_items_desde_row()
             };
 
