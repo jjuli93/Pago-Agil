@@ -1096,6 +1096,7 @@ as begin transaction
 	else
 		begin
 			-- Obtener el Id del ultimo insert
+			set @Importe = 0
 			set @IdFactura = @@IDENTITY
 			 
 			declare items_cursor cursor for
@@ -1210,6 +1211,7 @@ as begin transaction
 	declare items_cursor cursor for
 	select Descripcion, Monto, Cantidad from @Items
 
+	set @Importe = 0
 	open items_cursor
 	fetch next from items_cursor into  @Descripcion, @Monto, @Cantidad
 
