@@ -1144,7 +1144,7 @@ GO
 
 Create procedure SistemaCaido.GetItemsFactura(@IdFactura int)
 as begin
-	Select p.Descripcion, p.Precio, pf.Cantidad
+	Select ISNULL(p.Descripcion,''), p.Precio, pf.Cantidad
 	From SistemaCaido.Facturas f
 	Inner join SistemaCaido.ProductosXFacturas pf on pf.IdFactura = f.IdFactura
 	Inner join SistemaCaido.Productos p on p.IdProducto = pf.IdProducto

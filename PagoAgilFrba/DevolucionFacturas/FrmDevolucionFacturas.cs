@@ -68,7 +68,7 @@ namespace PagoAgilFrba.DevolucionFacturas
                     if (pantalla == 1)
                         form = new frmDevolucionFacturas2(this, cliente);
                     else
-                        form = new RegistroPago.FrmEjecucionPagoFactura();
+                        form = new RegistroPago.FrmEjecucionPagoFactura(this, cliente);
 
                     form.Show();
                     this.Hide();

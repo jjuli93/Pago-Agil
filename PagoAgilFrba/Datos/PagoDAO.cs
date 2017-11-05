@@ -17,7 +17,7 @@ namespace PagoAgilFrba.Datos
         private string connString = Singleton<Conexion>.Instance.getConnectionString();
 
 
-        public List<FacturaSimpleViewModel> GetFacturasClienteParaPago(int idCliente)
+        public List<FacturaSimpleSeleccionable> GetFacturasClienteParaPago(int idCliente)
         {
             try
             {
@@ -28,7 +28,7 @@ namespace PagoAgilFrba.Datos
                     cmd.Parameters.AddWithValue("@IdCliente", idCliente);
                     conn.Open();
 
-                    List<FacturaSimpleViewModel> facturas = new List<FacturaSimpleViewModel>();
+                    List<FacturaSimpleSeleccionable> facturas = new List<FacturaSimpleSeleccionable>();
 
                     SqlDataReader reader = cmd.ExecuteReader();
 
@@ -38,13 +38,16 @@ namespace PagoAgilFrba.Datos
                         int fieldFechaVencimiento = reader.GetOrdinal("FechaVencimiento");
                         int fieldImporte = reader.GetOrdinal("Importe");
                         int fieldNumeroFactura = reader.GetOrdinal("NumeroFactura");
+                        int fieldIdFactura = reader.GetOrdinal("IdFactura");
 
-                        facturas.Add(new FacturaSimpleViewModel()
+                        facturas.Add(new FacturaSimpleSeleccionable()
                         {
                             fechaAlta = reader.GetDateTime(fieldFechaAlta),
                             fechaVencimiento = reader.GetDateTime(fieldFechaVencimiento),
                             importe = Convert.ToDouble(reader.GetDecimal(fieldImporte).ToString()),
-                            numeroFactura = Convert.ToInt32(reader.GetDecimal(fieldNumeroFactura).ToString())
+                            numeroFactura = Convert.ToInt32(reader.GetDecimal(fieldNumeroFactura).ToString()),
+                            Id = reader.GetInt32(fieldIdFactura),
+                            seleccionada = false
                         });
                     }
 
@@ -112,7 +115,7 @@ namespace PagoAgilFrba.Datos
                     };
 
                     cmd.Parameters.Add(tablaIdsFacturas);
-                    cmd.Parameters.AddWithValue("@IdCliente", idCliente);
+                    cmd.Parameters.AddWithValue("@Cliente", idCliente);
                     cmd.Parameters.AddWithValue("@Sucursal", idSucursal);
                     cmd.Parameters.AddWithValue("@MedioPago", idMedioDePago);
 
@@ -126,6 +129,22 @@ namespace PagoAgilFrba.Datos
                 throw;
             }
         }
+
+
+
+        public void setMediosPagoCB(ComboBox combo)
+        {
+            List<ItemControlHelper.itemComboBox> items = new List<ItemControlHelper.itemComboBox>();
+
+            items = GetMediosDePago();
+
+            items.ForEach(x => combo.Items.Add(x));
+        }
+
+
+
+
+
 
 
     }

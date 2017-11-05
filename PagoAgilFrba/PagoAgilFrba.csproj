@@ -156,12 +156,6 @@
     <Compile Include="RegistroPago\FrmEjecucionPagoFactura.Designer.cs">
       <DependentUpon>FrmEjecucionPagoFactura.cs</DependentUpon>
     </Compile>
-    <Compile Include="RegistroPago\FrmRegistroPagoFactura.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="RegistroPago\FrmRegistroPagoFactura.Designer.cs">
-      <DependentUpon>FrmRegistroPagoFactura.cs</DependentUpon>
-    </Compile>
     <Compile Include="Rendicion\FrmRendicionFacturas.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -218,9 +212,6 @@
     </Compile>
     <EmbeddedResource Include="RegistroPago\FrmEjecucionPagoFactura.resx">
       <DependentUpon>FrmEjecucionPagoFactura.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="RegistroPago\FrmRegistroPagoFactura.resx">
-      <DependentUpon>FrmRegistroPagoFactura.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Rendicion\FrmRendicionFacturas.resx">
       <DependentUpon>FrmRendicionFacturas.cs</DependentUpon>
