@@ -323,6 +323,14 @@ IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[SistemaCaid
 DROP PROCEDURE [SistemaCaido].[GetMediosDePago]
 GO
 
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[SistemaCaido].[FacturaPuedeSerModificada]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [SistemaCaido].[FacturaPuedeSerModificada]
+GO
+
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[SistemaCaido].[GetItemsFactura]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [SistemaCaido].[GetItemsFactura]
+GO
+
 
 --*************************************** Tipos *************************************************************--   
 
@@ -495,9 +503,8 @@ GO
 
 CREATE TABLE [SistemaCaido].[Devoluciones](
 	[IdDevolucion] [int] IDENTITY(1,1) NOT NULL primary key,
-	[IdUsuario] [int] NOT NULL references SistemaCaido.Usuarios,
 	[IdCliente] [int] NOT NULL references SistemaCaido.Clientes,
-	[Motivo] [varchar](50),
+	[Motivo] [varchar](250),
 	[Fecha] [datetime])
 GO
 
@@ -1142,6 +1149,30 @@ as begin transaction
 GO
 
 
+Create procedure SistemaCaido.GetItemsFactura(@IdFactura int)
+as begin
+	Select p.Descripcion, p.Precio, pf.Cantidad
+	From SistemaCaido.Facturas f
+	Inner join SistemaCaido.ProductosXFacturas pf on pf.IdFactura = f.IdFactura
+	Inner join SistemaCaido.Productos p on p.IdProducto = pf.IdProducto
+	where f.IdFactura = @IdFactura
+END
+GO
+
+
+Create procedure SistemaCaido.FacturaPuedeSerModificada(@IdFactura int)
+as begin
+	Select case when (p.IdPago is null and rd.IdRendicionXFactura is null) then 1 else 0 end
+	from SistemaCaido.Facturas f
+	left join SistemaCaido.DevolucionesXFacturas df on df.IdFactura = f.IdFactura
+	left join SistemaCaido.Devoluciones d on d.IdDevolucion = df.IdDevolucion
+	left join SistemaCaido.PagosXFacturas pf on pf.IdFactura = f.IdFactura
+	left join SistemaCaido.Pagos p on p.IdPago = pf.IdPago And (d.IdDevolucion is null or d.Fecha < p.FechaCobro)
+	left join SistemaCaido.RendicionesXFacturas rd on rd.IdFactura = f.IdFactura
+	where f.IdFactura = @IdFactura
+END
+GO
+
 create procedure [SistemaCaido].[ModificacionFactura]
 (@IdFactura int, @IdCliente int, @IdEmpresa int, @NumeroFactura int, @FechaAlta datetime, @FechaVencimiento datetime, @Importe numeric(18,2))
 as begin transaction
@@ -1410,14 +1441,14 @@ as begin
 END
 GO
 
-Create procedure SistemaCaido.RealizarDevolucion (@IdCliente INT, @Motivo nvarchar(255), @IdUsuario INT, @Fecha DateTime, @ListaIdsFacturas SistemaCaido.listaIDs readonly)
+Create procedure SistemaCaido.RealizarDevolucion (@IdCliente INT, @Motivo nvarchar(255), @Fecha DateTime, @ListaIdsFacturas SistemaCaido.listaIDs readonly)
 as begin
 
 set xact_abort on
 begin tran
 
-Insert into SistemaCaido.Devoluciones (Fecha, IdCliente, IdUsuario, Motivo)
-values(@Fecha, @IdCliente, @IdUsuario, @Motivo)
+Insert into SistemaCaido.Devoluciones (Fecha, IdCliente, Motivo)
+values(@Fecha, @IdCliente, @Motivo)
 
 Insert into SistemaCaido.DevolucionesXFacturas (IdDevolucion, IdFactura)
 Select @@IDENTITY, f.id
