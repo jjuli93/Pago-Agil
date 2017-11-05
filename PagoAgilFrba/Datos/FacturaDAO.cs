@@ -91,10 +91,6 @@ namespace PagoAgilFrba.Datos
                     cmd.Parameters.Add("@NumeroFactura", SqlDbType.Int).Value = factura.numero_factura;
                     cmd.Parameters.Add("@FechaAlta", SqlDbType.DateTime).Value = factura.fecha_alta;
                     cmd.Parameters.Add("@FechaVencimiento", SqlDbType.DateTime).Value = factura.fecha_vencimiento;
-                    var p_nro_fact = cmd.Parameters.Add("@Importe", SqlDbType.Decimal);
-                    p_nro_fact.Precision = 18;
-                    p_nro_fact.Scale = 0;
-                    p_nro_fact.Value = (decimal)factura.numero_factura;
 
                     var table = new DataTable();
 

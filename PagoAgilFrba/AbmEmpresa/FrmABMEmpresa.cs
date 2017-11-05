@@ -64,6 +64,7 @@ namespace PagoAgilFrba.AbmEmpresa
             habilitadoChk.Checked = false;
             rubroCb.SelectedIndex = -1;
             fila_seleccionada = -1;
+            helper.limpiar_tabla(empresasDt);
         }
 
         public void fillCbRubros()
@@ -203,6 +204,13 @@ namespace PagoAgilFrba.AbmEmpresa
         private void aceptarBtn_Click(object sender, EventArgs e)
         {
             string operacion = descripcionLbl.Text;
+
+            if (operacion == "Buscador")
+            {
+                do_search();
+                return;
+            }
+
             string msg = string.Format("¿Confirmar <{0}>?", operacion);
 
             if (MessageBox.Show(msg, "PagoAgil FRBA App", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
@@ -220,11 +228,7 @@ namespace PagoAgilFrba.AbmEmpresa
                     case "Eliminar Empresa":
                         do_delete();
                         break;
-                    case "Buscador":
-                        do_search();
-                        break;
                 }
-                restablecer_controles();
             }
         }
 
