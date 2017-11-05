@@ -42,10 +42,10 @@ namespace PagoAgilFrba.Negocio
                     frm = new PagoAgilFrba.AbmFactura.FrmABMFactura();
                     break;
                 case 6:
-                    frm = new PagoAgilFrba.DevolucionFacturas.FrmDevolucionFacturas();
+                    frm = new PagoAgilFrba.DevolucionFacturas.FrmDevolucionFacturas(1);
                     break;
                 case 7:
-                    frm = new PagoAgilFrba.RegistroPago.FrmRegistroPagoFactura();
+                    frm = new PagoAgilFrba.DevolucionFacturas.FrmDevolucionFacturas(2);
                     break;
                 case 8:
                     frm = new PagoAgilFrba.Rendicion.FrmRendicionFacturas();

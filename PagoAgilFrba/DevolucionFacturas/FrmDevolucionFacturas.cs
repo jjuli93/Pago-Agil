@@ -19,10 +19,17 @@ namespace PagoAgilFrba.DevolucionFacturas
         ControlHelper ctrlHelper = Singleton<ControlHelper>.Instance;
         MessageHelper msgHelper = Singleton<MessageHelper>.Instance;
         ClienteDAO clienteDao = new ClienteDAO();
+        int pantalla;
 
-        public FrmDevolucionFacturas()
+        public FrmDevolucionFacturas(int numeroPantalla)
         {
             InitializeComponent();
+            pantalla = numeroPantalla;
+
+            if (pantalla == 1)
+                tituloPagoLbl.Hide();
+            else
+                tituloDevolucionLb.Hide();
         }
 
         #region "Botones de salida"
@@ -57,8 +64,13 @@ namespace PagoAgilFrba.DevolucionFacturas
 
                 if (cliente.id > 0)
                 {
-                    var frmDev = new frmDevolucionFacturas2(this, cliente);
-                    frmDev.Show();
+                    Form form;
+                    if (pantalla == 1)
+                        form = new frmDevolucionFacturas2(this, cliente);
+                    else
+                        form = new RegistroPago.FrmEjecucionPagoFactura();
+
+                    form.Show();
                     this.Hide();
                 }
                 else

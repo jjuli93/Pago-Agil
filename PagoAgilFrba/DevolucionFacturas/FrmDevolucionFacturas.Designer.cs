@@ -41,13 +41,14 @@
             this.clientesDt = new System.Windows.Forms.DataGridView();
             this.siguienteBtn = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.tituloLb = new System.Windows.Forms.Label();
+            this.tituloDevolucionLb = new System.Windows.Forms.Label();
             this.logoPictureBox = new System.Windows.Forms.PictureBox();
             this.abmPnl = new System.Windows.Forms.Panel();
             this.volverBtn = new System.Windows.Forms.Button();
             this.cerrarSesionHl = new System.Windows.Forms.LinkLabel();
             this.exitBtn = new System.Windows.Forms.LinkLabel();
             this.label1 = new System.Windows.Forms.Label();
+            this.tituloPagoLbl = new System.Windows.Forms.Label();
             this.filtrosGB.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.clientesDt)).BeginInit();
             this.panel1.SuspendLayout();
@@ -172,7 +173,8 @@
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.panel1.Controls.Add(this.tituloLb);
+            this.panel1.Controls.Add(this.tituloPagoLbl);
+            this.panel1.Controls.Add(this.tituloDevolucionLb);
             this.panel1.Controls.Add(this.logoPictureBox);
             this.panel1.Controls.Add(this.abmPnl);
             this.panel1.Controls.Add(this.cerrarSesionHl);
@@ -182,16 +184,16 @@
             this.panel1.Size = new System.Drawing.Size(503, 65);
             this.panel1.TabIndex = 12;
             // 
-            // tituloLb
+            // tituloDevolucionLb
             // 
-            this.tituloLb.AutoSize = true;
-            this.tituloLb.Font = new System.Drawing.Font("Verdana", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tituloLb.ForeColor = System.Drawing.SystemColors.ControlLight;
-            this.tituloLb.Location = new System.Drawing.Point(74, 9);
-            this.tituloLb.Name = "tituloLb";
-            this.tituloLb.Size = new System.Drawing.Size(197, 18);
-            this.tituloLb.TabIndex = 10;
-            this.tituloLb.Text = "Devolución de Facturas";
+            this.tituloDevolucionLb.AutoSize = true;
+            this.tituloDevolucionLb.Font = new System.Drawing.Font("Verdana", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tituloDevolucionLb.ForeColor = System.Drawing.SystemColors.ControlLight;
+            this.tituloDevolucionLb.Location = new System.Drawing.Point(74, 9);
+            this.tituloDevolucionLb.Name = "tituloDevolucionLb";
+            this.tituloDevolucionLb.Size = new System.Drawing.Size(197, 18);
+            this.tituloDevolucionLb.TabIndex = 10;
+            this.tituloDevolucionLb.Text = "Devolución de Facturas";
             // 
             // logoPictureBox
             // 
@@ -257,6 +259,17 @@
             this.label1.TabIndex = 13;
             this.label1.Text = "Seleccione un cliente";
             // 
+            // tituloPagoLbl
+            // 
+            this.tituloPagoLbl.AutoSize = true;
+            this.tituloPagoLbl.Font = new System.Drawing.Font("Verdana", 11.25F, System.Drawing.FontStyle.Bold);
+            this.tituloPagoLbl.ForeColor = System.Drawing.Color.Snow;
+            this.tituloPagoLbl.Location = new System.Drawing.Point(74, 9);
+            this.tituloPagoLbl.Name = "tituloPagoLbl";
+            this.tituloPagoLbl.Size = new System.Drawing.Size(148, 18);
+            this.tituloPagoLbl.TabIndex = 11;
+            this.tituloPagoLbl.Text = "Registro de Pago";
+            // 
             // FrmDevolucionFacturas
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -297,13 +310,14 @@
         private System.Windows.Forms.DataGridView clientesDt;
         private System.Windows.Forms.Button siguienteBtn;
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Label tituloLb;
+        private System.Windows.Forms.Label tituloDevolucionLb;
         private System.Windows.Forms.PictureBox logoPictureBox;
         private System.Windows.Forms.Panel abmPnl;
         private System.Windows.Forms.Button volverBtn;
         private System.Windows.Forms.LinkLabel cerrarSesionHl;
         private System.Windows.Forms.LinkLabel exitBtn;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label tituloPagoLbl;
 
     }
 }
