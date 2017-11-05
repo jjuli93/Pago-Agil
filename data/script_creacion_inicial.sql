@@ -396,8 +396,7 @@ CREATE TABLE [SistemaCaido].[Facturas](
 	[NumeroFactura] [numeric](18, 0) NOT NULL unique,
 	[FechaAlta] [datetime] NOT NULL,
 	[FechaVencimiento] [datetime] NOT NULL,
-	[Importe] [numeric](18, 2) NOT NULL,
-	[Habilitada] bit NOT NULL default(1))
+	[Importe] [numeric](18, 2) NOT NULL)
 GO
 
 CREATE TABLE [SistemaCaido].[Funcionalidades](
