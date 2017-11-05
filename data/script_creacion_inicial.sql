@@ -1082,7 +1082,7 @@ as begin transaction
 	declare @IdFactura int
 	declare @IdProducto int
 
-	set @Importe = 0
+	set @Importe = 1
 
 	-- Agregar la factura con importe 0
 	insert into SistemaCaido.Facturas (IdCliente, IdEmpresa, NumeroFactura, FechaAlta, FechaVencimiento, Importe)
@@ -1155,14 +1155,18 @@ GO
 
 Create procedure SistemaCaido.FacturaPuedeSerModificada(@IdFactura int)
 as begin
-	Select case when (p.IdPago is null and rd.IdRendicionXFactura is null) then 1 else 0 end
+	Select case when ( f.IdFactura is not null and  rd.IdRendicionXFactura is null) then 1 else 0 end
 	from SistemaCaido.Facturas f
-	left join SistemaCaido.DevolucionesXFacturas df on df.IdFactura = f.IdFactura
-	left join SistemaCaido.Devoluciones d on d.IdDevolucion = df.IdDevolucion
-	left join SistemaCaido.PagosXFacturas pf on pf.IdFactura = f.IdFactura
-	left join SistemaCaido.Pagos p on p.IdPago = pf.IdPago And (d.IdDevolucion is null or d.Fecha < p.FechaCobro)
 	left join SistemaCaido.RendicionesXFacturas rd on rd.IdFactura = f.IdFactura
 	where f.IdFactura = @IdFactura
+	and f.IdFactura not in (select f2.IdFactura
+							from SistemaCaido.Facturas f2
+							Inner join SistemaCaido.PagosXFacturas pf on pf.IdFactura = f2.IdFactura and (select max(IdPagoXFactura) from SistemaCaido.PagosXFacturas pf2 where f2.IdFactura = pf2.IdFactura) = pf.IdPagoXFactura
+							Inner join SistemaCaido.Pagos p on pf.IdPago = p.IdPago
+							left join SistemaCaido.DevolucionesXFacturas df on df.IdFactura = f2.IdFactura and (select max(IdDevolucionesXFacturas) from SistemaCaido.DevolucionesXFacturas df2 where df2.IdFactura = df.IdFactura) = df.IdDevolucionesXFacturas
+							left join SistemaCaido.Devoluciones d on d.IdDevolucion = df.IdDevolucion
+							where (d.IdDevolucion is null
+							or d.Fecha < p.FechaCobro) )
 END
 GO
 
@@ -1175,7 +1179,7 @@ as begin transaction
 	Declare @IdProducto int
 	Declare @Cantidad int
 	Declare @Importe int
-	Set @Importe = 0
+	Set @Importe = 1
 
 	update SistemaCaido.Facturas
 	set IdCliente = @IdCliente,
@@ -1363,12 +1367,12 @@ as begin
 	where f.IdCliente = @IdCliente
 	and f.IdFactura not in (select f2.IdFactura
 							from SistemaCaido.Facturas f2
-							Inner join SistemaCaido.PagosXFacturas pf on pf.IdFactura = f2.IdFactura
+							Inner join SistemaCaido.PagosXFacturas pf on pf.IdFactura = f2.IdFactura and (select max(IdPagoXFactura) from SistemaCaido.PagosXFacturas pf2 where f2.IdFactura = pf2.IdFactura) = pf.IdPagoXFactura
 							Inner join SistemaCaido.Pagos p on pf.IdPago = p.IdPago
-							left join SistemaCaido.DevolucionesXFacturas df on df.IdFactura = f2.IdFactura
+							left join SistemaCaido.DevolucionesXFacturas df on df.IdFactura = f2.IdFactura and (select max(IdDevolucionesXFacturas) from SistemaCaido.DevolucionesXFacturas df2 where df2.IdFactura = df.IdFactura) = df.IdDevolucionesXFacturas
 							left join SistemaCaido.Devoluciones d on d.IdDevolucion = df.IdDevolucion
-							where d.IdDevolucion is null
-							or d.Fecha < p.FechaCobro )
+							where (d.IdDevolucion is null
+							or d.Fecha < p.FechaCobro) )
 END
 GO
 
@@ -1708,7 +1712,7 @@ GO
 
 Create procedure SistemaCaido.EmpresasConMayorPorcentajeFacturasCobradas (@Anio int, @Trimestre int)
 as begin
-	Select top 5 e.Nombre , convert(decimal(5,2),((COUNT(distinct f.IdFactura) * 100) / cast((select count(*) 
+	Select top 5 e.Nombre , convert(decimal(5,2),((COUNT(f.IdFactura) * 100) / cast((select count(*) 
 							  from SistemaCaido.PagosXFacturas pf2 
 							  Join SistemaCaido.Pagos p2 on pf2.IdPago = p2.IdPago 
 					   		  where  YEAR(p2.FechaCobro) = @Anio
@@ -1727,7 +1731,7 @@ GO
 
 Create procedure SistemaCaido.ClientesConMayorPorcentajeFacturasPagadas (@Anio int, @Trimestre int)
 as begin
-	Select top 5 c.Nombre, c.Apellido, Convert(decimal(4,2),((COUNT(distinct f.IdFactura) * 100) / cast((select count(*) 
+	Select top 5 c.Nombre, c.Apellido, Convert(decimal(7,2),((COUNT(f.IdFactura) * 100) / cast((select count(*) 
 							  from SistemaCaido.PagosXFacturas pf2 
 							  Join SistemaCaido.Pagos p2 on pf2.IdPago = p2.IdPago 
 					   		  where  YEAR(p2.FechaCobro) = @Anio
