@@ -655,7 +655,7 @@ GO
 
 
 CREATE TYPE [SistemaCaido].[Items] AS TABLE(
-	[Producto] [int] NULL,
+	[Descripcion] varchar(250) NULL,
 	[Monto] [numeric](18, 2) NULL,
 	[Cantidad] [numeric](18, 0) NULL
 )
@@ -1077,9 +1077,10 @@ create procedure [SistemaCaido].AltaFactura
 as begin transaction
 	declare @Importe numeric(18,2)
 	declare @Monto numeric(18,2)
-	declare @Producto int
+	declare @Descripcion varchar
 	declare @Cantidad numeric(18,0)
 	declare @IdFactura int
+	declare @IdProducto int
 
 	set @Importe = 0
 
@@ -1098,31 +1099,23 @@ as begin transaction
 			set @IdFactura = @@IDENTITY
 			 
 			declare items_cursor cursor for
-			select Producto, Monto, Cantidad from @Items
+			select Descripcion, Monto, Cantidad from @Items
 
 			open items_cursor
-			fetch next from items_cursor into @Monto, @Cantidad
+			fetch next from items_cursor into  @Descripcion, @Monto, @Cantidad
 
 			while(@@FETCH_STATUS = 0) 
 			begin
-				select @Monto = isnull(Precio,0) from SistemaCaido.Productos where IdProducto = @Producto
-				if (@Monto = 0)
-					begin
-						--No existe el producto
-						raiserror('No existe el producto..', 1,1)
-						rollback transaction
-					end
-				else
-					begin
-						insert into SistemaCaido.ProductosXFacturas values(@Producto, @IdFactura, @Cantidad)
-						if (@@ERROR != 0)
-							begin
-								raiserror('No se pudo dar de alta el item de factura..', 1,1)
-								rollback transaction
-							end
-						else
-							set @Importe = @Importe + (@Monto * @Cantidad)
-					end
+				Insert into SistemaCaido.Productos (Descripcion, Precio)
+				values (@Descripcion, @Monto)
+
+				set @IDProducto = @@IDENTITY
+
+				Insert into SistemaCaido.ProductosXFacturas (Cantidad, IdProducto, IdFactura)
+				values(@Cantidad, @IdProducto, @IdFactura)
+
+				set @Importe = @Importe + (@Monto * @Cantidad)
+				
 			end
 
 			-- Actualizo el importe de la factura recientemente ingresada
@@ -1174,8 +1167,16 @@ END
 GO
 
 create procedure [SistemaCaido].[ModificacionFactura]
-(@IdFactura int, @IdCliente int, @IdEmpresa int, @NumeroFactura int, @FechaAlta datetime, @FechaVencimiento datetime, @Importe numeric(18,2))
+(@IdFactura int, @IdCliente int, @IdEmpresa int, @NumeroFactura int, @FechaAlta datetime, @FechaVencimiento datetime, @Items SistemaCaido.Items readonly)
 as begin transaction
+	
+	Declare @Descripcion varchar(250)
+	Declare @Monto Numeric(18,2)
+	Declare @IdProducto int
+	Declare @Cantidad int
+	Declare @Importe int
+	Set @Importe = 0
+
 	update SistemaCaido.Facturas
 	set IdCliente = @IdCliente,
 		IdEmpresa = @IdEmpresa,
@@ -1189,6 +1190,36 @@ as begin transaction
 			raiserror('No se pudo modificar la factura..', 1,1)
 			rollback transaction
 		end
+
+	delete p
+	from SistemaCaido.Productos p
+	Inner join SistemaCaido.ProductosXFacturas pf on pf.IdProducto = p.IdProducto
+	where pf.IdFactura = @IdFactura
+
+	delete from SistemaCaido.ProductosXFacturas
+	where IdFactura = @IdFactura
+
+	declare items_cursor cursor for
+	select Descripcion, Monto, Cantidad from @Items
+
+	open items_cursor
+	fetch next from items_cursor into  @Descripcion, @Monto, @Cantidad
+
+	while(@@FETCH_STATUS = 0) 
+	begin
+		Insert into SistemaCaido.Productos (Descripcion, Precio)
+		values (@Descripcion, @Monto)
+
+		set @IDProducto = @@IDENTITY
+
+		Insert into SistemaCaido.ProductosXFacturas (Cantidad, IdProducto, IdFactura)
+		values(@Cantidad, @IdProducto, @IdFactura)
+
+		set @Importe = @Importe + (@Monto * @Cantidad)
+				
+	end
+
+	update SistemaCaido.Facturas set Importe = @Importe where IdFactura = @IdFactura
 
 	commit transaction
 
