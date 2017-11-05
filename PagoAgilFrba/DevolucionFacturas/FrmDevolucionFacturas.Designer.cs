@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.label1 = new System.Windows.Forms.Label();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmDevolucionFacturas));
             this.filtrosGB = new System.Windows.Forms.GroupBox();
             this.limpiarBtn = new System.Windows.Forms.Button();
             this.fltDNI = new System.Windows.Forms.TextBox();
@@ -39,20 +39,21 @@
             this.fltNombre = new System.Windows.Forms.TextBox();
             this.label10 = new System.Windows.Forms.Label();
             this.clientesDt = new System.Windows.Forms.DataGridView();
-            this.button1 = new System.Windows.Forms.Button();
+            this.siguienteBtn = new System.Windows.Forms.Button();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.tituloLb = new System.Windows.Forms.Label();
+            this.logoPictureBox = new System.Windows.Forms.PictureBox();
+            this.abmPnl = new System.Windows.Forms.Panel();
+            this.volverBtn = new System.Windows.Forms.Button();
+            this.cerrarSesionHl = new System.Windows.Forms.LinkLabel();
+            this.exitBtn = new System.Windows.Forms.LinkLabel();
+            this.label1 = new System.Windows.Forms.Label();
             this.filtrosGB.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.clientesDt)).BeginInit();
+            this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.logoPictureBox)).BeginInit();
+            this.abmPnl.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.25F);
-            this.label1.Location = new System.Drawing.Point(12, 18);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(168, 20);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Seleccione un cliente";
             // 
             // filtrosGB
             // 
@@ -64,9 +65,9 @@
             this.filtrosGB.Controls.Add(this.label11);
             this.filtrosGB.Controls.Add(this.fltNombre);
             this.filtrosGB.Controls.Add(this.label10);
-            this.filtrosGB.Location = new System.Drawing.Point(4, 48);
+            this.filtrosGB.Location = new System.Drawing.Point(7, 108);
             this.filtrosGB.Name = "filtrosGB";
-            this.filtrosGB.Size = new System.Drawing.Size(492, 118);
+            this.filtrosGB.Size = new System.Drawing.Size(485, 118);
             this.filtrosGB.TabIndex = 1;
             this.filtrosGB.TabStop = false;
             this.filtrosGB.Text = "Filtros de búsqueda";
@@ -79,6 +80,7 @@
             this.limpiarBtn.TabIndex = 12;
             this.limpiarBtn.Text = "Limpiar";
             this.limpiarBtn.UseVisualStyleBackColor = true;
+            this.limpiarBtn.Click += new System.EventHandler(this.limpiarBtn_Click);
             // 
             // fltDNI
             // 
@@ -86,6 +88,7 @@
             this.fltDNI.Name = "fltDNI";
             this.fltDNI.Size = new System.Drawing.Size(198, 20);
             this.fltDNI.TabIndex = 10;
+            this.fltDNI.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.fltDNI_KeyPress);
             // 
             // label12
             // 
@@ -105,6 +108,7 @@
             this.buscarBtn.TabIndex = 11;
             this.buscarBtn.Text = "Buscar";
             this.buscarBtn.UseVisualStyleBackColor = true;
+            this.buscarBtn.Click += new System.EventHandler(this.buscarBtn_Click);
             // 
             // fltApellido
             // 
@@ -145,37 +149,135 @@
             this.clientesDt.AllowUserToAddRows = false;
             this.clientesDt.AllowUserToDeleteRows = false;
             this.clientesDt.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.clientesDt.Location = new System.Drawing.Point(7, 172);
+            this.clientesDt.Location = new System.Drawing.Point(10, 232);
             this.clientesDt.MultiSelect = false;
             this.clientesDt.Name = "clientesDt";
             this.clientesDt.ReadOnly = true;
             this.clientesDt.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.clientesDt.Size = new System.Drawing.Size(492, 234);
+            this.clientesDt.Size = new System.Drawing.Size(482, 234);
             this.clientesDt.TabIndex = 2;
+            this.clientesDt.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.clientesDt_CellClick);
             // 
-            // button1
+            // siguienteBtn
             // 
-            this.button1.Location = new System.Drawing.Point(402, 436);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 3;
-            this.button1.Text = "Siguiente";
-            this.button1.UseVisualStyleBackColor = true;
+            this.siguienteBtn.Enabled = false;
+            this.siguienteBtn.Location = new System.Drawing.Point(87, 3);
+            this.siguienteBtn.Name = "siguienteBtn";
+            this.siguienteBtn.Size = new System.Drawing.Size(75, 23);
+            this.siguienteBtn.TabIndex = 3;
+            this.siguienteBtn.Text = "Siguiente >>";
+            this.siguienteBtn.UseVisualStyleBackColor = true;
+            this.siguienteBtn.Click += new System.EventHandler(this.siguienteBtn_Click);
+            // 
+            // panel1
+            // 
+            this.panel1.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.panel1.Controls.Add(this.tituloLb);
+            this.panel1.Controls.Add(this.logoPictureBox);
+            this.panel1.Controls.Add(this.abmPnl);
+            this.panel1.Controls.Add(this.cerrarSesionHl);
+            this.panel1.Controls.Add(this.exitBtn);
+            this.panel1.Location = new System.Drawing.Point(-2, 0);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(503, 65);
+            this.panel1.TabIndex = 12;
+            // 
+            // tituloLb
+            // 
+            this.tituloLb.AutoSize = true;
+            this.tituloLb.Font = new System.Drawing.Font("Verdana", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tituloLb.ForeColor = System.Drawing.SystemColors.ControlLight;
+            this.tituloLb.Location = new System.Drawing.Point(74, 9);
+            this.tituloLb.Name = "tituloLb";
+            this.tituloLb.Size = new System.Drawing.Size(197, 18);
+            this.tituloLb.TabIndex = 10;
+            this.tituloLb.Text = "Devolución de Facturas";
+            // 
+            // logoPictureBox
+            // 
+            this.logoPictureBox.Image = ((System.Drawing.Image)(resources.GetObject("logoPictureBox.Image")));
+            this.logoPictureBox.Location = new System.Drawing.Point(2, 0);
+            this.logoPictureBox.Name = "logoPictureBox";
+            this.logoPictureBox.Size = new System.Drawing.Size(61, 63);
+            this.logoPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.logoPictureBox.TabIndex = 9;
+            this.logoPictureBox.TabStop = false;
+            // 
+            // abmPnl
+            // 
+            this.abmPnl.Controls.Add(this.siguienteBtn);
+            this.abmPnl.Controls.Add(this.volverBtn);
+            this.abmPnl.Location = new System.Drawing.Point(71, 30);
+            this.abmPnl.Name = "abmPnl";
+            this.abmPnl.Size = new System.Drawing.Size(349, 29);
+            this.abmPnl.TabIndex = 4;
+            // 
+            // volverBtn
+            // 
+            this.volverBtn.Location = new System.Drawing.Point(6, 3);
+            this.volverBtn.Name = "volverBtn";
+            this.volverBtn.Size = new System.Drawing.Size(75, 23);
+            this.volverBtn.TabIndex = 4;
+            this.volverBtn.Text = "<< Volver";
+            this.volverBtn.UseVisualStyleBackColor = true;
+            this.volverBtn.Click += new System.EventHandler(this.volverBtn_Click);
+            // 
+            // cerrarSesionHl
+            // 
+            this.cerrarSesionHl.AutoSize = true;
+            this.cerrarSesionHl.Location = new System.Drawing.Point(426, 41);
+            this.cerrarSesionHl.Name = "cerrarSesionHl";
+            this.cerrarSesionHl.Size = new System.Drawing.Size(67, 13);
+            this.cerrarSesionHl.TabIndex = 8;
+            this.cerrarSesionHl.TabStop = true;
+            this.cerrarSesionHl.Text = "cerrar sesión";
+            this.cerrarSesionHl.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.cerrarSesionHl_LinkClicked);
+            // 
+            // exitBtn
+            // 
+            this.exitBtn.AutoSize = true;
+            this.exitBtn.Font = new System.Drawing.Font("Lucida Console", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.exitBtn.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline;
+            this.exitBtn.LinkColor = System.Drawing.Color.LightGray;
+            this.exitBtn.Location = new System.Drawing.Point(467, 9);
+            this.exitBtn.Name = "exitBtn";
+            this.exitBtn.Size = new System.Drawing.Size(16, 13);
+            this.exitBtn.TabIndex = 7;
+            this.exitBtn.TabStop = true;
+            this.exitBtn.Text = "X";
+            this.exitBtn.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.exitBtn_LinkClicked);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12.25F);
+            this.label1.Location = new System.Drawing.Point(12, 74);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(168, 20);
+            this.label1.TabIndex = 13;
+            this.label1.Text = "Seleccione un cliente";
             // 
             // FrmDevolucionFacturas
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(507, 472);
-            this.Controls.Add(this.button1);
+            this.ClientSize = new System.Drawing.Size(501, 475);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.panel1);
             this.Controls.Add(this.clientesDt);
             this.Controls.Add(this.filtrosGB);
-            this.Controls.Add(this.label1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FrmDevolucionFacturas";
-            this.Text = "FrmDevolucionFacturas";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.Text = "Devolucion de Facturas";
             this.filtrosGB.ResumeLayout(false);
             this.filtrosGB.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.clientesDt)).EndInit();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.logoPictureBox)).EndInit();
+            this.abmPnl.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -183,7 +285,6 @@
 
         #endregion
 
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.GroupBox filtrosGB;
         private System.Windows.Forms.Button limpiarBtn;
         private System.Windows.Forms.TextBox fltDNI;
@@ -194,7 +295,15 @@
         private System.Windows.Forms.TextBox fltNombre;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.DataGridView clientesDt;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button siguienteBtn;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Label tituloLb;
+        private System.Windows.Forms.PictureBox logoPictureBox;
+        private System.Windows.Forms.Panel abmPnl;
+        private System.Windows.Forms.Button volverBtn;
+        private System.Windows.Forms.LinkLabel cerrarSesionHl;
+        private System.Windows.Forms.LinkLabel exitBtn;
+        private System.Windows.Forms.Label label1;
 
     }
 }

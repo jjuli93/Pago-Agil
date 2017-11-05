@@ -180,13 +180,13 @@ namespace PagoAgilFrba.AbmFactura
 
                 switch (operacion)
                 {
-                    case "Crear Cliente":
+                    case "Nueva Factura":
                         do_insert();
                         break;
-                    case "Modificar Cliente":
+                    case "Modificar Factura":
                         do_update();
                         break;
-                    case "Eliminar Cliente":
+                    case "Eliminar Factura":
                         do_delete();
                         break;
                 }
@@ -199,7 +199,8 @@ namespace PagoAgilFrba.AbmFactura
             {
                 try
                 {
-                    
+                    msgHelper.mostrar_aviso("Factura creada", "ABM Facturas");
+                    limpiar_controles();
                 }
                 catch (Exception ex)
                 {
@@ -216,7 +217,9 @@ namespace PagoAgilFrba.AbmFactura
             {
                 try
                 {
-                    
+                    msgHelper.mostrar_aviso("Factura modificada", "ABM Facturas");
+                    limpiar_controles();
+                    restablecer_controles();
                 }
                 catch (Exception ex)
                 {
@@ -233,10 +236,9 @@ namespace PagoAgilFrba.AbmFactura
         {
             try
             {
-                if (id_cliente > 0)
-                {
-                    
-                }
+                msgHelper.mostrar_aviso("Factura eliminada", "ABM Facturas");
+                limpiar_controles();
+                restablecer_controles();   
             }
             catch (Exception ex)
             {
@@ -267,6 +269,8 @@ namespace PagoAgilFrba.AbmFactura
             habilitadaChk.Checked = false;
             itemsDgv.Rows.Clear();
             itemsDgv.DataSource = null;
+            filaFactura_seleccionada = -1;
+            filaItem_seleccionada = -1;
         }
 
         private void habilitar_campos(bool valor)
